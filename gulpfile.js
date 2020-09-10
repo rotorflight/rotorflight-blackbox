@@ -25,13 +25,13 @@ const APPS_DIR = './apps/';
 const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 
-const LINUX_INSTALL_DIR = '/opt/betaflight';
+const LINUX_INSTALL_DIR = '/opt/rotorflight';
 
 var nwBuilderOptions = {
     version: '0.54.1',
     files: './dist/**/*',
     macIcns: './images/bf_icon.icns',
-    macPlist: { 'CFBundleDisplayName': 'Betaflight Blackbox Explorer'},
+    macPlist: { 'CFBundleDisplayName': 'Rotorflight Blackbox'},
     winIco: './images/bf_icon.ico',
 };
 
@@ -464,7 +464,7 @@ function release_zip(arch, appDirectory) {
     const output = getReleaseFilename(arch, 'zip');
     const base = path.join(appDirectory, pkg.name, arch);
 
-    return compressFiles(src, base, output, 'Betaflight Blackbox Explorer');
+    return compressFiles(src, base, output, 'Rotorflight Blackbox');
 }
 
 // Compress files from srcPath, using basePath, to outputFile in the RELEASE_DIR
@@ -580,10 +580,10 @@ function release_osx64(appDirectory) {
             target: path.join(RELEASE_DIR, getReleaseFilename('macOS', 'dmg')),
             basepath: path.join(appDirectory, pkg.name, 'osx64'),
             specification: {
-                title: 'BF Blackbox Explorer', // <= volume name; should be smaller than 27 chars.
+                title: 'Rotorflight Blackbox', // <= volume name; should be smaller than 27 chars.
                 contents: [
                     { 'x': 448, 'y': 342, 'type': 'link', 'path': '/Applications' },
-                    { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Betaflight Blackbox Explorer.app' }
+                    { 'x': 192, 'y': 344, 'type': 'file', 'path': pkg.name + '.app', 'name': 'Rotorflight Blackbox.app' }
                 ],
                 background: path.join(__dirname, 'images/dmg-background.png'),
                 format: 'UDZO',

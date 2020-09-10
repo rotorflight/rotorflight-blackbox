@@ -1,7 +1,7 @@
 {
-  "name": "betaflight-blackbox-explorer",
-  "displayName": "Betaflight - Blackbox Explorer",
-  "description": "Crossplatform blackbox analitics tool for Betaflight flight control system.",
+  "name": "rotorflight-blackbox",
+  "displayName": "Rotorflight Blackbox",
+  "description": "Crossplatform blackbox analytics tool for Rotorflight flight control system.",
   "version": "3.6.0",
   "main": "index.html",
   "chromium-args": "--disable-features=nw2",
@@ -21,9 +21,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/betaflight/blackbox-log-viewer"
+    "url": "github.com/rotorflight/rotorflight-blackbox"
   },
-  "author": "The Betaflight open source project.",
+  "author": "The Rotorflight open source project.",
   "license": "GPL-3.0",
   "dependencies": {
     "bootstrap": "~3.4.1",
