@@ -1,36 +1,23 @@
-# Betaflight Blackbox Explorer
+# Rotorflight Blackbox Explorer
 
-[![Latest version](https://img.shields.io/github/v/release/betaflight/blackbox-log-viewer)](https://github.com/betaflight/blackbox-log-viewer/releases) [![Build Status](https://travis-ci.com/betaflight/blackbox-log-viewer.svg?branch=master)](https://travis-ci.com/betaflight/blackbox-log-viewer) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=betaflight_blackbox-log-viewer&metric=alert_status)](https://sonarcloud.io/dashboard?id=betaflight_blackbox-log-viewer) [![Build Status](https://dev.azure.com/Betaflight/Betaflight%20Nightlies/_apis/build/status/betaflight.blackbox-log-viewer?branchName=master)](https://dev.azure.com/Betaflight/Betaflight%20Nightlies/_build/latest?definitionId=2&branchName=master) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+This is a version of Blackbox Explorer that has been customized for analyzing blackbox logs created by Rotorflight.
 
-![Main explorer interface](screenshots/main-interface.jpg)
+### Installation for End-Users:
 
-This tool allows you to open logs recorded by Betaflight's Blackbox feature in your web browser. You can seek through
-the log to examine graphed values at each timestep. If you have a flight video, you can load that in as well and it'll
-be played behind the log. You can export the graphs as a WebM video to share with others.
+Please see the "Releases" page on this Github repo to download the latest official release for your operating system:
+* [Click here to go to Releases](https://github.com/rotorflight/rotorflight-blackbox/releases)
 
-## Installation
+Please ignore any snapshots on this page (github is showing them automatically).
 
-### Standalone
+### Installation for Beta-testers:
 
-Download the installer from [Releases](https://github.com/betaflight/blackbox-log-viewer/releases).
+Please see the "Releases" page on this Github repo to download the latest _snapshot_ for your operating system:
+* [Click here to go to Releases](https://github.com/rotorflight/rotorflight-blackbox/releases)
 
-### Notes
-
-#### Windows users
-
-The minimum required version of Windows is Windows 8.
-
-#### MacOS X users
-
-Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Betaflight\ Blackbox\ Explorer.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal before installing: `sudo xattr -rd com.apple.quarantine /Applications/Betaflight\ Blackbox\ Explorer.app`.
-
-### Unstable Testing Versions
-
-Unstable testing versions of the lates builds of the Betaflight Blackbox Explorer for most platforms can be downloaded from [here](https://github.com/betaflight/blackbox-log-viewer-nightlies/releases).
-
-**Be aware that these versions are intended for testing / feedback only, and may be buggy or broken.**
+Please note that snapshots are available for beta-testing, and are otherwise _not_ supported.
 
 ## Usage
+
 Click the "Open log file/video" button at the top right and select your log file and your flight video (if you recorded one).
 
 You can scroll through the log by clicking or dragging on the seek bar that appears underneath the main graph. The 
@@ -78,7 +65,7 @@ List of possible values of `<task-name>`:
 #### Setting up and building on a Mac
 
 - Install GitHub desktop application from https://desktop.github.com and open the GitHub Desktop application.
-- At https://github.com/betaflight/betaflight-configurator, select Clone or Download > Open in Desktop
+- At https://github.com/rotorflight/rotorflight-configurator, select Clone or Download > Open in Desktop
 
 (The GitHub Desktop application should come to the front and create a repository (not necessarily where you want it).  The blackbox-log-viewer repository (folder) should appear under the list of local repositories.  You can find your local repository location on your mac using the 'Locate in Finder' command GitHub Desktop  It can be moved somewhere more else, but you'll then need to tell Github where you're moved it to.)
 
@@ -90,9 +77,10 @@ install node 8.x and yarn, if already installed, agree to update them
 ```
 brew install node@8 yarn
 ```
-Change Terminal's working directory wherever you put blackbox-log-viewer folder; easiest way is to type 'cd ' in Terminal then drag the blackbox-log-viewer folder from the Finder to the terminal window.  Or use a terminal command like 
+Change Terminal's working directory wherever you put the rotorflight-blackbox folder; easiest way is to type 'cd ' in Terminal then drag the rotorflight-blackbox folder from the Finder to the terminal window.  Or use a terminal command like
+
 ```
-cd ~/mydirectorypath/blackbox-log-viewer
+cd ~/mydirectorypath/rotorflight-blackbox
 ```
 
 install dependencies into that folder (ignoring many confusing messages) with:
@@ -106,6 +94,7 @@ yarn gulp release
 ```
 
 #### Build or release app for one specific platform
+
 To build or release only for one specific platform you can append the plaform after the `task-name`.
 If no platform is provided, only for the platform you are builing from will be build.
 
