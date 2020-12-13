@@ -64,7 +64,10 @@ function FlightLogFieldPresenter() {
         'motor[3]': 'Motor [4]',
 
         'servo[all]': 'Servos',
-        'servo[5]': 'Servo Tail',
+        'servo[0]': 'Servo [1]',
+        'servo[1]': 'Servo [2]',
+        'servo[2]': 'Servo [3]',
+        'servo[3]': 'Servo [4]',
 
         'vbatLatest': 'Battery volt.',
         'amperageLatest': 'Amperage',
@@ -580,6 +583,12 @@ function FlightLogFieldPresenter() {
 
             case 'rssi':
                 return (value / 1024 * 100).toFixed(2) + "%";
+
+            case 'servo[0]':
+            case 'servo[1]':
+            case 'servo[2]':
+            case 'servo[3]':
+                return (value).toFixed(0) + " uS";
 
             case 'debug[0]':
             case 'debug[1]':
