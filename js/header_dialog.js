@@ -469,6 +469,7 @@ function HeaderDialog(dialog, onSave) {
       $('h5.modal-title-craft').text((sysConfig['Craft name'] != null) ? ` Name : ${sysConfig['Craft name']}` : '');
 
 		switch(sysConfig.firmwareType) {
+			case FIRMWARE_TYPE_ROTORFLIGHT:
 			case FIRMWARE_TYPE_BETAFLIGHT:
 			case FIRMWARE_TYPE_CLEANFLIGHT:
 				$('.header-dialog-toggle').hide(); // selection button is not required
@@ -495,7 +496,8 @@ function HeaderDialog(dialog, onSave) {
 				});
 		}
 
-		if((sysConfig.firmware >= 3.0 && sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) ||
+		if((sysConfig.firmware >= 4.0 && sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+           (sysConfig.firmware >= 3.0 && sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) ||
 		   (sysConfig.firmware >= 2.0 && sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT)) {
 
 			PID_CONTROLLER_TYPE = ([
@@ -582,7 +584,8 @@ function HeaderDialog(dialog, onSave) {
         setParameter('deadband'					,sysConfig.deadband,0);
         setParameter('yaw_deadband'				,sysConfig.yaw_deadband,0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.4.0')) {
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.2.0')) ||
+            (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.4.0'))) {
             renderSelect('gyro_hardware_lpf'       ,sysConfig.gyro_lpf, GYRO_HARDWARE_LPF);
 
         } else {
@@ -663,7 +666,8 @@ function HeaderDialog(dialog, onSave) {
         }
 
         // D_MIN and rate_limits
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.2.0')) ||
+            (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0'))) {
             setParameter('d_min_roll'   , sysConfig.d_min[0]     , 0);
             setParameter('d_min_pitch'  , sysConfig.d_min[1]     , 0);
             setParameter('d_min_yaw'    , sysConfig.d_min[2]     , 0);
@@ -694,7 +698,8 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dtermSetpointWeight'		,sysConfig.dtermSetpointWeight,2);
         setParameter('feedforward_transition'   ,sysConfig.feedforward_transition,2);
         setParameter('abs_control_gain'         ,sysConfig.abs_control_gain, 0);
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) {
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.2.0')) ||
+            (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0'))) {
             setParameterFloat('yawRateAccelLimit', sysConfig.yawRateAccelLimit, 2);
             setParameterFloat('rateAccelLimit'   , sysConfig.rateAccelLimit, 2);
         } else {
@@ -708,8 +713,9 @@ function HeaderDialog(dialog, onSave) {
 		setParameter('motorOutputHigh'			,sysConfig.motorOutput[1],0);
 		setParameter('digitalIdleOffset'		,sysConfig.digitalIdleOffset,2);
         renderSelect('antiGravityMode'          ,sysConfig.anti_gravity_mode, ANTI_GRAVITY_MODE);
-        if((activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) ||
-                (activeSysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '2.0.0'))) {
+        if((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.2.0')) ||
+           (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) ||
+           (activeSysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '2.0.0'))) {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,3);
         } else {
             setParameter('antiGravityGain'      ,sysConfig.anti_gravity_gain,0);
