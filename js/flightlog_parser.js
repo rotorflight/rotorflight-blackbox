@@ -6,7 +6,8 @@ var FlightLogIndex,
     FIRMWARE_TYPE_BASEFLIGHT = 1,
     FIRMWARE_TYPE_CLEANFLIGHT = 2,
     FIRMWARE_TYPE_BETAFLIGHT = 3,
-    FIRMWARE_TYPE_INAV = 4;
+    FIRMWARE_TYPE_INAV = 4,
+    FIRMWARE_TYPE_ROTORFLIGHT = 5;
 
 var FlightLogParser = function(logData) {
     //Private constants:
@@ -647,7 +648,8 @@ var FlightLogParser = function(logData) {
 
             case "yawRateAccelLimit":
             case "rateAccelLimit":
-                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||
+                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.1.0')) ||
                    (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10)/1000;
                 } else {
@@ -662,8 +664,9 @@ var FlightLogParser = function(logData) {
             case "dterm_notch_cutoff":
             case "dterm_lpf_hz":
             case "dterm_lpf2_hz":
-                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
-                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
+                   if((that.sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
+                      (that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
+                      (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10);
                 } else {
                     that.sysConfig[fieldName] = parseInt(fieldValue, 10) / 100.0;
@@ -672,7 +675,8 @@ var FlightLogParser = function(logData) {
 
             case "gyro_notch_hz":
             case "gyro_notch_cutoff":
-                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
+                if((that.sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
+                   (that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(that.sysConfig.firmwareVersion, '3.0.1')) ||
                    (that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(that.sysConfig.firmwareVersion, '2.0.0'))) {
                     that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
                 } else {
@@ -759,7 +763,8 @@ var FlightLogParser = function(logData) {
                      * match Baseflight so we can use Baseflight's IMU for both: */
                     if (that.sysConfig.firmwareType == FIRMWARE_TYPE_INAV ||
                         that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT) {
+                        that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT ||
+                        that.sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) {
                         that.sysConfig.gyroScale = that.sysConfig.gyroScale * (Math.PI / 180.0) * 0.000001;
                     }
             break;
@@ -767,13 +772,20 @@ var FlightLogParser = function(logData) {
 
                 //TODO Unify this somehow...
 
-                // Extract the firmware revision in case of Betaflight/Raceflight/Cleanfligh 2.x/Other
+                // Extract the firmware revision in case of Rotorflight/Betaflight/Raceflight/Cleanfligh 2.x/Other
                 var matches = fieldValue.match(/(.*flight).* (\d+)\.(\d+)(\.(\d+))*/i);
                 if(matches!=null) {
 
-                    // Detecting Betaflight requires looking at the revision string
-                    if (matches[1] === "Betaflight") {
+                    // Detecting requires looking at the revision string
+                    if (matches[1].toLowerCase() === "betaflight") {
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_BETAFLIGHT;
+                        $('html').removeClass('isBaseF');
+                        $('html').removeClass('isCF');
+                        $('html').addClass('isBF');
+                        $('html').removeClass('isINAV');
+                    }
+                    else if (matches[1].toLowerCase() === "rotorflight") {
+                        that.sysConfig.firmwareType = FIRMWARE_TYPE_ROTORFLIGHT;
                         $('html').removeClass('isBaseF');
                         $('html').removeClass('isCF');
                         $('html').addClass('isBF');
