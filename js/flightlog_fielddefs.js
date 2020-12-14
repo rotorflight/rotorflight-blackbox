@@ -291,7 +291,7 @@ var
             "RANGEFINDER_QUALITY",
             "LIDAR_TF",
             "ADC_INTERNAL",
-            "RUNAWAY_TAKEOFF",
+            "GOVERNOR",
             "SDIO",
             "CURRENT_SENSOR",
             "USB",
