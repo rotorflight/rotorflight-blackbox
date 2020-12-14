@@ -414,6 +414,13 @@ function FlightLogFieldPresenter() {
                             'debug[2]':'Altitude Adjustment',
                             'debug[3]':'Rescue State',
             },
+            'GOVERNOR' :   {
+                            'debug[all]':'GOVERNOR',
+                            'debug[0]':'Gov Headspeed Target',
+                            'debug[1]':'Gov Headspeed Setpoint',
+                            'debug[2]':'Gov PidSum',
+                            'debug[3]':'Gov Feedforward',
+            },
         };
     
     function presentFlags(flags, flagNames) {
@@ -759,6 +766,18 @@ function FlightLogFieldPresenter() {
                             return value.toFixed(0);
                         }
                         break;
+                case 'GOVERNOR':
+                    switch (fieldName) {
+                        case 'debug[0]': // target HeadSpeed
+                            return value.toFixed(0) + 'rpm';
+                        case 'debug[1]': // SetPoint
+                            return value.toFixed(0) + 'rpm';
+                        case 'debug[2]': // govPidSum * 1000
+                            return (value / 10).toFixed(1) + '%';
+                        case 'debug[3]': // govFeedForward * 1000
+                            return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
             }
             return value.toFixed(0);
 		}
