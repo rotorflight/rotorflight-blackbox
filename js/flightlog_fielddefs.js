@@ -28,6 +28,7 @@ var
         GTUNE_CYCLE_RESULT: 20,
         FLIGHT_MODE: 30,
         TWITCH_TEST: 40, // Feature for latency testing
+        GOVERNOR_STATE: 50,  // Main motor governor state
 
         CUSTOM : 250, // Virtual Event Code - Never part of Log File.
         CUSTOM_BLANK : 251, // Virtual Event Code - Never part of Log File. - No line shown
@@ -588,6 +589,18 @@ var
         "RUNAWAY_TAKEOFF",
         "GPS_RESCUE",
         "SERIAL_IO",
+    ]),
+
+    FLIGHT_LOG_GOVSTATES = makeReadOnly([
+        "THROTTLE_OFF",
+        "THROTTLE_IDLE",
+        "SPOOLING_UP",
+        "RECOVERY",
+        "ACTIVE",
+        "LOST_THROTTLE",
+        "LOST_HEADSPEED",
+        "AUTOROTATION",
+        "BAILOUT",
     ]),
 
     RATES_TYPE = makeReadOnly([
