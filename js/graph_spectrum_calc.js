@@ -20,6 +20,7 @@ var GraphSpectrumCalc = GraphSpectrumCalc || {
     },
     _flightLog : null,
     _sysConfig : null,
+    _minMaxAvgText : 'n/a',
 };
 
 GraphSpectrumCalc.initialize = function(flightLog, sysConfig) {
@@ -235,6 +236,10 @@ GraphSpectrumCalc._getFlightChunks = function() {
 GraphSpectrumCalc._getFlightSamplesFreq = function() {
 
     var allChunks = this._getFlightChunks();
+    
+    var maxVal = -9999;
+    var minVal = 9999;
+    var avgAccumulator = 0;
 
     var samples = new Float64Array(MAX_ANALYSER_LENGTH / (1000 * 1000) * this._blackBoxRate);
 
@@ -244,9 +249,24 @@ GraphSpectrumCalc._getFlightSamplesFreq = function() {
         var chunk = allChunks[chunkIndex];
         for (var frameIndex = 0; frameIndex < chunk.frames.length; frameIndex++) {
             samples[samplesCount] = (this._dataBuffer.curve.lookupRaw(chunk.frames[frameIndex][this._dataBuffer.fieldIndex]));
+            // Determine min/max/average of the values for display to the user
+            var value = chunk.frames[frameIndex][this._dataBuffer.fieldIndex];
+            if (value > maxVal) {
+                maxVal = value;
+            }
+            if (value < minVal) {
+                minVal = value;
+            }
+            avgAccumulator += value;
             samplesCount++;
         }
     }
+
+    // Calculate average and create the min/max/avg label text
+    var avgVal = avgAccumulator / samplesCount;
+    //this._minMaxAvgText = `: Min=${minVal.toFixed(0)}, Max=${maxVal.toFixed(0)}`;
+    this._minMaxAvgText = ': Min=' + minVal.toFixed(0) + ', Max=' + maxVal.toFixed(0) + ', Avg=' + avgVal.toFixed(1);
+    //this._minMaxAvgText = minVal.toFixed(3) + ;
 
     return {
         samples : samples,
@@ -374,6 +394,7 @@ GraphSpectrumCalc._normalizeFft = function(fftOutput, fftLength) {
         fftOutput    : fftOutput,
         maxNoiseIdx  : maxNoiseIdx,
         blackBoxRate : this._blackBoxRate,
+        minMaxAvgText : this._minMaxAvgText,
     };
 
     return fftData;
