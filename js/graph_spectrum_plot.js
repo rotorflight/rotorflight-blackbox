@@ -174,7 +174,7 @@ GraphSpectrumPlot._drawFrequencyGraph = function(canvasCtx) {
         x += barWidth + 1;
     }
 
-    this._drawAxisLabel(canvasCtx, this._fftData.fieldName, WIDTH - 4, HEIGHT - 6, 'right');
+    this._drawAxisLabel(canvasCtx, this._fftData.fieldName + this._fftData.minMaxAvgText, WIDTH - 4, HEIGHT - 20, 'right');
     this._drawHorizontalGridLines(canvasCtx, PLOTTED_BLACKBOX_RATE / 2, LEFT, TOP, WIDTH, HEIGHT, MARGIN, 'Hz');
 
 };
