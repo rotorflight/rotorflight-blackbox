@@ -602,7 +602,7 @@ function FlightLogFieldPresenter() {
             	return FlightLogFieldPresenter.decodeDebugFieldToFriendly(flightLog, fieldName, value, currentFlightMode);
 
             default:
-                return "";
+                return (value).toFixed(0);
         }
     };
     
