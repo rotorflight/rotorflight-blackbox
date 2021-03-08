@@ -310,6 +310,13 @@ GraphConfig.load = function(config) {
                     inputRange: 500, 
                     outputRange: 1.0
                 };
+            } else if (fieldName == "rcCommand[4]") { // Collective
+                return {
+                    offset: 0,
+                    power: 1.0, /* Scale linearly */
+                    inputRange: 500 * gyroScaleMargin,
+                    outputRange: 1.0
+                };
             } else if (fieldName.match(/^rcCommand\[/)) {
                 return {
                     offset: 0,

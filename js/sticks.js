@@ -195,7 +195,7 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
             stickIndex,
             rcCommand = [], rcCommandLabels = [];
 
-        for (stickIndex = 0; stickIndex < 4; stickIndex++) {
+        for (stickIndex = 0; stickIndex < 5; stickIndex++) {
             //Check that stick data is present to be drawn:
             if (rcCommandFields[stickIndex] === undefined)
                 return;
@@ -221,13 +221,13 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                 stickPositions[0] = yawValue / config.yawStickMax; //Yaw
                 stickPositions[1] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch 
                 stickPositions[2] = pitchStickCurve.lookup(rcCommand[0]); //Roll
-                stickPositions[3] = (1500 - rcCommand[3]) / 500; //Throttle
+                stickPositions[3] = rcCommand[4] / 500; //Collective
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[2];
                     stickLabel[1] = rcCommandLabels[1];
                     stickLabel[2] = rcCommandLabels[0];
-                    stickLabel[3] = rcCommandLabels[3];
+                    stickLabel[3] = rcCommandLabels[4];
                 }
 
                 break;
@@ -235,25 +235,25 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                 stickPositions[0] = pitchStickCurve.lookup(rcCommand[0]); //Roll
                 stickPositions[1] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
                 stickPositions[2] = yawValue / config.yawStickMax; //Yaw
-                stickPositions[3] = (1500 - rcCommand[3]) / 500; //Throttle
+                stickPositions[3] = rcCommand[4] / 500; //Collective
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[0];
                     stickLabel[1] = rcCommandLabels[1];
                     stickLabel[2] = rcCommandLabels[2];
-                    stickLabel[3] = rcCommandLabels[3];
+                    stickLabel[3] = rcCommandLabels[4];
                 }
 
                 break;
             case STICK_MODE_4:
                 stickPositions[0] = pitchStickCurve.lookup(rcCommand[0]); //Roll
-                stickPositions[1] = (1500 - rcCommand[3]) / 500; //Throttle
+                stickPositions[1] = rcCommand[4] / 500; //Collective
                 stickPositions[2] = yawValue / config.yawStickMax; //Yaw
                 stickPositions[3] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[0];
-                    stickLabel[1] = rcCommandLabels[3];
+                    stickLabel[1] = rcCommandLabels[4];
                     stickLabel[2] = rcCommandLabels[2];
                     stickLabel[3] = rcCommandLabels[1];
                 }
@@ -261,13 +261,13 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                 break;
             default: // Mode 2
                 stickPositions[0] = yawValue / config.yawStickMax; //Yaw
-                stickPositions[1] = (1500 - rcCommand[3]) / 500; //Throttle
+                stickPositions[1] = -1 * rcCommand[4] / 500; //Collective
                 stickPositions[2] = pitchStickCurve.lookup(rcCommand[0]); //Roll
                 stickPositions[3] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[2];
-                    stickLabel[1] = rcCommandLabels[3];
+                    stickLabel[1] = rcCommandLabels[4];
                     stickLabel[2] = rcCommandLabels[0];
                     stickLabel[3] = rcCommandLabels[1];
                 }
