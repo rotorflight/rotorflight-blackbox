@@ -50,6 +50,7 @@ function FlightLogFieldPresenter() {
         'rcCommand[1]': 'RC Command [pitch]',
         'rcCommand[2]': 'RC Command [yaw]',
         'rcCommand[3]': 'RC Command [throttle]',
+        'rcCommand[4]': 'RC Command [collective]',
 
         'gyroADC[all]': 'Gyros',
         'gyroADC[0]': 'Gyro [roll]',
@@ -510,6 +511,7 @@ function FlightLogFieldPresenter() {
             case 'rcCommand[0]':
             case 'rcCommand[1]':
             case 'rcCommand[2]':
+            case 'rcCommand[4]':
                 return value.toFixed(0) + " us"; // Show in range -500/+500
             case 'rcCommand[3]':
                 return (value - 1000).toFixed(0) + " us"; // Show in range 0/+1000
