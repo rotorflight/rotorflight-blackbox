@@ -201,7 +201,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             } else if ((matches = fieldName.match(/^rcCommand\[(\d+)]$/))) {
                 var rcCommandIndex = matches[1];
 
-                if (rcCommandIndex >= 0 && rcCommandIndex < 4) {
+                if (rcCommandIndex >= 0 && rcCommandIndex < 5) {
                     idents.rcCommandFields[rcCommandIndex] = fieldIndex;
                 }
             } else if ((matches = fieldName.match(/^axisPID\[(\d+)]$/))) {
