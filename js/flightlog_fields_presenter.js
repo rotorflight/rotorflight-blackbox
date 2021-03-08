@@ -69,6 +69,8 @@ function FlightLogFieldPresenter() {
         'servo[2]': 'Servo [3]',
         'servo[3]': 'Servo [4]',
 
+        'headspeed': 'Headspeed',
+
         'vbatLatest': 'Battery volt.',
         'amperageLatest': 'Amperage',
         'BaroAlt': 'Barometer',
@@ -583,6 +585,9 @@ function FlightLogFieldPresenter() {
 
             case 'rssi':
                 return (value / 1024 * 100).toFixed(2) + "%";
+
+            case 'headspeed':
+                return (value).toFixed(0) + " rpm";
 
             case 'servo[0]':
             case 'servo[1]':
