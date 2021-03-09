@@ -56,16 +56,11 @@ function FlightLogFieldPresenter() {
         'gyroADC[1]': 'Gyro [pitch]',
         'gyroADC[2]': 'Gyro [yaw]',
 
-        //End-users prefer 1-based indexing
         'motor[all]': 'Motors',
         'motor[0]': 'Motor [1]',
         'motor[1]': 'Motor [2]',
         'motor[2]': 'Motor [3]',
         'motor[3]': 'Motor [4]',
-        'motor[4]': 'Motor [5]',
-        'motor[5]': 'Motor [6]',
-        'motor[6]': 'Motor [7]',
-        'motor[7]': 'Motor [8]',
 
         'servo[all]': 'Servos',
         'servo[5]': 'Servo Tail',
@@ -507,11 +502,7 @@ function FlightLogFieldPresenter() {
             case 'motor[1]':
             case 'motor[2]':
             case 'motor[3]':
-            case 'motor[4]':
-            case 'motor[5]':
-            case 'motor[6]':
-            case 'motor[7]':
-                return `${flightLog.rcMotorRawToPctPhysical(value).toFixed(2)} %`;
+                return `${flightLog.rcMotorRawToPct(value).toFixed(1)} %`;
 
             case 'rcCommands[0]':
             case 'rcCommands[1]':
