@@ -528,8 +528,7 @@ function FlightLog(logData) {
                          [fieldNameToIndex["axisP[1]"], fieldNameToIndex["axisI[1]"], fieldNameToIndex["axisD[1]"], fieldNameToIndex["axisF[1]"]],
                          [fieldNameToIndex["axisP[2]"], fieldNameToIndex["axisI[2]"], fieldNameToIndex["axisD[2]"], fieldNameToIndex["axisF[2]"]]];
 
-        let motor = [fieldNameToIndex["motor[0]"], fieldNameToIndex["motor[1]"], fieldNameToIndex["motor[2]"], fieldNameToIndex["motor[3]"],
-                       fieldNameToIndex["motor[4]"], fieldNameToIndex["motor[5]"], fieldNameToIndex["motor[6]"], fieldNameToIndex["motor[7]"]];
+        let motor = [fieldNameToIndex["motor[0]"], fieldNameToIndex["motor[1]"], fieldNameToIndex["motor[2]"], fieldNameToIndex["motor[3]"]];
 
         let sourceChunkIndex;
         let destChunkIndex;
@@ -1155,20 +1154,9 @@ FlightLog.prototype.rcCommandRawToThrottle = function(value) {
     return Math.min(Math.max(((value - this.getSysConfig().minthrottle) / (this.getSysConfig().maxthrottle - this.getSysConfig().minthrottle)) * 100.0, 0.0),100.0);
 };
 
-FlightLog.prototype.rcMotorRawToPctPhysical = function(value) {
-
+FlightLog.prototype.rcMotorRawToPct = function(value) {
     // Motor displayed as percentage
-    let motorPct;
-    if (this.isDigitalProtocol()) {
-        motorPct = ((value - DSHOT_MIN_VALUE) / DSHOT_RANGE) * 100;
-    } else {
-        const MAX_ANALOG_VALUE = this.getSysConfig().maxthrottle;
-        const MIN_ANALOG_VALUE = this.getSysConfig().minthrottle;
-        const ANALOG_RANGE = MAX_ANALOG_VALUE - MIN_ANALOG_VALUE;
-        motorPct = ((value - MIN_ANALOG_VALUE) / ANALOG_RANGE) * 100;
-    }
-    return Math.min(Math.max(motorPct, 0.0), 100.0);
-
+    return (value / 10.0);
 };
 
 FlightLog.prototype.isDigitalProtocol = function() {
