@@ -510,9 +510,9 @@ function FlightLogFieldPresenter() {
             case 'rcCommand[0]':
             case 'rcCommand[1]':
             case 'rcCommand[2]':
-                return (value + 1500).toFixed(0) + " us";
+                return value.toFixed(0) + " us"; // Show in range -500/+500
             case 'rcCommand[3]':
-                return value.toFixed(0) + " us";
+                return (value - 1000).toFixed(0) + " us"; // Show in range 0/+1000
 
             case 'motor[0]':
             case 'motor[1]':
@@ -525,6 +525,7 @@ function FlightLogFieldPresenter() {
             case 'rcCommands[2]':
                 return value.toFixed(0) + " deg/s";
             case 'rcCommands[3]':
+            case 'rcCommands[4]':
                 return value.toFixed(1) + "%";
 
             case 'axisSum[0]':
