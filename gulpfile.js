@@ -28,7 +28,7 @@ const RELEASE_DIR = './release/';
 const LINUX_INSTALL_DIR = '/opt/rotorflight';
 
 var nwBuilderOptions = {
-    version: '0.50.2',
+    version: '0.54.0',
     files: './dist/**/*',
     macIcns: './images/rf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'RotorFlight Blackbox'},
