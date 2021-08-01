@@ -2,7 +2,7 @@
 Name=Rotorflight Blackbox
 Comment=Cross-platform blackbox analytics tool for Rotorflight flight control system
 Exec=/opt/rotorflight/rotorflight-blackbox/rotorflight-blackbox
-Icon=/opt/rotorflight/rotorflight-blackbox/icon/bf_icon_128.png
+Icon=/opt/rotorflight/rotorflight-blackbox/icon/rf_icon_128.png
 Terminal=false
 Type=Application
 MimeType=application/x-blackboxlog
