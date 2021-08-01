@@ -30,9 +30,9 @@ const LINUX_INSTALL_DIR = '/opt/rotorflight';
 var nwBuilderOptions = {
     version: '0.54.1',
     files: './dist/**/*',
-    macIcns: './images/bf_icon.icns',
+    macIcns: './images/rf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Rotorflight Blackbox'},
-    winIco: './images/bf_icon.ico',
+    winIco: './images/rf_icon.ico',
 };
 
 //-----------------
