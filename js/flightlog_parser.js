@@ -516,13 +516,23 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isBaseF');
     					$('html').addClass('isCF');
                         $('html').removeClass('isBF');
+                        $('html').removeClass('isRF');
                         $('html').removeClass('isINAV');
+                    break;
+                    case "Rotorflight":
+                        that.sysConfig.firmwareType = FIRMWARE_TYPE_ROTORFLIGHT;
+                        $('html').removeClass('isBaseF');
+                        $('html').removeClass('isCF');
+                        $('html').removeClass('isBF');
+                        $('html').removeClass('isINAV');
+                        $('html').addClass('isRF');
                     break;
                     default:
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_BASEFLIGHT;
                         $('html').addClass('isBaseF');
     					$('html').removeClass('isCF');
                         $('html').removeClass('isBF');
+                        $('html').removeClass('isRF');
                         $('html').removeClass('isINAV');
                 }
             break;
@@ -782,13 +792,15 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isBaseF');
                         $('html').removeClass('isCF');
                         $('html').addClass('isBF');
+                        $('html').removeClass('isRF');
                         $('html').removeClass('isINAV');
                     }
                     else if (matches[1].toLowerCase() === "rotorflight") {
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_ROTORFLIGHT;
                         $('html').removeClass('isBaseF');
                         $('html').removeClass('isCF');
-                        $('html').addClass('isBF');
+                        $('html').removeClass('isBF');
+                        $('html').addClass('isRF');
                         $('html').removeClass('isINAV');
                     }
 
@@ -811,6 +823,7 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isBaseF');
                         $('html').removeClass('isCF');
                         $('html').removeClass('isBF');
+                        $('html').removeClass('isRF');
                         $('html').addClass('isINAV');
                     } else {
 

@@ -781,6 +781,15 @@ html:not(.video-hidden).isBF .view-video {
      color: rgba(158, 100, 0,1);
 }
 
+html.has-analyser-sticks.isRF .view-analyser-sticks,
+html.has-analyser.isRF .view-analyser,
+html.has-table.isRF .view-table,
+html.has-sticks.isRF .view-sticks,
+html.has-craft.isRF .view-craft,
+html:not(.video-hidden).isRF .view-video {
+     color: rgba(0, 79, 128,1);
+}
+
 html.has-analyser-sticks.isCF .view-analyser-sticks,
 html.has-analyser.isCF .view-analyser,
 html.has-table.isCF .view-table,
@@ -1143,6 +1152,14 @@ html.isBF .navbar-logo img {
     margin-left: 0 !important;
 }
 
+html.isRF .navbar-logo img {
+    content: url(".././images/rf_logo_white.svg");
+    width: 250px;
+    height: 35px;
+    margin-top: 5px !important;
+    margin-left: 5px !important;
+}
+
 html.isINAV .navbar-logo img {
 	content: url(".././images/inav_logo_white.png");
 	width: auto;
@@ -1176,6 +1193,11 @@ html.isINAV .navbar-logo img {
 
 html.isBF .navbar-logo span {
     left: -181px;
+    top: 30px;
+}
+
+html.isRF .navbar-logo span {
+    left: -160px;
     top: 30px;
 }
 
@@ -1393,12 +1415,23 @@ html.isBF input[type="checkbox"].ios-switch:checked + div > div {
 
 /* Blue Knob */
 input[type="checkbox"].blue.ios-switch:checked + div > div ,
+html.isRF input[type="checkbox"].ios-switch:checked + div > div {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(8, 80, 172,1);
+}
+
+/* Blue Knob */
+input[type="checkbox"].blue.ios-switch:checked + div > div ,
 html.isINAV input[type="checkbox"].ios-switch:checked + div > div {
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(8, 80, 172,1);
 }
 
 html.isBF .config-graph h4 span:first-child,
 html.isBF .log-graph-config h3 span {
+    background-image: linear-gradient(to bottom,#fff8e9 0,#ffbb00 100%);
+}
+
+html.isRF .config-graph h4 span:first-child,
+html.isRF .log-graph-config h3 span {
     background-image: linear-gradient(to bottom,#fff8e9 0,#ffbb00 100%);
 }
 
