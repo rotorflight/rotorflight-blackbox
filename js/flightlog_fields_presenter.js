@@ -568,7 +568,7 @@ function FlightLogFieldPresenter() {
                 return (value / 100).toFixed(2) + "V" + ", " + (value / 100 / flightLog.getNumCellsEstimate()).toFixed(2) + "V/cell";
 
             case 'amperageLatest':
-                return (value / 100).toFixed(2) + "A" + ", " + (value / 100 / flightLog.getNumMotors()).toFixed(2) + "A/motor";
+                return (value / 100).toFixed(2) + "A";
 
             case 'heading[0]':
             case 'heading[1]':
