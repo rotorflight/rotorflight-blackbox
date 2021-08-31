@@ -78,96 +78,48 @@ var FlightLogParser = function(logData) {
         NEWLINE  = '\n'.charCodeAt(0),
 
         INFLIGHT_ADJUSTMENT_FUNCTIONS = [
-            {
-                name: 'None'
-            },
-            {
-                name: 'RC Rate',
-                scale: 0.01
-            },
-            {
-                name : 'RC Expo',
-                scale: 0.01
-            },
-            {
-                name: 'Throttle Expo',
-                scale: 0.01
-            },
-            {
-                name: 'Pitch & Roll Rate',
-                scale: 0.01
-            },
-            {
-                name: 'Yaw rate',
-                scale: 0.01
-            },
-            {
-                name: 'Pitch & Roll P',
-                scale: 0.1,
-                scalef: 1
-            },
-            {
-                name: 'Pitch & Roll I',
-                scale: 0.001,
-                scalef: 0.1
-            },
-            {
-                name: 'Pitch & Roll D',
-                scalef: 1000
-            },
-            {
-                name: 'Yaw P',
-                scale: 0.1,
-                scalef: 1
-            },
-            {
-                name: 'Yaw I',
-                scale: 0.001,
-                scalef: 0.1
-            },
-            {
-                name: 'Yaw D',
-                scalef: 1000
-            },
-            {
-                name: "Rate Profile"
-            },
-            {
-                name: 'Pitch Rate',
-                scale: 0.01
-            },
-            {
-                name: 'Roll Rate',
-                scale: 0.01
-            },
-            {
-                name: 'Pitch P',
-                scale: 0.1,
-                scalef: 1
-            },
-            {
-                name: 'Pitch I',
-                scale: 0.001,
-                scalef: 0.1
-            },
-            {
-                name: 'Pitch D',
-                scalef: 1000
-            },
-            {
-                name: 'Roll P',
-                scale: 0.1,
-                scalef: 1
-            },
-            {
-                name : 'Roll I',
-                scale: 0.001,
-                scalef: 0.1
-            },
-            {
-                name: 'Roll D',
-                scalef: 1000
-            }
+            { name: 'None',                           },
+            { name: 'Pitch Rate',                     },
+            { nam : 'Roll Rate',                      },
+            { name: 'Yaw Rate',                       },
+            { name: 'Pitch RC Rate',                  },
+            { name: 'Roll RC Rate',                   },
+            { name: 'Yaw RC Rate',                    },
+            { name: 'Pitch RC Expo',  scale: 0.01,    },
+            { name: 'Roll RC Expo',   scale: 0.01,    },
+            { name: 'Yaw RC Expo',    scale: 0.01,    },
+            { name: 'Pitch P-gain',                   },
+            { name: 'Pitch I-gain',                   },
+            { name: 'Pitch D-gain',                   },
+            { name: 'Pitch F-gain',                   },
+            { name: 'Roll P-gain',                    },
+            { name: 'Roll I-gain',                    },
+            { name: 'Roll D-gain',                    },
+            { name: 'Roll F-gain',                    },
+            { name: 'Yaw P-gain',                     },
+            { name: 'Yaw I-gain',                     },
+            { name: 'Yaw D-gain',                     },
+            { name: 'Yaw F-gain',                     },
+            { name: 'Yaw Center',                     },
+            { name: 'Yaw Cyclic FF',                  },
+            { name: 'Yaw Collective FF',              },
+            { name: 'Yaw Impulse FF',                 },
+            { name: 'Rescue Collective',              },
+            { name: 'Angle Level Gain',               },
+            { name: 'Horizon Level Gain',             },
+            { name: 'Acro Trainer Gain',              },
+            { name: 'Governor Gain',                  },
+            { name: 'Governor P-gain',                },
+            { name: 'Governor I-gain',                },
+            { name: 'Governor D-gain',                },
+            { name: 'Governor F-gain',                },
+            { name: 'Governor TTA-gain',              },
+            { name: 'Governor Cyclic Weight',         },
+            { name: 'Governor Collective Weight',     },
+            { name: "Rate Profile"                    },
+            { name: "PID Profile"                     },
+            { name: "OSD Profile"                     },
+            { name: "LED Profile"                     },
         ];
 
     //Private variables:
