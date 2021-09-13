@@ -51,6 +51,7 @@ var
         'HORIZON',
         'PASSTHRU',
         'FAILSAFE',
+        'RESCUE',
         'GPSRESCUE',
         'CAMSTAB',
         'BEEPER',
