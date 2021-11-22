@@ -101,10 +101,13 @@ var FlightLogParser = function(logData) {
             { name: 'Yaw D-gain',                     },
             { name: 'Yaw F-gain',                     },
             { name: 'Yaw Center',                     },
+            { name: 'Yaw CW Stop Gain',               },
+            { name: 'Yaw CCW Stop Gain',              },
             { name: 'Yaw Cyclic FF',                  },
             { name: 'Yaw Collective FF',              },
             { name: 'Yaw Impulse FF',                 },
             { name: 'Rescue Collective',              },
+            { name: 'Rescue Collective Boost',        },
             { name: 'Angle Level Gain',               },
             { name: 'Horizon Level Gain',             },
             { name: 'Acro Trainer Gain',              },
@@ -116,10 +119,10 @@ var FlightLogParser = function(logData) {
             { name: 'Governor TTA-gain',              },
             { name: 'Governor Cyclic Weight',         },
             { name: 'Governor Collective Weight',     },
-            { name: "Rate Profile"                    },
-            { name: "PID Profile"                     },
-            { name: "OSD Profile"                     },
-            { name: "LED Profile"                     },
+            { name: 'Rate Profile'                    },
+            { name: 'Profile'                         },
+            { name: 'OSD Profile'                     },
+            { name: 'LED Profile'                     },
         ];
 
     //Private variables:
