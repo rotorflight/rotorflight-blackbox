@@ -414,6 +414,13 @@ function FlightLogFieldPresenter() {
             'debug[2]':'Altitude Adjustment',
             'debug[3]':'Rescue State',
         },
+        'YAW_PRECOMP' : {
+            'debug[all]':'Yaw Precompensation',
+            'debug[0]':'Cyclic Feedforward',
+            'debug[1]':'Collective Feedforward',
+            'debug[2]':'Collective Impulse Feedforward',
+            'debug[3]':'Total Precompensation',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -833,6 +840,8 @@ function FlightLogFieldPresenter() {
                             return value.toFixed(0);
                         }
                         break;
+                case 'YAW_PRECOMP':
+                    return (value / 10).toFixed(1) + '%';
             }
             return value.toFixed(0);
         }
