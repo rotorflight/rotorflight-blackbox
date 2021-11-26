@@ -2,11 +2,19 @@
 ## Makefile for Rotorflight Blackbox
 ##
 
+# Default version number
+SEMVER ?= 0.2.0-devel
 
-.PHONY: all apps debug release init clean realclean distclean
+
+## Rules
+
+.PHONY: all init apps debug release version clean realclean distclean
 
 
 all: apps
+
+init:
+	yarn install
 
 apps:
 	yarn gulp apps
@@ -17,8 +25,8 @@ debug:
 release:
 	yarn gulp release
 
-init:
-	yarn install
+version:
+	sed -i -e 's/\("version":[ \t]*\)".*"/\1"$(SEMVER)"/' package.json
 
 
 ## Cleaning

@@ -535,7 +535,7 @@ function release_rpm(arch, appDirectory, done) {
 
     var options = {
              name: pkg.name,
-             version: pkg.version,
+             version: pkg.version.replace('-','_'),
              buildArch: getLinuxPackageArch('rpm', arch),
              vendor: pkg.author,
              summary: pkg.description,
