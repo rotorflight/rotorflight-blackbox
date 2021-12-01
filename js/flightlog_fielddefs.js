@@ -400,6 +400,77 @@ var
         "FF_INTERPOLATED",
     ]),
 
+    DEBUG_MODE_RF_4_2 = makeReadOnly([
+        "NONE",
+        "CYCLETIME",
+        "BATTERY",
+        "GYRO",
+        "ACCELEROMETER",
+        "PIDLOOP",
+        "GYRO_SCALED",
+        "RC_INTERPOLATION",
+        "ANGLERATE",
+        "ESC_SENSOR",
+        "SCHEDULER",
+        "STACK",
+        "ESC_SENSOR_RPM",
+        "ESC_SENSOR_TMP",
+        "ALTITUDE",
+        "FFT",
+        "FFT_TIME",
+        "FFT_FREQ",
+        "RX_FRSKY_SPI",
+        "RX_SFHSS_SPI",
+        "GYRO_RAW",
+        "DUAL_GYRO_RAW",
+        "DUAL_GYRO_DIFF",
+        "MAX7456_SIGNAL",
+        "MAX7456_SPICLOCK",
+        "SBUS",
+        "FPORT",
+        "RANGEFINDER",
+        "RANGEFINDER_QUALITY",
+        "LIDAR_TF",
+        "ADC_INTERNAL",
+        "GOVERNOR",
+        "SDIO",
+        "CURRENT_SENSOR",
+        "USB",
+        "SMARTAUDIO",
+        "RTH",
+        "ITERM_RELAX",
+        "ACRO_TRAINER",
+        "RC_SMOOTHING",
+        "RX_SIGNAL_LOSS",
+        "RC_SMOOTHING_RATE",
+        "UNUSED_42",
+        "DYN_LPF",
+        "RX_SPECTRUM_SPI",
+        "DSHOT_RPM_TELEMETRY",
+        "RPM_FILTER",
+        "RPM_SOURCE",
+        "AC_CORRECTION",
+        "AC_ERROR",
+        "DUAL_GYRO_SCALED",
+        "DSHOT_RPM_ERRORS",
+        "CRSF_LINK_STATISTICS_UPLINK",
+        "CRSF_LINK_STATISTICS_PWR",
+        "CRSF_LINK_STATISTICS_DOWN",
+        "BARO",
+        "GPS_RESCUE_THROTTLE_PID",
+        "FREQ_SENSOR",
+        "FF_LIMIT",
+        "FF_INTERPOLATED",
+        "BLACKBOX_OUTPUT",
+        "GYRO_SAMPLE",
+        "RX_TIMING",
+        "YAW_PRECOMP",
+        "USER1",
+        "USER2",
+        "USER3",
+        "USER4",
+    ]),
+
     SUPER_EXPO_YAW = makeReadOnly([
         "OFF",
         "ON",
@@ -569,6 +640,13 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
             // Add modifications here
         }
         FLIGHT_LOG_FEATURES = makeReadOnly(FLIGHT_LOG_FEATURES);
+
+        // Debug names
+        if (semver.gte(firmwareVersion, '4.2.0')) {
+            DEBUG_MODE = DEBUG_MODE_RF_4_2.slice();
+            // Add modifications here
+        }
+        DEBUG_MODE = makeReadOnly(DEBUG_MODE);
 
     } else if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
 
