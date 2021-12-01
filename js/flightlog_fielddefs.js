@@ -5,7 +5,7 @@ function makeReadOnly(x) {
     if (Object.freeze) {
         return Object.freeze(x);
     }
-    
+
     // Otherwise a no-op
     return x;
 }
@@ -14,73 +14,74 @@ function makeReadOnly(x) {
 const MAX_MOTOR_NUMBER = 4;
 
 // Fields definitions for lists
-var 
+var
     FlightLogEvent = makeReadOnly({
         SYNC_BEEP: 0,
-        
+
         AUTOTUNE_CYCLE_START: 10,
         AUTOTUNE_CYCLE_RESULT: 11,
         AUTOTUNE_TARGETS: 12,
         INFLIGHT_ADJUSTMENT: 13,
         LOGGING_RESUME: 14,
         DISARM: 15,
-        
+
         GTUNE_CYCLE_RESULT: 20,
         FLIGHT_MODE: 30,
         TWITCH_TEST: 40, // Feature for latency testing
-        
+
         CUSTOM : 250, // Virtual Event Code - Never part of Log File.
         CUSTOM_BLANK : 251, // Virtual Event Code - Never part of Log File. - No line shown
+
         LOG_END: 255
     }),
 
     // Add a general axis index.
     AXIS = makeReadOnly({
-            ROLL:  0,
-            PITCH: 1,
-            YAW:   2
+        ROLL:  0,
+        PITCH: 1,
+        YAW:   2
     }),
 
     FLIGHT_LOG_FLIGHT_MODE_NAME = [],
     
     FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3 = makeReadOnly([
-            'ARM',
-            'ANGLE',
-            'HORIZON',
-            'BARO',
-            'ANTIGRAVITY',
-            'MAG',
-            'HEADFREE',
-            'HEADADJ',
-            'CAMSTAB',
-            'CAMTRIG',
-            'GPSHOME',
-            'GPSHOLD',
-            'PASSTHRU',
-            'BEEPER',
-            'LEDMAX',
-            'LEDLOW',
-            'LLIGHTS',
-            'CALIB',
-            'GOV',
-            'OSD',
-            'TELEMETRY',
-            'GTUNE',
-            'SONAR',
-            'SERVO1',
-            'SERVO2',
-            'SERVO3',
-            'BLACKBOX',
-            'FAILSAFE',
-            'AIRMODE',
-            '3DDISABLE',
-            'FPVANGLEMIX',
-            'BLACKBOXERASE',
-            'CAMERA1',
-            'CAMERA2',
-            'CAMERA3',
-            'FLIPOVERAFTERCRASH',
-            'PREARM',
+        'ARM',
+        'ANGLE',
+        'HORIZON',
+        'BARO',
+        'ANTIGRAVITY',
+        'MAG',
+        'HEADFREE',
+        'HEADADJ',
+        'CAMSTAB',
+        'CAMTRIG',
+        'GPSHOME',
+        'GPSHOLD',
+        'PASSTHRU',
+        'BEEPER',
+        'LEDMAX',
+        'LEDLOW',
+        'LLIGHTS',
+        'CALIB',
+        'GOV',
+        'OSD',
+        'TELEMETRY',
+        'GTUNE',
+        'SONAR',
+        'SERVO1',
+        'SERVO2',
+        'SERVO3',
+        'BLACKBOX',
+        'FAILSAFE',
+        'AIRMODE',
+        '3DDISABLE',
+        'FPVANGLEMIX',
+        'BLACKBOXERASE',
+        'CAMERA1',
+        'CAMERA2',
+        'CAMERA3',
+        'FLIPOVERAFTERCRASH',
+        'PREARM',
     ]),
 
     FLIGHT_LOG_FLIGHT_MODE_NAME_POST_3_3 = makeReadOnly([
@@ -135,80 +136,80 @@ var
     ]),
 
     FLIGHT_LOG_FEATURES = makeReadOnly([
-            'RX_PPM',
-            'VBAT',
-            'INFLIGHT_ACC_CAL',
-            'RX_SERIAL',
-            'MOTOR_STOP',
-            'SERVO_TILT',
-            'SOFTSERIAL',
-            'GPS',
-            'FAILSAFE',
-            'SONAR',
-            'TELEMETRY',
-            'CURRENT_METER',
-            '3D',
-            'RX_PARALLEL_PWM',
-            'RX_MSP',
-            'RSSI_ADC',
-            'LED_STRIP',
-            'DISPLAY',
-            'ONESHOT125',
-            'BLACKBOX',
-            'CHANNEL_FORWARDING',
-            'TRANSPONDER',
-            'AIRMODE',
-            'SUPEREXPO_RATES'
+        'RX_PPM',
+        'VBAT',
+        'INFLIGHT_ACC_CAL',
+        'RX_SERIAL',
+        'MOTOR_STOP',
+        'SERVO_TILT',
+        'SOFTSERIAL',
+        'GPS',
+        'FAILSAFE',
+        'SONAR',
+        'TELEMETRY',
+        'CURRENT_METER',
+        '3D',
+        'RX_PARALLEL_PWM',
+        'RX_MSP',
+        'RSSI_ADC',
+        'LED_STRIP',
+        'DISPLAY',
+        'ONESHOT125',
+        'BLACKBOX',
+        'CHANNEL_FORWARDING',
+        'TRANSPONDER',
+        'AIRMODE',
+        'SUPEREXPO_RATES'
     ]),
 
     PID_CONTROLLER_TYPE = ([
-            'UNUSED',
-            'MWREWRITE',
-            'LUXFLOAT'
+        'UNUSED',
+        'MWREWRITE',
+        'LUXFLOAT'
     ]),
 
     PID_DELTA_TYPE = makeReadOnly([
-            'ERROR',
-            'MEASUREMENT'
+        'ERROR',
+        'MEASUREMENT'
     ]),
 
     OFF_ON = makeReadOnly([
-            "OFF",
-            "ON"
+        "OFF",
+        "ON"
     ]),
 
     FAST_PROTOCOL = makeReadOnly([
-            "PWM",
-            "ONESHOT125",
-            "ONESHOT42", 
-            "MULTISHOT",
-            "BRUSHED",
-            "DSHOT150",
-            "DSHOT300",
-            "DSHOT600",
-            "DSHOT1200",
-            "PROSHOT1000",
+        "PWM",
+        "ONESHOT125",
+        "ONESHOT42",
+        "MULTISHOT",
+        "BRUSHED",
+        "DSHOT150",
+        "DSHOT300",
+        "DSHOT600",
+        "DSHOT1200",
+        "PROSHOT1000",
     ]),
 
     MOTOR_SYNC = makeReadOnly([
-            "SYNCED",
-            "UNSYNCED" 
+        "SYNCED",
+        "UNSYNCED"
     ]),
 
     SERIALRX_PROVIDER = makeReadOnly([
-			"SPEK1024",
-			"SPEK2048",
-			"SBUS",
-			"SUMD",
-			"SUMH",
-			"XB-B",
-			"XB-B-RJ01",
-			"IBUS",
-			"JETIEXBUS",
-            "CRSF",
-            "SRXL",
-            "CUSTOM",
-            "FPORT",
+        "SPEK1024",
+        "SPEK2048",
+        "SBUS",
+        "SUMD",
+        "SUMH",
+        "XB-B",
+        "XB-B-RJ01",
+        "IBUS",
+        "JETIEXBUS",
+        "CRSF",
+        "SRXL",
+        "CUSTOM",
+        "FPORT",
     ]),
 
     ANTI_GRAVITY_MODE = makeReadOnly([
@@ -217,17 +218,17 @@ var
     ]),
 
     RC_SMOOTHING_TYPE = makeReadOnly([
-        "INTERPOLATION", 
+        "INTERPOLATION",
         "FILTER"
     ]),
 
     RC_SMOOTHING_INPUT_TYPE = makeReadOnly([
-        "PT1", 
+        "PT1",
         "BIQUAD"
     ]),
 
     RC_SMOOTHING_DERIVATIVE_TYPE = makeReadOnly([
-        "PT1", 
+        "PT1",
         "BIQUAD"
     ]),
 
@@ -237,17 +238,17 @@ var
     ]),
 
     RC_SMOOTHING_DEBUG_AXIS = makeReadOnly([
-        "ROLL", 
-        "PITCH", 
-        "YAW", 
+        "ROLL",
+        "PITCH",
+        "YAW",
         "THROTTLE"
     ]),
 
     RC_INTERPOLATION = makeReadOnly([
-            "OFF",
-            "DEFAULT",
-            "AUTO",
-            "MANUAL"             
+        "OFF",
+        "DEFAULT",
+        "AUTO",
+        "MANUAL"
     ]),
 
     FILTER_TYPE = makeReadOnly([
@@ -260,133 +261,133 @@ var
     DEBUG_MODE = [],
 
     DEBUG_MODE_COMPLETE = makeReadOnly([
-            "NONE",
-            "CYCLETIME",
-            "BATTERY",
-            "GYRO",
-            "ACCELEROMETER",
-            "MIXER",
-            "AIRMODE",
-            "PIDLOOP",
-            "NOTCH",
-            "RC_INTERPOLATION",
-            "VELOCITY",
-            "DTERM_FILTER",
-            "ANGLERATE",
-            "ESC_SENSOR",
-            "SCHEDULER",
-            "STACK",
-            "ESC_SENSOR_RPM",
-            "ESC_SENSOR_TMP",
-            "ALTITUDE",
-            "FFT",
-            "FFT_TIME",
-            "FFT_FREQ",
-            "RX_FRSKY_SPI",
-            "GYRO_RAW",
-            "DUAL_GYRO",
-            "DUAL_GYRO_RAW",
-            "DUAL_GYRO_COMBINED",
-            "DUAL_GYRO_DIFF",
-            "MAX7456_SIGNAL",
-            "MAX7456_SPICLOCK",
-            "SBUS",
-            "FPORT",
-            "RANGEFINDER",
-            "RANGEFINDER_QUALITY",
-            "LIDAR_TF",
-            "ADC_INTERNAL",
-            "RUNAWAY_TAKEOFF",
-            "SDIO",
-            "CURRENT_SENSOR",
-            "USB",
-            "SMARTAUDIO",
-            "RTH",
-            "ITERM_RELAX",
-            "ACRO_TRAINER",
-            "RC_SMOOTHING",
-            "RX_SIGNAL_LOSS",
-            "RC_SMOOTHING_RATE",
-            "ANTI_GRAVITY",
-            "DYN_LPF",
-            "RX_SPECTRUM_SPI",
-            "DSHOT_RPM_TELEMETRY",
-            "RPM_FILTER",
-            "D_MIN",
-            "AC_CORRECTION",
-            "AC_ERROR",
-            "DUAL_GYRO_SCALED",
-            "DSHOT_RPM_ERRORS",
-            "CRSF_LINK_STATISTICS_UPLINK",
-            "CRSF_LINK_STATISTICS_PWR",
-            "CRSF_LINK_STATISTICS_DOWN",
-            "BARO",
-            "GPS_RESCUE_THROTTLE_PID",
-            "DYN_IDLE",
-            "FF_LIMIT",
-            "FF_INTERPOLATED",
+        "NONE",
+        "CYCLETIME",
+        "BATTERY",
+        "GYRO",
+        "ACCELEROMETER",
+        "MIXER",
+        "AIRMODE",
+        "PIDLOOP",
+        "NOTCH",
+        "RC_INTERPOLATION",
+        "VELOCITY",
+        "DTERM_FILTER",
+        "ANGLERATE",
+        "ESC_SENSOR",
+        "SCHEDULER",
+        "STACK",
+        "ESC_SENSOR_RPM",
+        "ESC_SENSOR_TMP",
+        "ALTITUDE",
+        "FFT",
+        "FFT_TIME",
+        "FFT_FREQ",
+        "RX_FRSKY_SPI",
+        "GYRO_RAW",
+        "DUAL_GYRO",
+        "DUAL_GYRO_RAW",
+        "DUAL_GYRO_COMBINED",
+        "DUAL_GYRO_DIFF",
+        "MAX7456_SIGNAL",
+        "MAX7456_SPICLOCK",
+        "SBUS",
+        "FPORT",
+        "RANGEFINDER",
+        "RANGEFINDER_QUALITY",
+        "LIDAR_TF",
+        "ADC_INTERNAL",
+        "RUNAWAY_TAKEOFF",
+        "SDIO",
+        "CURRENT_SENSOR",
+        "USB",
+        "SMARTAUDIO",
+        "RTH",
+        "ITERM_RELAX",
+        "ACRO_TRAINER",
+        "RC_SMOOTHING",
+        "RX_SIGNAL_LOSS",
+        "RC_SMOOTHING_RATE",
+        "ANTI_GRAVITY",
+        "DYN_LPF",
+        "RX_SPECTRUM_SPI",
+        "DSHOT_RPM_TELEMETRY",
+        "RPM_FILTER",
+        "D_MIN",
+        "AC_CORRECTION",
+        "AC_ERROR",
+        "DUAL_GYRO_SCALED",
+        "DSHOT_RPM_ERRORS",
+        "CRSF_LINK_STATISTICS_UPLINK",
+        "CRSF_LINK_STATISTICS_PWR",
+        "CRSF_LINK_STATISTICS_DOWN",
+        "BARO",
+        "GPS_RESCUE_THROTTLE_PID",
+        "DYN_IDLE",
+        "FF_LIMIT",
+        "FF_INTERPOLATED",
     ]),
 
     SUPER_EXPO_YAW = makeReadOnly([
-            "OFF",
-            "ON",
-            "ALWAYS"
+        "OFF",
+        "ON",
+        "ALWAYS"
     ]),
 
     DTERM_DIFFERENTIATOR = makeReadOnly([
-            "STANDARD",
-            "ENHANCED"
+        "STANDARD",
+        "ENHANCED"
     ]),
 
     GYRO_LPF = makeReadOnly([
-            "OFF",
-            "188HZ",
-            "98HZ",
-            "42HZ",
-            "20HZ",
-            "10HZ",
-            "5HZ",
-            "EXPERIMENTAL"
+        "OFF",
+        "188HZ",
+        "98HZ",
+        "42HZ",
+        "20HZ",
+        "10HZ",
+        "5HZ",
+        "EXPERIMENTAL"
     ]),
 
     GYRO_HARDWARE_LPF = makeReadOnly([
-            "NORMAL",
-            "EXPERIMENTAL",
-            "1KHZ_SAMPLING"
+        "NORMAL",
+        "EXPERIMENTAL",
+        "1KHZ_SAMPLING"
     ]),
 
     GYRO_32KHZ_HARDWARE_LPF = makeReadOnly([
-            "NORMAL",
-            "EXPERIMENTAL"
+        "NORMAL",
+        "EXPERIMENTAL"
     ]),
 
     ACC_HARDWARE = makeReadOnly([
-	        "AUTO",
-	        "NONE",
-	        "ADXL345",
-	        "MPU6050",
-	        "MMA8452",
-	        "BMA280",
-	        "LSM303DLHC",
-	        "MPU6000",
-	        "MPU6500",
-	        "FAKE"
+        "AUTO",
+        "NONE",
+        "ADXL345",
+        "MPU6050",
+        "MMA8452",
+        "BMA280",
+        "LSM303DLHC",
+        "MPU6000",
+        "MPU6500",
+        "FAKE"
     ]),
 
     BARO_HARDWARE = makeReadOnly([
-            "AUTO",
-            "NONE",
-            "BMP085",
-            "MS5611",
-            "BMP280"
+        "AUTO",
+        "NONE",
+        "BMP085",
+        "MS5611",
+        "BMP280"
     ]),
 
     MAG_HARDWARE = makeReadOnly([
-            "AUTO",
-            "NONE",
-            "HMC5883",
-            "AK8975",
-            "AK8963"
+        "AUTO",
+        "NONE",
+        "HMC5883",
+        "AK8975",
+        "AK8963"
     ]),
 
     FLIGHT_LOG_FLIGHT_STATE_NAME = makeReadOnly([
@@ -396,7 +397,7 @@ var
         "SMALL_ANGLE",
         "FIXED_WING"
     ]),
-    
+
     FLIGHT_LOG_FAILSAFE_PHASE_NAME = makeReadOnly([
         "IDLE",
         "RX_LOSS_DETECTED",
@@ -417,9 +418,9 @@ var
     ITERM_RELAX = makeReadOnly([
         "OFF",
         "RP",
-        "RPY", 
+        "RPY",
         "RP_INC",
-        "RPY_INC", 
+        "RPY_INC",
     ]),
 
     ITERM_RELAX_TYPE = makeReadOnly([
