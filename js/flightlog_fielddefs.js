@@ -43,7 +43,7 @@ var
     }),
 
     FLIGHT_LOG_FLIGHT_MODE_NAME = [],
-    
+
     FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3 = makeReadOnly([
         'ARM',
         'ANGLE',
@@ -133,6 +133,40 @@ var
         'ACROTRAINER',
         'VTXCONTROLDISABLE',
         'LAUNCHCONTROL',
+    ]),
+
+    FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_2 = makeReadOnly([
+        'ARM',
+        'ANGLE',
+        'HORIZON',
+        'PASSTHRU',
+        'FAILSAFE',
+        'RESCUE',
+        'GPSRESCUE',
+        'CAMSTAB',
+        'BEEPER',
+        'LEDLOW',
+        'CALIB',
+        'OSD',
+        'TELEMETRY',
+        'SERVO1',
+        'SERVO2',
+        'SERVO3',
+        'BLACKBOX',
+        'BLACKBOXERASE',
+        'CAMERA1',
+        'CAMERA2',
+        'CAMERA3',
+        'PREARM',
+        'VTXPITMODE',
+        'PARALYZE',
+        'USER1',
+        'USER2',
+        'USER3',
+        'USER4',
+        'PIDAUDIO',
+        'ACROTRAINER',
+        'VTXCONTROLDISABLE',
     ]),
 
     FLIGHT_LOG_FEATURES = makeReadOnly([
@@ -486,6 +520,12 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
 
     if(firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) {
 
+        // Flight mode names
+        if (semver.gte(firmwareVersion, '4.2.0')) {
+            FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_2.slice();
+            // Add modifications here
+        }
+        FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
     } else if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
 
