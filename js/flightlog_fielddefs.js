@@ -169,7 +169,9 @@ var
         'VTXCONTROLDISABLE',
     ]),
 
-    FLIGHT_LOG_FEATURES = makeReadOnly([
+    FLIGHT_LOG_FEATURES = [],
+
+    FLIGHT_LOG_FEATURES_BF = makeReadOnly([
         'RX_PPM',
         'VBAT',
         'INFLIGHT_ACC_CAL',
@@ -194,6 +196,40 @@ var
         'TRANSPONDER',
         'AIRMODE',
         'SUPEREXPO_RATES'
+    ]),
+
+    FLIGHT_LOG_FEATURES_RF_4_2 = makeReadOnly([
+        'RX_PPM',
+        'UNUSED1',
+        'INFLIGHT_ACC_CAL',
+        'RX_SERIAL',
+        'UNUSED4',
+        'UNUSED5',
+        'SOFTSERIAL',
+        'GPS',
+        'UNUSED8',
+        'SONAR',
+        'TELEMETRY',
+        'UNUSED11',
+        'UNUSED12',
+        'RX_PARALLEL_PWM',
+        'RX_MSP',
+        'RSSI_ADC',
+        'LED_STRIP',
+        'DISPLAY',
+        'OSD',
+        'UNUSED19',
+        'UNUSED20',
+        'UNUSED21',
+        'UNUSED22',
+        'UNUSED23',
+        'UNUSED24',
+        'RX_SPI',
+        'GOVERNOR',
+        'ESC_SENSOR',
+        'FREQ_SENSOR',
+        'DYNAMIC_FILTER',
+        'RPM_FILTER',
     ]),
 
     PID_CONTROLLER_TYPE = ([
@@ -527,6 +563,13 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
+        // Features
+        if (semver.gte(firmwareVersion, '4.2.0')) {
+            FLIGHT_LOG_FEATURES = FLIGHT_LOG_FEATURES_RF_4_2.slice();
+            // Add modifications here
+        }
+        FLIGHT_LOG_FEATURES = makeReadOnly(FLIGHT_LOG_FEATURES);
+
     } else if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
 
         // Debug names
@@ -573,8 +616,11 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
+        FLIGHT_LOG_FEATURES = FLIGHT_LOG_FEATURES_BF;
+
     } else {
         DEBUG_MODE = DEBUG_MODE_COMPLETE;
+        FLIGHT_LOG_FEATURES = FLIGHT_LOG_FEATURES_BF;
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_PRE_3_3.slice(0);
 
@@ -583,5 +629,6 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         }
 
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
+
     }
 }
