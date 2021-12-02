@@ -6,7 +6,8 @@ var FlightLogIndex,
     FIRMWARE_TYPE_BASEFLIGHT = 1,
     FIRMWARE_TYPE_CLEANFLIGHT = 2,
     FIRMWARE_TYPE_BETAFLIGHT = 3,
-    FIRMWARE_TYPE_INAV = 4;
+    FIRMWARE_TYPE_INAV = 4,
+    FIRMWARE_TYPE_ROTORFLIGHT = 5;
 
 var FlightLogParser = function(logData) {
     //Private constants:
@@ -573,15 +574,25 @@ var FlightLogParser = function(logData) {
                     case "Cleanflight":
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_CLEANFLIGHT;
                         $('html').removeClass('isBaseF');
-    					$('html').addClass('isCF');
+                        $('html').addClass('isCF');
+                        $('html').removeClass('isBF');
+                        $('html').removeClass('isRF');
+                        $('html').removeClass('isINAV');
+                    break;
+                    case "Rotorflight":
+                        that.sysConfig.firmwareType = FIRMWARE_TYPE_ROTORFLIGHT;
+                        $('html').removeClass('isBaseF');
+                        $('html').removeClass('isCF');
                         $('html').removeClass('isBF');
                         $('html').removeClass('isINAV');
+                        $('html').addClass('isRF');
                     break;
                     default:
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_BASEFLIGHT;
                         $('html').addClass('isBaseF');
-    					$('html').removeClass('isCF');
+                        $('html').removeClass('isCF');
                         $('html').removeClass('isBF');
+                        $('html').removeClass('isRF');
                         $('html').removeClass('isINAV');
                 }
             break;
@@ -866,16 +877,25 @@ var FlightLogParser = function(logData) {
 
                 //TODO Unify this somehow...
 
-                // Extract the firmware revision in case of Betaflight/Raceflight/Cleanfligh 2.x/Other
+                // Extract the firmware revision in case of Rotorflight/Betaflight/Raceflight/Cleanfligh 2.x/Other
                 var matches = fieldValue.match(/(.*flight).* (\d+)\.(\d+)(\.(\d+))*/i);
                 if(matches!=null) {
 
-                    // Detecting Betaflight requires looking at the revision string
-                    if (matches[1] === "Betaflight") {
+                    // Detecting requires looking at the revision string
+                    if (matches[1].toLowerCase() === "betaflight") {
                         that.sysConfig.firmwareType = FIRMWARE_TYPE_BETAFLIGHT;
                         $('html').removeClass('isBaseF');
                         $('html').removeClass('isCF');
                         $('html').addClass('isBF');
+                        $('html').removeClass('isRF');
+                        $('html').removeClass('isINAV');
+                    }
+                    else if (matches[1].toLowerCase() === "rotorflight") {
+                        that.sysConfig.firmwareType = FIRMWARE_TYPE_ROTORFLIGHT;
+                        $('html').removeClass('isBaseF');
+                        $('html').removeClass('isCF');
+                        $('html').removeClass('isBF');
+                        $('html').addClass('isRF');
                         $('html').removeClass('isINAV');
                     }
 
@@ -898,6 +918,7 @@ var FlightLogParser = function(logData) {
                         $('html').removeClass('isBaseF');
                         $('html').removeClass('isCF');
                         $('html').removeClass('isBF');
+                        $('html').removeClass('isRF');
                         $('html').addClass('isINAV');
                     } else {
 
