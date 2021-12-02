@@ -435,16 +435,18 @@ function firmwareGreaterOrEqual(sysConfig, bf_version, cf_version) {
      * Check if firmware version is higher or equal to requested version
      *
      * sysConfig            System config structure
-     * bf_version           Betaflight version to check, e.g. '3.1.0' (string)
+     * bf_version           Betaflight/Rotorflight version to check, e.g. '3.1.0' (string)
      * cf_version           Cleanflight version to check, e.g. '2.3.0' (optional, string)
      *
      * returns              True when firmware version is higher or equal to requested version
      *                      False when firmware version is lower than the requested version
      ***/
     if (cf_version === undefined) {
-        return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, bf_version));
+        return (sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, bf_version)) ||
+               (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version));
     } else {
-        return (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version)) || 
+        return (sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, bf_version)) ||
+               (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, bf_version)) ||
                (sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(sysConfig.firmwareVersion, cf_version));
     }
 }

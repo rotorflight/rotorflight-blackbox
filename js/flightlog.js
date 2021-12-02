@@ -645,7 +645,8 @@ function FlightLog(logData) {
                     var fieldIndexRcCommands = fieldIndex;
 
                     // Since version 4.0 is not more a virtual field. Copy the real field to the virtual one to maintain the name, workspaces, etc.
-                    if (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(sysConfig.firmwareVersion, '4.0.0')) {
+                    if ((sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+                        (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.0.0'))) {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] = srcFrame[setpoint[axis]];
@@ -1222,7 +1223,8 @@ FlightLog.prototype.getPIDPercentage = function(value) {
 
 
 FlightLog.prototype.getReferenceVoltageMillivolts = function() {
-    if(this.getSysConfig().firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(this.getSysConfig().firmwareVersion, '4.0.0')) {
+    if ((this.getSysConfig().firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+        (this.getSysConfig().firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(this.getSysConfig().firmwareVersion, '4.0.0'))) {
         return this.getSysConfig().vbatref * 10;
     } else if((this.getSysConfig().firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(this.getSysConfig().firmwareVersion, '3.1.0')) ||
        (this.getSysConfig().firmwareType == FIRMWARE_TYPE_CLEANFLIGHT && semver.gte(this.getSysConfig().firmwareVersion, '2.0.0'))) {
