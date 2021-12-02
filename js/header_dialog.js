@@ -502,6 +502,7 @@ function HeaderDialog(dialog, onSave) {
       $('h5.modal-title-craft').text((sysConfig['Craft name'] != null) ? ` Name : ${sysConfig['Craft name']}` : '');
 
 		switch(sysConfig.firmwareType) {
+			case FIRMWARE_TYPE_ROTORFLIGHT:
 			case FIRMWARE_TYPE_BETAFLIGHT:
 			case FIRMWARE_TYPE_CLEANFLIGHT:
 				$('.header-dialog-toggle').hide(); // selection button is not required

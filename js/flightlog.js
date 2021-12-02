@@ -1013,8 +1013,8 @@ function FlightLog(logData) {
 
         parser.parseHeader(logIndexes.getLogBeginOffset(index), logIndexes.getLogBeginOffset(index + 1));
 
-        // Hide the header button if we are not using betaflight
         switch (this.getSysConfig().firmwareType) {
+            case FIRMWARE_TYPE_ROTORFLIGHT:
             case FIRMWARE_TYPE_BETAFLIGHT:
             case FIRMWARE_TYPE_INAV:
                 $(".open-header-dialog").show()
