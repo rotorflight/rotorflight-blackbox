@@ -536,6 +536,10 @@ function HeaderDialog(dialog, onSave) {
 					'LEGACY',
 					'BETAFLIGHT'
 				])
+                } else if (sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) {
+			PID_CONTROLLER_TYPE = ([
+					'ROTORFLIGHT',
+				])
 		} else {
 			PID_CONTROLLER_TYPE = ([
 					'UNUSED',
@@ -624,7 +628,8 @@ function HeaderDialog(dialog, onSave) {
         setParameter('deadband'					,sysConfig.deadband,0);
         setParameter('yaw_deadband'				,sysConfig.yaw_deadband,0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.4.0')) {
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+            (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '3.4.0'))) {
             renderSelect('gyro_hardware_lpf'       ,sysConfig.gyro_lpf, GYRO_HARDWARE_LPF);
 
         } else {
@@ -714,7 +719,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('rcSmoothingActiveCutoffsThr'  ,"0", 0);
        }
 
-        // D_MIN and rate_limits
+        // D_MIN
         if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
             setParameter('d_min_roll'   , sysConfig.d_min[0]     , 0);
             setParameter('d_min_pitch'  , sysConfig.d_min[1]     , 0);
@@ -722,13 +727,18 @@ function HeaderDialog(dialog, onSave) {
             setParameter('d_min_gain'   , sysConfig.d_min_gain   , 0);
             setParameter('d_min_advance', sysConfig.d_min_advance, 0);
             $("#d_min").show();
+        } else {
+            $("#d_min").hide();
+        }
 
+        // rate_limits
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+            (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0'))) {
             setParameter('rate_limits_roll'  , sysConfig.rate_limits[0], 0);
             setParameter('rate_limits_pitch' , sysConfig.rate_limits[1], 0);
             setParameter('rate_limits_yaw'   , sysConfig.rate_limits[2], 0);
             $("#rate_limits").show();
         } else {
-            $("#d_min").hide();
             $("#rate_limits").hide();
         }
 
