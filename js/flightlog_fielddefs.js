@@ -187,8 +187,8 @@ var
         "DSHOT150",
         "DSHOT300",
         "DSHOT600",
-        "DSHOT1200",
         "PROSHOT1000",
+        "DISABLED",
     ]),
 
     MOTOR_SYNC = makeReadOnly([
@@ -210,6 +210,7 @@ var
         "SRXL",
         "CUSTOM",
         "FPORT",
+        "SRXL2",
     ]),
 
     ANTI_GRAVITY_MODE = makeReadOnly([
@@ -228,6 +229,7 @@ var
     ]),
 
     RC_SMOOTHING_DERIVATIVE_TYPE = makeReadOnly([
+        "OFF",
         "PT1",
         "BIQUAD"
     ]),
