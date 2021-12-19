@@ -635,7 +635,7 @@ function FlightLog(logData) {
                     var fieldIndexRcCommands = fieldIndex;
 
                     // Since version 4.0 is not more a virtual field. Copy the real field to the virtual one to maintain the name, workspaces, etc.
-                    if ((sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+                    if ((sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.2.12')) ||
                         (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.0.0'))) {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
