@@ -49,7 +49,7 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#ExecutableFileName}"; ValueT
 Filename: {app}\{#ExecutableFileName}; Description: {cm:LaunchProgram, {#ApplicationName}}; Flags: nowait postinstall skipifsilent
 
 [Setup]
-AppId=610b3d74-ca89-4533-9490-128c40143493
+AppId=33fdac19-b15b-4c6a-97ff-3a1dad32b28c
 AppName={#ApplicationName}
 AppPublisher={#CompanyName}
 AppPublisherURL={#CompanyUrl}
