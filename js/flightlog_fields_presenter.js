@@ -297,10 +297,10 @@ function FlightLogFieldPresenter() {
         },
         'RPM_FILTER' : {
             'debug[all]':'RPM Filter', 
-            'debug[0]':'Motor 1 - rpmFilter',
-            'debug[1]':'Motor 2 - rpmFilter',
-            'debug[2]':'Motor 3 - rpmFilter',
-            'debug[3]':'Motor 4 - rpmFilter',
+            'debug[0]':'Filter Bank',
+            'debug[1]':'Motor Index',
+            'debug[2]':'Motor RPM',
+            'debug[3]':'Filter Hz',
         },
         'D_MIN' : {
             'debug[all]':'D_MIN',
@@ -796,6 +796,16 @@ function FlightLogFieldPresenter() {
                 case 'DSHOT_RPM_TELEMETRY':
                     return (value * 200 / flightLog.getSysConfig()['motor_poles']).toFixed(0) + " rpm";
                 case 'RPM_FILTER':
+                    switch (fieldName) {
+                        case 'debug[0]': // bank index
+                        case 'debug[1]': // motor index
+                            return value.toFixed(0);
+                        case 'debug[2]': // motor rpm
+                            return value.toFixed(0) + 'rpm';
+                        case 'debug[3]': // filter Hz
+                            return (value / 10).toFixed(1) + 'Hz';
+                    }
+                    break;
                     return value.toFixed(0) + "Hz";
                 case 'D_MIN':
                     switch (fieldName) {
