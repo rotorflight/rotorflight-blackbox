@@ -26,19 +26,32 @@ function BlackboxLogViewer() {
         alert("Your browser does not support the APIs required for reading log files.");
     }
     
+    const GRAPH_ZOOM_LEVEL = [
+            1,
+            2.5,
+            5,
+            10,
+            25,
+            50,
+            100,
+            250,
+            500,
+            1000,
+    ];
+
+    const
+        GRAPH_MIN_ZOOM = 0,
+        GRAPH_MAX_ZOOM = GRAPH_ZOOM_LEVEL.length - 1,
+        GRAPH_DEFAULT_ZOOM = 4;
+
     var
         GRAPH_STATE_PAUSED = 0,
         GRAPH_STATE_PLAY = 1,
-        
         SMALL_JUMP_TIME = 100 * 1000,
         PLAYBACK_MIN_RATE = 10,
         PLAYBACK_MAX_RATE = 300,
         PLAYBACK_DEFAULT_RATE = 100,
-        PLAYBACK_RATE_STEP = 5,
-        GRAPH_MIN_ZOOM = 1,
-        GRAPH_MAX_ZOOM = 1000,
-        GRAPH_DEFAULT_ZOOM = 100,
-        GRAPH_ZOOM_STEP = 1;
+        PLAYBACK_RATE_STEP = 5;
     
     var
         graphState = GRAPH_STATE_PAUSED,
@@ -494,25 +507,27 @@ function BlackboxLogViewer() {
         $(".playback-rate-control .noUi-handle").text(playbackRate + '%');
     }
     
-    function setGraphZoom(zoom, updateUi) {
-        if (zoom == null) { // go back to last zoom value
+    function setGraphZoomLevel(zoom, updateUi) {
+        if (zoom == null)
             zoom = lastGraphZoom;
-        }
-        if (zoom >= GRAPH_MIN_ZOOM && zoom <= GRAPH_MAX_ZOOM) {
-            lastGraphZoom = graphZoom;
-            graphZoom = zoom;
+        if (zoom < GRAPH_MIN_ZOOM)
+            zoom = GRAPH_MIN_ZOOM;
+        if (zoom > GRAPH_MAX_ZOOM)
+            zoom = GRAPH_MAX_ZOOM;
+
+        lastGraphZoom = graphZoom;
+        graphZoom = zoom;
             
-            if (graph) {
-                graph.setGraphZoom(zoom / 100);
-                invalidateGraph();
-            }
+        if (graph) {
+            graph.setGraphZoom(GRAPH_ZOOM_LEVEL[zoom] / 100);
+            invalidateGraph();
         }
         
         if (updateUi) {
             $(".graph-zoom-control").val(graphZoom);
         }
 
-        $(".graph-zoom-control .noUi-handle").text(graphZoom + '%');
+        $(".graph-zoom-control .noUi-handle").text(GRAPH_ZOOM_LEVEL[graphZoom] + '%');
     }
     
     function showConfigFile(state) {
@@ -609,7 +624,7 @@ function BlackboxLogViewer() {
         updateCanvasSize();
         
         setGraphState(GRAPH_STATE_PAUSED);
-        setGraphZoom(graphZoom, true);
+        setGraphZoomLevel(graphZoom, true);
     }
 
     function loadFileMessage(fileName) {
@@ -1688,13 +1703,13 @@ function BlackboxLogViewer() {
                 if($(e.target).attr('id') == 'graphCanvas') { // we are scrolling the graph
                     if (delta < 0) { // scroll down (or left)
                         if (e.altKey || e.shiftKey) {
-                            setGraphZoom(graphZoom - 10.0 - ((e.altKey) ? 15.0 : 0.0), true);
+                            setGraphZoomLevel(graphZoom - 1 - ((e.altKey) ? 2 : 0), true);
                         } else {
                             logJumpBack(0.1 /*10%*/);
                         }
                     } else { // scroll up or right
                         if (e.altKey || e.shiftKey) {
-                            setGraphZoom(graphZoom + 10.0 + ((e.altKey) ? 15.0 : 0.0), true);
+                            setGraphZoomLevel(graphZoom + 1 + ((e.altKey) ? 2 : 0), true);
                         } else {
                             logJumpForward(0.1 /*10%*/);
                         }
@@ -1888,7 +1903,7 @@ function BlackboxLogViewer() {
                                     newGraphConfig(lastGraphConfig);
                                 }
                             } else {
-                                    (graphZoom==GRAPH_MIN_ZOOM)?setGraphZoom(null, true):setGraphZoom(GRAPH_MIN_ZOOM, true);
+                                    (graphZoom==GRAPH_MIN_ZOOM)?setGraphZoomLevel(null, true):setGraphZoomLevel(GRAPH_MIN_ZOOM, true);
                             }
                         } catch(e) {
                             console.log('Workspace toggle feature not functioning');
@@ -1941,7 +1956,7 @@ function BlackboxLogViewer() {
                     break;
                     case 37: // left arrow (normal scroll, shifted zoom out)
                         if (e.shiftKey) {
-                            setGraphZoom(graphZoom - 10.0 - ((e.altKey)?15.0:0.0), true);
+                            setGraphZoomLevel(graphZoom - 1 - ((e.altKey)?2:0), true);
                         } else {
                           logJumpBack(null, e.altKey);
                         }
@@ -1949,7 +1964,7 @@ function BlackboxLogViewer() {
                     break;
                     case 39: // right arrow (normal scroll, shifted zoom in)
                         if (e.shiftKey) {
-                            setGraphZoom(graphZoom + 10.0 + ((e.altKey)?15.0:0.0), true);
+                            setGraphZoomLevel(graphZoom + 1 + ((e.altKey)?2:0), true);
                         } else {
                             logJumpForward(null, e.altKey);
                         }
@@ -2012,25 +2027,24 @@ function BlackboxLogViewer() {
             });
 
         $(".playback-rate-control .noUi-handle").text( playbackRate + '%');
-        
+
         $(".graph-zoom-control")
             .noUiSlider({
                 start: graphZoom,
                 connect: false,
-                step: GRAPH_ZOOM_STEP,
+                step: 1,
                 range: {
-                    'min': [ GRAPH_MIN_ZOOM ],
-                    '50%': [ GRAPH_DEFAULT_ZOOM, GRAPH_ZOOM_STEP ],
-                    'max': [ GRAPH_MAX_ZOOM, GRAPH_ZOOM_STEP ]
+                    'min': GRAPH_MIN_ZOOM,
+                    'max': GRAPH_MAX_ZOOM,
                 },
                 tooltips: true,
-                format: percentageFormat
             })
             .on("slide", function() {
-                setGraphZoom(parseFloat($(this).val()), false);
+		const index = parseInt($(this).val());
+                setGraphZoomLevel(index, false);
             })
             .dblclick(function() { 
-                setGraphZoom(100, true);
+                setGraphZoomLevel(GRAPH_DEFAULT_ZOOM, true);
             });
         
         $('.navbar-toggle').click(function(e) {
