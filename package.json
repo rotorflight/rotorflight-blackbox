@@ -2,7 +2,7 @@
   "name": "rotorflight-blackbox",
   "displayName": "Rotorflight Blackbox",
   "description": "Crossplatform blackbox analytics tool for Rotorflight flight control system.",
-  "version": "0.2.0-devel",
+  "version": "0.2.0-20220207",
   "main": "index.html",
   "chromium-args": "--disable-features=nw2",
   "default_locale": "en",
