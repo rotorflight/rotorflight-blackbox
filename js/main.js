@@ -710,7 +710,9 @@ function BlackboxLogViewer() {
             renderLogFileInfo(file);
             currentOffsetCache.log      = file.name; // store the name of the loaded log file
             currentOffsetCache.index    = null;      // and clear the index
-            
+
+            document.title = file.name + ' - Rotorflight Blackbox';
+
             hasLog = true; html.toggleClass("has-log", hasLog);
             html.toggleClass("has-table", hasTable);
             html.toggleClass("has-craft",              userSettings.drawCraft);
