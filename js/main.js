@@ -385,6 +385,15 @@ function BlackboxLogViewer() {
      * Update the metadata displays to show information about the currently selected log index.
      */
     function renderSelectedLogInfo() {
+        var sysConfig = flightLog.getSysConfig();
+
+        const logdate = sysConfig['Log start datetime'];
+        if (logdate && logdate.startsWith('20')) {
+            $(".log-date").text(logdate);
+        } else {
+            $(".log-date").empty();
+        }
+
         $(".log-index").val(flightLog.getLogIndex());
                 
         if (flightLog.getNumCellsEstimate()) {
@@ -406,7 +415,6 @@ function BlackboxLogViewer() {
         **/
         
         // Add log version information to status bar
-        var sysConfig = flightLog.getSysConfig();
         $('.version', statusBar).text( ((sysConfig['Craft name']!=null)?(sysConfig['Craft name'] + ' : '):'') +
                                         ((sysConfig['Firmware revision']!=null)?(sysConfig['Firmware revision']):''));
         $('.looptime', statusBar).text( stringLoopTime(sysConfig.looptime, sysConfig.pid_process_denom, sysConfig.unsynced_fast_pwm, sysConfig.motor_pwm_rate));
