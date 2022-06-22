@@ -1464,9 +1464,9 @@ var FlightLogParser = function(logData) {
             break;
             case FlightLogEvent.INFLIGHT_ADJUSTMENT:
                 var tmp = stream.readU8();
-                lastEvent.data.name = 'Unknown';
                 lastEvent.data.func = tmp & 127;
                 lastEvent.data.value = tmp < 128 ? stream.readSignedVB() : uint32ToFloat(stream.readU32());
+                lastEvent.data.name = `Unknown (${lastEvent.data.func})`;
                 if (INFLIGHT_ADJUSTMENT_FUNCTIONS[lastEvent.data.func] !== undefined) {
                     var descr = INFLIGHT_ADJUSTMENT_FUNCTIONS[lastEvent.data.func];
                     lastEvent.data.name = descr.name;
