@@ -261,9 +261,9 @@ GraphConfig.load = function(config) {
         try {
             if (fieldName.match(/^motor\[/)) {
                 return {
-                    offset: -500,
+                    offset: 0,
                     power: 1.0,
-                    inputRange: 500,
+                    inputRange: 1000,
                     outputRange: 1.0,
                 };
             } else if (fieldName.match(/^servo\[/)) {
@@ -617,7 +617,7 @@ GraphConfig.load = function(config) {
             return {
                 offset: 0,
                 power: 1.0,
-                inputRange: 500,
+                inputRange: 1000,
                 outputRange: 1.0
             };
         }
