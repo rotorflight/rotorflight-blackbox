@@ -268,9 +268,9 @@ GraphConfig.load = function(config) {
                 };
             } else if (fieldName.match(/^servo\[/)) {
                 return {
-                    offset: -1500,
+                    offset: 0,
                     power: 1.0,
-                    inputRange: 500,
+                    inputRange: 2200,
                     outputRange: 1.0
                 };
             } else if (fieldName.match(/^accSmooth\[/)) {
