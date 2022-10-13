@@ -106,6 +106,8 @@ var FlightLogParser = function(logData) {
             { name: 'Yaw Cyclic FF',                  },
             { name: 'Yaw Collective FF',              },
             { name: 'Yaw Impulse FF',                 },
+            { name: 'Pitch Collective FF',            },
+            { name: 'Pitch Impulse FF',               },
             { name: 'Rescue Collective',              },
             { name: 'Rescue Collective Boost',        },
             { name: 'Angle Level Gain',               },
@@ -119,10 +121,28 @@ var FlightLogParser = function(logData) {
             { name: 'Governor TTA-gain',              },
             { name: 'Governor Cyclic Weight',         },
             { name: 'Governor Collective Weight',     },
+            { name: 'Tail Motor Idle',                },
+            { name: 'Swash Phase',                    },
+
             { name: 'Rate Profile'                    },
             { name: 'Profile'                         },
             { name: 'OSD Profile'                     },
             { name: 'LED Profile'                     },
+
+            { name: 'Way P-gain',                     },
+            { name: 'Way I-gain',                     },
+            { name: 'Way D-gain',                     },
+            { name: 'Way F-gain',                     },
+
+            { name: 'Pitch Error Cutoff',             },
+            { name: 'Pitch D-term Cutoff',            },
+            { name: 'Pitch F-term Cutoff',            },
+            { name: 'Roll Error Cutoff',              },
+            { name: 'Roll D-term Cutoff',             },
+            { name: 'Roll F-term Cutoff',             },
+            { name: 'Yaw Error Cutoff',               },
+            { name: 'Yaw D-term Cutoff',              },
+            { name: 'Yaw F-term Cutoff',              },
         ];
 
     //Private variables:
