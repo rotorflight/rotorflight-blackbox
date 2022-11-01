@@ -540,6 +540,9 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             case FlightLogEvent.GOVERNOR_STATE:
                 drawEventLine(x, labelY, `GovState: ${FlightLogFieldPresenter.presentEnum(event.data.govState, FLIGHT_LOG_GOVSTATES)}`, "rgba(0,0,255,0.75)", 2);
             break;
+            case FlightLogEvent.RESCUE_STATE:
+                drawEventLine(x, labelY, `RescueState: ${FlightLogFieldPresenter.presentEnum(event.data.rescueState, FLIGHT_LOG_RESCUE_STATES)}`, "rgba(0,0,255,0.75)", 2);
+            break;
             case FlightLogEvent.GTUNE_CYCLE_RESULT:
                 drawEventLine(x, labelY, "GTune result - axis:" + event.data.axis + " gyroAVG:" + event.data.gyroAVG + " newP:" + event.data.newP, "rgba(255,255,255,0.5)");
             break;

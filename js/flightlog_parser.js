@@ -1442,6 +1442,9 @@ var FlightLogParser = function(logData) {
             case FlightLogEvent.GOVERNOR_STATE:
                 lastEvent.data.govState = stream.readUnsignedVB();
             break;
+            case FlightLogEvent.RESCUE_STATE:
+                lastEvent.data.rescueState = stream.readUnsignedVB();
+            break;
             case FlightLogEvent.FLIGHT_MODE: // get the flag status change
                 lastEvent.data.newFlags = stream.readUnsignedVB();
                 lastEvent.data.lastFlags = stream.readUnsignedVB();
