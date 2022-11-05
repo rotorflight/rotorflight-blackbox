@@ -14,10 +14,10 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 16.15.1
 
@@ -36,7 +36,7 @@ jobs:
       run: mv release/rotorflight-blackbox* .
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rotorflight-blackbox-linux-testing-${{ env.GIT_VER }}
         path: rotorflight-blackbox*
@@ -48,10 +48,10 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 16.15.1
 
@@ -70,7 +70,7 @@ jobs:
       run: mv release/rotorflight-blackbox* .
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rotorflight-blackbox-macos-testing-${{ env.GIT_VER }}
         path: rotorflight-blackbox*
@@ -82,10 +82,10 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 16.15.1
 
@@ -104,7 +104,7 @@ jobs:
       run: move release/rotorflight-blackbox* .
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rotorflight-blackbox-windows-testing-${{ env.GIT_VER }}
         path: rotorflight-blackbox*
@@ -117,7 +117,7 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Delete tag
       run: git push origin :${GITHUB_REF}
