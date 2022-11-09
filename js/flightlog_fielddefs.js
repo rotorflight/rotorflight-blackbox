@@ -171,6 +171,39 @@ var
         'VTXCONTROLDISABLE',
     ]),
 
+    FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_3 = makeReadOnly([
+        'ARM',
+        'ANGLE',
+        'HORIZON',
+        'FAILSAFE',
+        'RESCUE',
+        'GPSRESCUE',
+        'CAMSTAB',
+        'BEEPER',
+        'LEDLOW',
+        'CALIB',
+        'OSD',
+        'TELEMETRY',
+        'SERVO1',
+        'SERVO2',
+        'SERVO3',
+        'BLACKBOX',
+        'BLACKBOXERASE',
+        'CAMERA1',
+        'CAMERA2',
+        'CAMERA3',
+        'PREARM',
+        'VTXPITMODE',
+        'PARALYZE',
+        'USER1',
+        'USER2',
+        'USER3',
+        'USER4',
+        'PIDAUDIO',
+        'ACROTRAINER',
+        'VTXCONTROLDISABLE',
+    ]),
+
     FLIGHT_LOG_FEATURES = [],
 
     FLIGHT_LOG_FEATURES_BF = makeReadOnly([
@@ -233,6 +266,41 @@ var
         'DYNAMIC_FILTER',
         'RPM_FILTER',
     ]),
+
+    FLIGHT_LOG_FEATURES_RF_4_3 = makeReadOnly([
+        'RX_PPM',
+        'UNUSED1',
+        'INFLIGHT_ACC_CAL',
+        'RX_SERIAL',
+        'UNUSED4',
+        'UNUSED5',
+        'SOFTSERIAL',
+        'GPS',
+        'UNUSED8',
+        'SONAR',
+        'TELEMETRY',
+        'UNUSED11',
+        'UNUSED12',
+        'RX_PARALLEL_PWM',
+        'RX_MSP',
+        'RSSI_ADC',
+        'LED_STRIP',
+        'DISPLAY',
+        'OSD',
+        'UNUSED19',
+        'UNUSED20',
+        'UNUSED21',
+        'UNUSED22',
+        'UNUSED23',
+        'UNUSED24',
+        'RX_SPI',
+        'GOVERNOR',
+        'ESC_SENSOR',
+        'FREQ_SENSOR',
+        'UNUSED_29',
+        'RPM_FILTER',
+    ]),
+
 
     PID_CONTROLLER_TYPE = ([
         'UNUSED',
@@ -307,7 +375,7 @@ var
     ]),
 
     RC_SMOOTHING_MODE = makeReadOnly([
-        "OFF", 
+        "OFF",
         "ON"
     ]),
 
@@ -467,6 +535,87 @@ var
         "GYRO_SAMPLE",
         "RX_TIMING",
         "YAW_PRECOMP",
+        "USER1",
+        "USER2",
+        "USER3",
+        "USER4",
+    ]),
+
+    DEBUG_MODE_RF_4_3 = makeReadOnly([
+        "NONE",
+        "CYCLETIME",
+        "BATTERY",
+        "GYRO",
+        "ACCELEROMETER",
+        "PIDLOOP",
+        "GYRO_SCALED",
+        "RC_INTERPOLATION",
+        "ANGLERATE",
+        "ESC_SENSOR",
+        "SCHEDULER",
+        "STACK",
+        "ESC_SENSOR_RPM",
+        "ESC_SENSOR_TMP",
+        "ALTITUDE",
+        "FFT",
+        "FFT_TIME",
+        "FFT_FREQ",
+        "RX_FRSKY_SPI",
+        "RX_SFHSS_SPI",
+        "GYRO_RAW",
+        "DUAL_GYRO_RAW",
+        "DUAL_GYRO_DIFF",
+        "MAX7456_SIGNAL",
+        "MAX7456_SPICLOCK",
+        "SBUS",
+        "FPORT",
+        "RANGEFINDER",
+        "RANGEFINDER_QUALITY",
+        "LIDAR_TF",
+        "ADC_INTERNAL",
+        "GOVERNOR",
+        "SDIO",
+        "CURRENT_SENSOR",
+        "USB",
+        "SMARTAUDIO",
+        "RTH",
+        "ITERM_RELAX",
+        "ACRO_TRAINER",
+        "RC_SMOOTHING",
+        "RX_SIGNAL_LOSS",
+        "UNUSED_41",
+        "UNUSED_42",
+        "DYN_LPF",
+        "RX_SPECTRUM_SPI",
+        "DSHOT_RPM_TELEMETRY",
+        "RPM_FILTER",
+        "RPM_SOURCE",
+        "UNUSED_48",
+        "UNUSED_49",
+        "DUAL_GYRO_SCALED",
+        "DSHOT_RPM_ERRORS",
+        "CRSF_LINK_STATISTICS_UPLINK",
+        "CRSF_LINK_STATISTICS_PWR",
+        "CRSF_LINK_STATISTICS_DOWN",
+        "BARO",
+        "GPS_RESCUE_THROTTLE_PID",
+        "FREQ_SENSOR",
+        "FF_LIMIT",
+        "FF_INTERPOLATED",
+        "BLACKBOX_OUTPUT",
+        "GYRO_SAMPLE",
+        "RX_TIMING",
+        "D_LPF",
+        "VTX_TRAMP",
+        "GHST",
+        "SCHEDULER_DETERMINISM",
+        "TIMING_ACCURACY",
+        "RX_EXPRESSLRS_SPI",
+        "RX_EXPRESSLRS_PHASELOCK",
+        "RX_STATE_TIME",
+        "PITCH_PRECOMP",
+        "YAW_PRECOMP",
+        "RESCUE",
         "USER1",
         "USER2",
         "USER3",
@@ -651,23 +800,29 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
     if(firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) {
 
         // Flight mode names
-        if (semver.gte(firmwareVersion, '4.2.0')) {
+        if (semver.gte(firmwareVersion, '4.3.0')) {
+            FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_3.slice();
+        }
+        else if (semver.gte(firmwareVersion, '4.2.0')) {
             FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_2.slice();
-            // Add modifications here
         }
         FLIGHT_LOG_FLIGHT_MODE_NAME = makeReadOnly(FLIGHT_LOG_FLIGHT_MODE_NAME);
 
         // Features
-        if (semver.gte(firmwareVersion, '4.2.0')) {
+        if (semver.gte(firmwareVersion, '4.3.0')) {
+            FLIGHT_LOG_FEATURES = FLIGHT_LOG_FEATURES_RF_4_3.slice();
+        }
+        else if (semver.gte(firmwareVersion, '4.2.0')) {
             FLIGHT_LOG_FEATURES = FLIGHT_LOG_FEATURES_RF_4_2.slice();
-            // Add modifications here
         }
         FLIGHT_LOG_FEATURES = makeReadOnly(FLIGHT_LOG_FEATURES);
 
         // Debug names
-        if (semver.gte(firmwareVersion, '4.2.0')) {
+        if (semver.gte(firmwareVersion, '4.3.0')) {
+            DEBUG_MODE = DEBUG_MODE_RF_4_3.slice();
+        }
+        else if (semver.gte(firmwareVersion, '4.2.0')) {
             DEBUG_MODE = DEBUG_MODE_RF_4_2.slice();
-            // Add modifications here
         }
         DEBUG_MODE = makeReadOnly(DEBUG_MODE);
 
@@ -679,7 +834,7 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         DEBUG_MODE.splice(DEBUG_MODE.indexOf('AIRMODE'),      1);
         DEBUG_MODE.splice(DEBUG_MODE.indexOf('VELOCITY'),     1);
         DEBUG_MODE.splice(DEBUG_MODE.indexOf('DTERM_FILTER'), 1);
-        
+
         if(semver.gte(firmwareVersion, '3.4.0')) {
             DEBUG_MODE.splice(DEBUG_MODE.indexOf('GYRO'),     1, 'GYRO_FILTERED');
             DEBUG_MODE.splice(DEBUG_MODE.indexOf('NOTCH'),    1, 'GYRO_SCALED');
