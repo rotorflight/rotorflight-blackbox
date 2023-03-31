@@ -878,7 +878,7 @@ function FlightLogFieldPresenter() {
                         case 'debug[5]': // gov.I * 1000
                         case 'debug[6]': // gov.D * 1000
                         case 'debug[7]': // gov.F * 1000
-                            return (value / 10).toFixed(1) + '%%';
+                            return (value / 10).toFixed(1) + '%';
                     }
                     break;
             }
