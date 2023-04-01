@@ -105,6 +105,10 @@ function FlightLogFieldPresenter() {
             'debug[1]':'Debug [1]',
             'debug[2]':'Debug [2]',
             'debug[3]':'Debug [3]',
+            'debug[4]':'Debug [4]',
+            'debug[5]':'Debug [5]',
+            'debug[6]':'Debug [6]',
+            'debug[7]':'Debug [7]',
         },
         'CYCLETIME' : {
             'debug[all]':'Debug Cycle Time',
@@ -680,6 +684,10 @@ function FlightLogFieldPresenter() {
             case 'debug[1]':
             case 'debug[2]':
             case 'debug[3]':
+            case 'debug[4]':
+            case 'debug[5]':
+            case 'debug[6]':
+            case 'debug[7]':
                 return FlightLogFieldPresenter.decodeDebugFieldToFriendly(flightLog, fieldName, value, currentFlightMode);
 
             default:
