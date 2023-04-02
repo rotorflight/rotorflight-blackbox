@@ -26,11 +26,11 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
         that = this,
         windowCenterTime,
         canvasContext = canvas.getContext("2d"),
-        defaultSettings = { 
-            drawSticks: true, 
-            stickTrails: false, 
-            stickInvertYaw: false, 
-            stickUnits:false 
+        defaultSettings = {
+            drawSticks: true,
+            stickTrails: false,
+            stickInvertYaw: false,
+            stickUnits:false
         },
         sysConfig = flightLog.getSysConfig(),
         pitchStickCurve = new ExpoCurve(0, 0.700, 500 * (sysConfig.rcRate ? sysConfig.rcRate : 100) / 100, 1.0, 10);
@@ -48,14 +48,14 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
         // Calculated size of each number/letter
         drawingParams.fontSizeValueLabel = Math.max(8, canvas.height / 15);
 
-        // Padding of the sticks. It is a 10% of canvas with a maximum of 16 
+        // Padding of the sticks. It is a 10% of canvas with a maximum of 16
         drawingParams.stickSpacing = Math.min(height / 10, width / 10, 16);
-        
+
         // Use that plus the inter-stick spacing that has been determined already to decide how big each stick should be:
         drawingParams.stickSurroundRadius = Math.min(width / 4 - drawingParams.stickSpacing, height / 2 - drawingParams.stickSpacing - drawingParams.fontSizeValueLabel);
 
         // Decide if to show the labels
-        // The length of the 2 label texts are roughly 80% of the fontsize times the number of letters. 
+        // The length of the 2 label texts are roughly 80% of the fontsize times the number of letters.
         var labelLength = (userSettings.stickUnits ? 7 : 4);
         var minWidthForLabels = drawingParams.stickSurroundRadius * 4 + drawingParams.stickSpacing * 2 + 0.8 * labelLength * drawingParams.fontSizeValueLabel * 2;
         drawingParams.drawLabels = width > minWidthForLabels;
@@ -219,15 +219,15 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
         switch (userSettings.stickMode) {
             case STICK_MODE_1:
                 stickPositions[0] = yawValue / config.yawStickMax; //Yaw
-                stickPositions[1] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch 
+                stickPositions[1] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
                 stickPositions[2] = pitchStickCurve.lookup(rcCommand[0]); //Roll
-                stickPositions[3] = rcCommand[4] / 500; //Collective
+                stickPositions[3] = rcCommand[3] / 500; //Collective
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[2];
                     stickLabel[1] = rcCommandLabels[1];
                     stickLabel[2] = rcCommandLabels[0];
-                    stickLabel[3] = rcCommandLabels[4];
+                    stickLabel[3] = rcCommandLabels[3];
                 }
 
                 break;
@@ -235,25 +235,25 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                 stickPositions[0] = pitchStickCurve.lookup(rcCommand[0]); //Roll
                 stickPositions[1] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
                 stickPositions[2] = yawValue / config.yawStickMax; //Yaw
-                stickPositions[3] = rcCommand[4] / 500; //Collective
+                stickPositions[3] = rcCommand[3] / 500; //Collective
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[0];
                     stickLabel[1] = rcCommandLabels[1];
                     stickLabel[2] = rcCommandLabels[2];
-                    stickLabel[3] = rcCommandLabels[4];
+                    stickLabel[3] = rcCommandLabels[3];
                 }
 
                 break;
             case STICK_MODE_4:
                 stickPositions[0] = pitchStickCurve.lookup(rcCommand[0]); //Roll
-                stickPositions[1] = rcCommand[4] / 500; //Collective
+                stickPositions[1] = rcCommand[3] / 500; //Collective
                 stickPositions[2] = yawValue / config.yawStickMax; //Yaw
                 stickPositions[3] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[0];
-                    stickLabel[1] = rcCommandLabels[4];
+                    stickLabel[1] = rcCommandLabels[3];
                     stickLabel[2] = rcCommandLabels[2];
                     stickLabel[3] = rcCommandLabels[1];
                 }
@@ -261,13 +261,13 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
                 break;
             default: // Mode 2
                 stickPositions[0] = yawValue / config.yawStickMax; //Yaw
-                stickPositions[1] = -1 * rcCommand[4] / 500; //Collective
+                stickPositions[1] = -1 * rcCommand[3] / 500; //Collective
                 stickPositions[2] = pitchStickCurve.lookup(rcCommand[0]); //Roll
                 stickPositions[3] = pitchStickCurve.lookup(-rcCommand[1]); //Pitch
 
                 if (stickLabel != null) {
                     stickLabel[0] = rcCommandLabels[2];
-                    stickLabel[1] = rcCommandLabels[4];
+                    stickLabel[1] = rcCommandLabels[3];
                     stickLabel[2] = rcCommandLabels[0];
                     stickLabel[3] = rcCommandLabels[1];
                 }
