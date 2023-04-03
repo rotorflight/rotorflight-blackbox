@@ -57,6 +57,12 @@ function FlightLogFieldPresenter() {
         'gyroADC[1]': 'Gyro [pitch]',
         'gyroADC[2]': 'Gyro [yaw]',
 
+        'mixer[all]': 'Mixer',
+        'mixer[0]': 'Mixer SR',
+        'mixer[1]': 'Mixer SP',
+        'mixer[2]': 'Mixer SY',
+        'mixer[3]': 'Mixer SC',
+
         'motor[all]': 'Motors',
         'motor[0]': 'Motor [1]',
         'motor[1]': 'Motor [2]',
@@ -587,6 +593,12 @@ function FlightLogFieldPresenter() {
                 return value.toFixed(0) + " us"; // Show in range -500/+500
             case 'rcCommand[3]':
                 return (value - 1000).toFixed(0) + " us"; // Show in range 0/+1000
+
+            case 'mixer[0]':
+            case 'mixer[1]':
+            case 'mixer[2]':
+            case 'mixer[3]':
+                return (value / 10).toFixed(1) + '%';
 
             case 'motor[0]':
             case 'motor[1]':
