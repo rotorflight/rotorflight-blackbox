@@ -372,8 +372,8 @@ function FlightLog(logData) {
                     var
                         destFrame;
 
-                    // The G frames need to be processed always. They are "invalid" if not H (Home) has been detected 
-                    // before, but if not processed the viewer shows cuts and gaps. This happens if the quad takes off before 
+                    // The G frames need to be processed always. They are "invalid" if not H (Home) has been detected
+                    // before, but if not processed the viewer shows cuts and gaps. This happens if the quad takes off before
                     // fixing enough satellites.
                     if (frameValid || (frameType == 'G')) {
                         switch (frameType) {
@@ -519,7 +519,7 @@ function FlightLog(logData) {
         let gyroADC = [fieldNameToIndex["gyroADC[0]"], fieldNameToIndex["gyroADC[1]"], fieldNameToIndex["gyroADC[2]"]];
         let accSmooth = [fieldNameToIndex["accSmooth[0]"], fieldNameToIndex["accSmooth[1]"], fieldNameToIndex["accSmooth[2]"]];
         let magADC = [fieldNameToIndex["magADC[0]"], fieldNameToIndex["magADC[1]"], fieldNameToIndex["magADC[2]"]];
-        let rcCommand = [fieldNameToIndex["rcCommand[0]"], fieldNameToIndex["rcCommand[1]"], fieldNameToIndex["rcCommand[2]"], fieldNameToIndex["rcCommand[3]"]];
+        let rcCommand = [fieldNameToIndex["rcCommand[0]"], fieldNameToIndex["rcCommand[1]"], fieldNameToIndex["rcCommand[2]"], fieldNameToIndex["rcCommand[3]"], fieldNameToIndex["rcCommand[4]"]];
         let setpoint = [fieldNameToIndex["setpoint[0]"], fieldNameToIndex["setpoint[1]"], fieldNameToIndex["setpoint[2]"], fieldNameToIndex["setpoint[3]"]];
 
         const flightModeFlagsIndex = fieldNameToIndex["flightModeFlags"]; // This points to the flightmode data
@@ -624,7 +624,7 @@ function FlightLog(logData) {
                             }
 
                             // Assign value
-                            destFrame[fieldIndex++] = pidSum; 
+                            destFrame[fieldIndex++] = pidSum;
                         }
                     }
 
@@ -640,7 +640,7 @@ function FlightLog(logData) {
                         // Roll, pitch and yaw
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] = srcFrame[setpoint[axis]];
-                        } 
+                        }
                         // Throttle
                         destFrame[fieldIndex++] = srcFrame[setpoint[AXIS.YAW + 1]]/10;
 
@@ -650,7 +650,7 @@ function FlightLog(logData) {
                         for (var axis = 0; axis <= AXIS.YAW; axis++) {
                             destFrame[fieldIndex++] =
                                 (rcCommand[axis] !== undefined ? that.rcCommandRawToDegreesPerSecond(srcFrame[rcCommand[axis]], axis, currentFlightMode) : 0);
-                        } 
+                        }
                         // Throttle
                         destFrame[fieldIndex++] =
                             (rcCommand[AXIS.YAW + 1] !== undefined ? that.rcCommandRawToThrottle(srcFrame[rcCommand[AXIS.YAW + 1]]) : 0);
@@ -1059,7 +1059,7 @@ FlightLog.prototype.rcCommandRawToDegreesPerSecond = function(value, axis, curre
             }
 
             var rcRate = sysConfig["rc_rates"][axis] / 100.0;
-            if (rcRate > 2.0) { 
+            if (rcRate > 2.0) {
                 rcRate += RC_RATE_INCREMENTAL * (rcRate - 2.0);
             }
 
