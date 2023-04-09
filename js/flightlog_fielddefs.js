@@ -30,6 +30,7 @@ var
         TWITCH_TEST: 40, // Feature for latency testing
         GOVERNOR_STATE: 50,  // Main motor governor state
         RESCUE_STATE: 51,
+        AIRBORNE_STATE: 52,
 
         CUSTOM : 250, // Virtual Event Code - Never part of Log File.
         CUSTOM_BLANK : 251, // Virtual Event Code - Never part of Log File. - No line shown
@@ -761,6 +762,11 @@ var
         "CLIMB",
         "HOVER",
         "EXIT",
+    ]),
+
+    FLIGHT_LOG_AIRBORNE_STATES = makeReadOnly([
+        "LANDING",
+        "TAKEOFF",
     ]),
 
     RATES_TYPE = makeReadOnly([
