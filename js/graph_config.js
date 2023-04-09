@@ -107,8 +107,8 @@ function GraphConfig(graphConfig) {
 
                     for (var k = 0; k < logFieldNames.length; k++) {
                         if (logFieldNames[k].match(nameRegex)) {
-                            // add special condition for rcCommands and debug as each of the fields requires a different scaling.
-                            let forceNewCurve = (nameRoot=='rcCommand') || (nameRoot=='rcCommands') || (nameRoot=='debug');
+                            // add special condition for rcCommand and debug as each of the fields requires a different scaling.
+                            let forceNewCurve = (nameRoot=='rcCommand') || (nameRoot=='debug');
                             newGraph.fields.push(adaptField($.extend({}, field, {curve: $.extend({}, field.curve), name: logFieldNames[k], friendlyName: FlightLogFieldPresenter.fieldNameToFriendly(logFieldNames[k], flightLog.getSysConfig().debug_mode)}), colorIndexOffset, forceNewCurve));
                             colorIndexOffset++;
                         }
@@ -280,15 +280,7 @@ GraphConfig.load = function(config) {
                     inputRange: sysConfig.acc_1G * 16.0, /* Reasonable typical maximum for acc */
                     outputRange: 1.0
                 };
-            } else if (fieldName == "rcCommands[3]") { // Throttle scaled
-                return {
-                    offset: -50,
-                    power: 1.0, /* Make this 1.0 to scale linearly */
-                    inputRange: 50,
-                    outputRange: 1.0
-                };
             } else if (fieldName.match(/^axisError\[/)  ||     // Gyro, Gyro Scaled, RC Command Scaled and axisError
-                       fieldName.match(/^rcCommands\[/) ||     // These use the same scaling as they are in the
                        fieldName.match(/^gyroADC\[/)) {        // same range.
                 return {
                     offset: 0,
@@ -643,7 +635,7 @@ GraphConfig.load = function(config) {
             EXAMPLE_GRAPHS.push({label: "Gyros",fields: ["gyroADC[all]"]});
         }
         if (!flightLog.isFieldDisabled().SETPOINT) {
-            EXAMPLE_GRAPHS.push({label: "RC Rates",fields: ["rcCommands[all]"]});
+            EXAMPLE_GRAPHS.push({label: "Setpoints",fields: ["setpoint[all]"]});
         }
         if (!flightLog.isFieldDisabled().RC_COMMANDS) {
             EXAMPLE_GRAPHS.push({label: "RC Command",fields: ["rcCommand[all]"]});
@@ -653,9 +645,9 @@ GraphConfig.load = function(config) {
         }
         if (!(flightLog.isFieldDisabled().GYRO || flightLog.isFieldDisabled().PID)) {
             EXAMPLE_GRAPHS.push({label: "PID Error",fields: ["axisError[all]"]},
-                                {label: "Gyro + PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "gyroADC[0]", "axisSum[0]", "rcCommands[0]"]},
-                                {label: "Gyro + PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "gyroADC[1]", "axisSum[1]", "rcCommands[1]"]},
-                                {label: "Gyro + PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "gyroADC[2]", "axisSum[2]", "rcCommands[2]"]});
+                                {label: "Gyro + PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]"]},
+                                {label: "Gyro + PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]"]},
+                                {label: "Gyro + PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]"]});
         }
         if (!flightLog.isFieldDisabled().ACC) {
             EXAMPLE_GRAPHS.push({label: "Accelerometers",fields: ["accSmooth[all]"]});

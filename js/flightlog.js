@@ -226,9 +226,6 @@ function FlightLog(logData) {
         if (!that.isFieldDisabled().PID) {
             fieldNames.push("axisSum[0]", "axisSum[1]", "axisSum[2]");
         }
-        if (!that.isFieldDisabled().SETPOINT) {
-            fieldNames.push("rcCommands[0]", "rcCommands[1]", "rcCommands[2]", "rcCommands[3]"); // Custom calculated scaled rccommand
-        }
         if (!(that.isFieldDisabled().GYRO || that.isFieldDisabled().PID)) {
             fieldNames.push("axisError[0]", "axisError[1]", "axisError[2]"); // Custom calculated error field
         }
@@ -628,39 +625,11 @@ function FlightLog(logData) {
                         }
                     }
 
-                    // Check the current flightmode (we need to know this so that we can correctly calculate the rates)
-                    var currentFlightMode = srcFrame[flightModeFlagsIndex];
-
-                    // Calculate the Scaled rcCommand (setpoint) (in deg/s, % for throttle)
-                    var fieldIndexRcCommands = fieldIndex;
-
-                    // Since version 4.0 is not more a virtual field. Copy the real field to the virtual one to maintain the name, workspaces, etc.
-                    if ((sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.2.12')) ||
-                        (sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.0.0'))) {
-                        // Roll, pitch and yaw
-                        for (var axis = 0; axis <= AXIS.YAW; axis++) {
-                            destFrame[fieldIndex++] = srcFrame[setpoint[axis]];
-                        }
-                        // Throttle
-                        destFrame[fieldIndex++] = srcFrame[setpoint[AXIS.YAW + 1]]/10;
-
-                    // Versions earlier to 4.0 we must calculate the expected setpoint
-                    } else {
-                        // Roll, pitch and yaw
-                        for (var axis = 0; axis <= AXIS.YAW; axis++) {
-                            destFrame[fieldIndex++] =
-                                (rcCommand[axis] !== undefined ? that.rcCommandRawToDegreesPerSecond(srcFrame[rcCommand[axis]], axis, currentFlightMode) : 0);
-                        }
-                        // Throttle
-                        destFrame[fieldIndex++] =
-                            (rcCommand[AXIS.YAW + 1] !== undefined ? that.rcCommandRawToThrottle(srcFrame[rcCommand[AXIS.YAW + 1]]) : 0);
-                    }
-
                     // Calculate the PID Error
                     if (axisPID && gyroADC) {
                         for (var axis = 0; axis < 3; axis++) {
-                            let gyroADCdegrees = (gyroADC[axis] !== undefined ? that.gyroRawToDegreesPerSecond(srcFrame[gyroADC[axis]]) : 0);
-                            destFrame[fieldIndex++] = destFrame[fieldIndexRcCommands + axis] - gyroADCdegrees;
+                            let gyroADCdegrees = (gyroADC[axis] !== undefined) ? that.gyroRawToDegreesPerSecond(srcFrame[gyroADC[axis]]) : 0;
+                            destFrame[fieldIndex++] = srcFrame[setpoint[axis]] - gyroADCdegrees;
                         }
                     }
 
