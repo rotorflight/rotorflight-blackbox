@@ -43,7 +43,7 @@ function FlightLogFieldPresenter() {
         'rcCommands[0]' : 'Setpoint [roll]',
         'rcCommands[1]' : 'Setpoint [pitch]',
         'rcCommands[2]' : 'Setpoint [yaw]',
-        'rcCommands[3]' : 'Setpoint [throttle]',
+        'rcCommands[3]' : 'Setpoint [collective]',
 
         'rcCommand[all]': 'RC Commands',
         'rcCommand[0]': 'RC Command [roll]',
@@ -52,16 +52,48 @@ function FlightLogFieldPresenter() {
         'rcCommand[3]': 'RC Command [collective]',
         'rcCommand[4]': 'RC Command [throttle]',
 
+        'setpoint[all]': 'Setpoints',
+        'setpoint[0]': 'Setpoint [roll]',
+        'setpoint[1]': 'Setpoint [pitch]',
+        'setpoint[2]': 'Setpoint [yaw]',
+        'setpoint[3]': 'Setpoint [collective]',
+
         'gyroADC[all]': 'Gyros',
         'gyroADC[0]': 'Gyro [roll]',
         'gyroADC[1]': 'Gyro [pitch]',
         'gyroADC[2]': 'Gyro [yaw]',
 
+        'gyroRAW[all]': 'Unfiltered Gyros',
+        'gyroRAW[0]': 'Unfiltered Gyro [roll]',
+        'gyroRAW[1]': 'Unfiltered Gyro [pitch]',
+        'gyroRAW[2]': 'Unfiltered Gyro [yaw]',
+
+        'accADC[all]': 'Accel',
+        'accADC[0]': 'Accel [X]',
+        'accADC[1]': 'Accel [Y]',
+        'accADC[2]': 'Accel [Z]',
+
+        'magADC[all]': 'Compass',
+        'magADC[0]': 'Compass [X]',
+        'magADC[1]': 'Compass [Y]',
+        'magADC[2]': 'Compass [Z]',
+
         'mixer[all]': 'Mixer',
-        'mixer[0]': 'Mixer SR',
-        'mixer[1]': 'Mixer SP',
-        'mixer[2]': 'Mixer SY',
-        'mixer[3]': 'Mixer SC',
+        'mixer[0]': 'Mixer SR [roll]',
+        'mixer[1]': 'Mixer SP [pitch]',
+        'mixer[2]': 'Mixer SY [yaw]',
+        'mixer[3]': 'Mixer SC [collective]',
+
+        'headspeed': 'Headspeed',
+        'tailspeed': 'Tailspeed',
+
+        'altitude': 'Altitude',
+        'vario': 'Variometer',
+
+        'rssi': 'RSSI',
+
+        'Vbat': 'Battery voltage',
+        'Ibat': 'Battery current',
 
         'motor[all]': 'Motors',
         'motor[0]': 'Motor [1]',
@@ -75,33 +107,21 @@ function FlightLogFieldPresenter() {
         'servo[2]': 'Servo [3]',
         'servo[3]': 'Servo [4]',
 
-        'headspeed': 'Headspeed',
-
-        'vbatLatest': 'Battery volt.',
-        'amperageLatest': 'Amperage',
-        'BaroAlt': 'Barometer',
+        'attitude[all]': 'Attitude',
+        'attitude[0]': 'Attitude [roll]',
+        'attitude[1]': 'Attitude [pitch]',
+        'attitude[2]': 'Attitude [yaw]',
 
         'heading[all]': 'Heading',
         'heading[0]': 'Heading [roll]',
         'heading[1]': 'Heading [pitch]',
         'heading[2]': 'Heading [yaw]',
 
-        'accSmooth[all]': 'Accel.',
-        'accSmooth[0]': 'Accel. [X]',
-        'accSmooth[1]': 'Accel. [Y]',
-        'accSmooth[2]': 'Accel. [Z]',
-
-        'magADC[all]': 'Compass',
-        'magADC[0]': 'Compass [X]',
-        'magADC[1]': 'Compass [Y]',
-        'magADC[2]': 'Compass [Z]',
-
         'flightModeFlags': 'Flight Mode Flags',
         'stateFlags': 'State Flags',
         'failsafePhase': 'Failsafe Phase',
         'rxSignalReceived': 'RX Signal Received',
         'rxFlightChannelsValid': 'RX Flight Ch. Valid',
-        'rssi': 'RSSI',
     };
 
     const DEBUG_FRIENDLY_FIELD_NAMES_INITIAL = {
