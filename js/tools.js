@@ -4,19 +4,19 @@
 function hexToFloat(string) {
     var arr = new Uint32Array(1);
     arr[0] = parseInt(string, 16);
-    
+
     var floatArr = new Float32Array(arr.buffer);
-    
-    return floatArr[0]; 
+
+    return floatArr[0];
 }
 
 function uint32ToFloat(value) {
     var arr = new Uint32Array(1);
     arr[0] = value;
-    
+
     var floatArr = new Float32Array(arr.buffer);
 
-    return floatArr[0]; 
+    return floatArr[0];
 }
 
 function asciiArrayToString(arr) {
@@ -25,10 +25,10 @@ function asciiArrayToString(arr) {
 
 function asciiStringToByteArray(s) {
     var bytes = [];
-    
+
     for (var i = 0; i < s.length; i++)
         bytes.push(s.charCodeAt(i));
-    
+
     return bytes;
 }
 
@@ -80,7 +80,7 @@ function signExtend2Bit(byte) {
 /**
  * Get the first index of needle in haystack, or -1 if it was not found. Needle and haystack
  * are both byte arrays.
- * 
+ *
  * Provide startIndex in order to specify the first index to search from
  * @param haystack
  * @param needle
@@ -88,17 +88,17 @@ function signExtend2Bit(byte) {
  */
 function memmem(haystack, needle, startIndex) {
     var i, j, found;
-    
+
     for (var i = startIndex ? startIndex : 0; i <= haystack.length - needle.length; i++) {
         if (haystack[i] == needle[0]) {
             for (var j = 1; j < needle.length && haystack[i + j] == needle[j]; j++)
                 ;
-        
+
             if (j == needle.length)
                 return i;
         }
     }
-    
+
     return -1;
 }
 
@@ -186,12 +186,12 @@ function binarySearchOrPrevious(list, item) {
     var
         min = 0,
         max = list.length,
-        mid, 
+        mid,
         result = 0;
-    
+
     while (min < max) {
         mid = Math.floor((min + max) / 2);
-        
+
         if (list[mid] === item)
             return mid;
         else if (list[mid] < item) {
@@ -201,7 +201,7 @@ function binarySearchOrPrevious(list, item) {
         } else
             max = mid;
     }
-    
+
     return result;
 }
 
@@ -213,12 +213,12 @@ function binarySearchOrNext(list, item) {
     var
         min = 0,
         max = list.length,
-        mid, 
+        mid,
         result = list.length - 1;
-    
+
     while (min < max) {
         mid = Math.floor((min + max) / 2);
-        
+
         if (list[mid] === item)
             return mid;
         else if (list[mid] > item) {
@@ -228,16 +228,16 @@ function binarySearchOrNext(list, item) {
         } else
             min = mid + 1;
     }
-    
+
     return result;
 }
 
 function leftPad(string, pad, minLength) {
     string = "" + string;
-    
+
     while (string.length < minLength)
         string = pad + string;
-    
+
     return string;
 }
 
@@ -245,18 +245,18 @@ function formatTime(msec, displayMsec) {
 // modify function to allow negative times.
     var
         ms, secs, mins, hours;
-    
+
     ms = Math.round(Math.abs(msec));
-    
+
     secs = Math.floor(ms / 1000);
     ms %= 1000;
 
     mins = Math.floor(secs / 60);
     secs %= 60;
 
-    hours = Math.floor(mins / 60);  
+    hours = Math.floor(mins / 60);
     mins %= 60;
-    
+
     return ((msec<0)?'-':'') + (hours ? leftPad(hours, "0", 2) + ":" : "") + leftPad(mins, "0", 2) + ":" + leftPad(secs, "0", 2)
         + (displayMsec ? "." + leftPad(ms, "0", 3) : "");
 }
@@ -268,7 +268,7 @@ function stringLoopTime(loopTime, pid_process_denom, unsynced_fast_pwm, motor_pw
         if(pid_process_denom!=null) {
             returnString += "/" + (parseFloat((1000/(loopTime*pid_process_denom)).toFixed(3)) +'kHz');
             if(unsynced_fast_pwm!=null) {
-                returnString += (unsynced_fast_pwm==0)?('/SYNCED') : ( (motor_pwm_rate!=null)?('/' + parseFloat((motor_pwm_rate/1000).toFixed(3)) + "kHz"):('UNSYNCED') ); 
+                returnString += (unsynced_fast_pwm==0)?('/SYNCED') : ( (motor_pwm_rate!=null)?('/' + parseFloat((motor_pwm_rate/1000).toFixed(3)) + "kHz"):('UNSYNCED') );
             }
         }
     returnString += ')';
@@ -282,7 +282,7 @@ function stringTimetoMsec(input) {
 
             if(matches.length>2) { // there is a placeholder - either : or .
                 if(matches[3] == ':'){ // time has been entered MM:SS.SSS
-                   return ((matches[1])?-1:1) * (matches[2] * 60 * 1000000 + ((matches[4])?matches[4]:0) * 1000000 + ((matches[5])?(matches[5] + "00").slice(0,3):0) * 1000); 
+                   return ((matches[1])?-1:1) * (matches[2] * 60 * 1000000 + ((matches[4])?matches[4]:0) * 1000000 + ((matches[5])?(matches[5] + "00").slice(0,3):0) * 1000);
                 } else {
                    return ((matches[1])?-1:1) * (matches[2] * 1000000 + ((matches[4])?(matches[4] + "00").slice(0,3):0) * 1000);
                 }
@@ -341,13 +341,13 @@ var mouseNotification = {
     show: function(target, x, y, message, delay, messageClass, align, margin) {
 
         /**
-         target 			is the target element that triggered the mouse notification
-         x,y				are the mouse coordinates (if required)
-         message 		is the text to display (supports html endcoding)
-         delay 			is how long the message will remain before auto clearing
-         messageClass 	is the css class that should be used to draw the box, null for default
-         align 			is the position to put the popup to, null means at the mouse position, 'top-left' etc,
-         margin 			is the margin from the mouse cursor or border, null for default 10px
+         target                         is the target element that triggered the mouse notification
+         x,y                                are the mouse coordinates (if required)
+         message                 is the text to display (supports html endcoding)
+         delay                         is how long the message will remain before auto clearing
+         messageClass         is the css class that should be used to draw the box, null for default
+         align                         is the position to put the popup to, null means at the mouse position, 'top-left' etc,
+         margin                         is the margin from the mouse cursor or border, null for default 10px
 
          the index.html should have an entry <div class="mouseNotification"></div>
          and the .css should have two definitions...

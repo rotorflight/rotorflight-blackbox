@@ -4,39 +4,39 @@ function Craft2D(flightLog, canvas, propColors) {
     var
         ARM_THICKNESS_MULTIPLIER = 0.18,
         ARM_EXTEND_BEYOND_MOTOR_MULTIPLIER = 1.1,
-        
+
         CENTRAL_HUB_SIZE_MULTIPLIER = 0.3,
-        
+
         MOTOR_LABEL_SPACING = 10;
 
     var canvasContext = canvas.getContext("2d")
 
     var craftParameters = {};
-    
+
     var customMix;
-        
+
         if(userSettings != null) {
             customMix = userSettings.customMix;
         } else {
-            customMix = null;            
+            customMix = null;
         }
 
-    var numMotors; 
+    var numMotors;
         if(customMix===null) {
             numMotors = propColors.length;
         } else {
             numMotors = customMix.motorOrder.length;
-        }   
-        
+        }
+
     var shadeColors = [],
 
         craftColor = "rgb(76,76,76)",
-        
+
         armLength, bladeRadius;
 
     var motorOrder,
         yawOffset;
-        
+
     // Motor numbering in counter-clockwise order starting from the 3 o'clock position
     if(customMix===null) {
         switch (numMotors) {
@@ -70,16 +70,16 @@ function Craft2D(flightLog, canvas, propColors) {
 
     function makeColorHalfStrength(color) {
         color = parseInt(color.substring(1), 16);
-        
+
         return "rgba(" + ((color >> 16) & 0xFF) + "," + ((color >> 8) & 0xFF) + "," + (color & 0xFF) + ",0.5)";
     }
-    
+
         /**
      * Examine the log metadata to determine the layout of motors for the 2D craft model. Returns the craft parameters
      * object.
      */
     function decide2DCraftParameters() {
-        
+
         switch (numMotors) {
             case 2:
                 craftParameters.motors = [
@@ -123,7 +123,7 @@ function Craft2D(flightLog, canvas, propColors) {
                         y: 0, /*-0.71,*/
                         direction: -1,
                         color: propColors[motorOrder[1]]
-                    }, 
+                    },
                     {
                         x: 0, /*-0.71,*/
                         y: -1, /*-0.71,*/
@@ -135,18 +135,18 @@ function Craft2D(flightLog, canvas, propColors) {
                         y: 0, /*0.71,*/
                         direction: -1,
                         color: propColors[motorOrder[2]]
-                    }, 
+                    },
                     {
                         x: 0, /*0.71,*/
                         y: 1, /*0.71,*/
                         direction: 1,
                         color: propColors[motorOrder[0]]
-                    }, 
+                    },
                 ];
             break;
             default:
                 craftParameters.motors = [];
-            
+
                 for (var i = 0; i < numMotors; i++) {
                     craftParameters.motors.push({
                         x: Math.cos(i / numMotors * Math.PI * 2),
@@ -157,12 +157,12 @@ function Craft2D(flightLog, canvas, propColors) {
                 }
             break;
         }
-        
+
         return craftParameters;
     }
-    
+
     this.render = function(frame, frameFieldIndexes) {
-        var 
+        var
             motorIndex,
             sysConfig = flightLog.getSysConfig();
 
@@ -172,38 +172,38 @@ function Craft2D(flightLog, canvas, propColors) {
         canvasContext.translate(canvas.width*0.5, canvas.height*0.5);
         canvasContext.rotate(-yawOffset);
         canvasContext.scale(0.5, 0.5); // scale to fit
-    
+
         //Draw arms
         canvasContext.lineWidth = armLength * ARM_THICKNESS_MULTIPLIER;
-        
+
         canvasContext.lineCap = "round";
         canvasContext.strokeStyle = craftColor;
-        
+
         canvasContext.beginPath();
-        
+
         for (i = 0; i < numMotors; i++) {
             canvasContext.moveTo(0, 0);
-    
+
             canvasContext.lineTo(
                 (armLength * ARM_EXTEND_BEYOND_MOTOR_MULTIPLIER) * craftParameters.motors[i].x,
                 (armLength * ARM_EXTEND_BEYOND_MOTOR_MULTIPLIER) * craftParameters.motors[i].y
             );
         }
-    
+
         canvasContext.stroke();
-    
+
         //Draw the central hub
         canvasContext.beginPath();
-        
+
         canvasContext.moveTo(0, 0);
         canvasContext.arc(0, 0, armLength * CENTRAL_HUB_SIZE_MULTIPLIER, 0, 2 * Math.PI);
-        
+
         canvasContext.fillStyle = craftColor;
         canvasContext.fill();
-    
+
         for (i = 0; i < numMotors; i++) {
             var motorValue = frame[frameFieldIndexes["motor[" + motorOrder[i] + "]"]];
-            
+
             canvasContext.save();
             {
                 //Move to the motor center
@@ -211,30 +211,30 @@ function Craft2D(flightLog, canvas, propColors) {
                     armLength * craftParameters.motors[i].x,
                     armLength * craftParameters.motors[i].y
                 );
-    
+
                 canvasContext.fillStyle = shadeColors[motorOrder[i]];
-    
+
                 canvasContext.beginPath();
-                
+
                 canvasContext.moveTo(0, 0);
                 canvasContext.arc(0, 0, bladeRadius, 0, Math.PI * 2, false);
-                
+
                 canvasContext.fill();
-    
+
                 canvasContext.fillStyle = propColors[motorOrder[i]];
-    
+
                 canvasContext.beginPath();
-    
+
                 canvasContext.moveTo(0, 0);
-                canvasContext.arc(0, 0, bladeRadius, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 
+                canvasContext.arc(0, 0, bladeRadius, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2
                         * Math.max(motorValue - sysConfig.motorOutput[0], 0) / (sysConfig.motorOutput[1] - sysConfig.motorOutput[0]), false);
-                
+
                 canvasContext.fill();
-    
+
                 /* Disable motor value markers
                 var
                     motorLabel = "" + motorValue;
-    
+
                 if (craftParameters.motors[motorIndex].x > 0) {
                     canvasContext.textAlign = 'left';
                     canvasContext.fillText(motorLabel, bladeRadius + MOTOR_LABEL_SPACING, 0);
@@ -243,25 +243,25 @@ function Craft2D(flightLog, canvas, propColors) {
                     canvasContext.fillText(motorLabel, -(bladeRadius + MOTOR_LABEL_SPACING), 0);
                 }
                 */
-    
+
             }
             canvasContext.restore();
         }
         canvasContext.restore();
     };
-    
+
     for (var i = 0; i < propColors.length; i++) {
         shadeColors.push(makeColorHalfStrength(propColors[i]));
     }
-    
+
     decide2DCraftParameters();
-    
+
     this.resize = function(width, height) {
         if (canvas.width != width || canvas.height != height) {
             canvas.width = width;
             canvas.height = height;
         }
-            
+
             armLength = 0.5 * height;
 
             if (numMotors >= 6) {
@@ -270,7 +270,7 @@ function Craft2D(flightLog, canvas, propColors) {
                 bladeRadius = armLength * 0.6;
             }
     }
-    
+
     // Assume we're to fill the entire canvas until we're told otherwise by .resize()
     this.resize(canvas.width, canvas.height);
 }

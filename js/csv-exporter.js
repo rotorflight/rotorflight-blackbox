@@ -9,7 +9,7 @@
 
 /**
  * @constructor
- * @param {FlightLog} flightLog 
+ * @param {FlightLog} flightLog
  * @param {ExportOptions} [opts={}]
  */
 let CsvExporter = function(flightLog, opts={}) {
@@ -20,7 +20,7 @@ let CsvExporter = function(flightLog, opts={}) {
         quoteStrings: true,
     }, opts);
 
-    /** 
+    /**
      * @param {function} success is a callback triggered when export is done
      */
     function dump(success) {

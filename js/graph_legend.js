@@ -5,24 +5,24 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         that = this;
 
     function buildLegend() {
-        var 
+        var
             graphs = config.getGraphs(),
             i, j;
-        
+
         targetElem.empty();
 
         for (i = 0; i < graphs.length; i++) {
-            var 
+            var
                 graph = graphs[i],
                 graphDiv = $('<div class="graph-legend" id="' + i +'"><h3 class="graph-legend-group field-quick-adjust" graph="' + i + '"></h3><ul class="list-unstyled graph-legend-field-list"></ul></div>'),
                 graphTitle = $("h3", graphDiv),
                 fieldList = $("ul", graphDiv);
-            
+
             graphTitle.text(graph.label);
             graphTitle.prepend('<span class="glyphicon glyphicon-minus"></span>');
-            
-            for (j = 0; j < graph.fields.length; j++) { 
-                var 
+
+            for (j = 0; j < graph.fields.length; j++) {
+                var
                     field = graph.fields[j],
                     li = $('<li class="graph-legend-field field-quick-adjust" name="' + field.name + '" graph="' + i + '" field="' + j +'"></li>'),
                     nameElem = $('<span class="graph-legend-field-name field-quick-adjust" name="' + field.name + '" graph="' + i + '" field="' + j +'"></span>'),
@@ -39,7 +39,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 settingsElem.css('background', field.color);
                 fieldList.append(li);
             }
-            
+
             targetElem.append(graphDiv);
         }
 
@@ -97,11 +97,11 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
 
                var selectedGraph = $(this).attr('graph');
                if(!e.altKey) {
-                   if (onZoomGraph) {                   
+                   if (onZoomGraph) {
                        onZoomGraph(selectedGraph);
                    }
                } else {
-                   if (onExpandGraph) {                   
+                   if (onExpandGraph) {
                        onExpandGraph(selectedGraph);
                    }
                }
@@ -109,9 +109,9 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
         });
 
         // Make the legend dragabble
-        $('.log-graph-legend').sortable( 
+        $('.log-graph-legend').sortable(
             {
-                update: function( event, ui ) { 
+                update: function( event, ui ) {
                             var newOrder = $('.log-graph-legend').sortable('toArray');
                             var newGraphs = [];
                             var oldGraphs = config.getGraphs();
@@ -123,12 +123,12 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 cursor: "move",
             }
         );
-        $('.log-graph-legend').disableSelection();        
+        $('.log-graph-legend').disableSelection();
 
         $('.log-close-legend-dialog').on('click', function() {
             that.hide();
         });
-        
+
         $('.log-open-legend-dialog').on('click', function() {
             that.show();
         });
@@ -151,8 +151,8 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 if (userSettings.legendUnits) { // if we want the legend to show engineering units
                     value = FlightLogFieldPresenter.decodeFieldToFriendly(flightLog, fieldName, value, currentFlightMode);
                 } else { // raw value
-                    if (value % 1 != 0) { 
-                        value = value.toFixed(2); 
+                    if (value % 1 != 0) {
+                        value = value.toFixed(2);
                     }
                 }
 
@@ -167,7 +167,7 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
                 var i = $(this).attr('graph');
                 var j = $(this).attr('field');
                 var field = graphs[ i ].fields[ j ];
-                var str = 
+                var str =
                     "Z"  + (field.curve.outputRange * 100).toFixed(0) +
                     " E" + (field.curve.power * 100).toFixed(0) +
                     " S" + (field.smoothing / 100).toFixed(0);
@@ -178,26 +178,26 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
             console.log('Cannot update legend with values');
         }
     };
-    
+
     this.show = function() {
         $('.log-graph-config').show();
         $('.log-open-legend-dialog').hide();
-        
+
         if (onVisibilityChange) {
             onVisibilityChange(false);
         }
     };
-    
+
     this.hide = function() {
         $('.log-graph-config').hide();
         $('.log-open-legend-dialog').show();
-        
+
         if (onVisibilityChange) {
             onVisibilityChange(true);
         }
     };
-    
+
     config.addListener(buildLegend);
-    
+
     buildLegend();
 }

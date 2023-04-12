@@ -477,9 +477,9 @@ var FlightLogParser = function(logData) {
     function translateFieldName(fieldName) {
         var translation = translationValues[fieldName];
         if (typeof translation !== 'undefined') {
-        	return translation;
+                return translation;
         } else {
-        	return fieldName;
+                return fieldName;
         }
     }
 
@@ -901,7 +901,7 @@ var FlightLogParser = function(logData) {
                         $('html').addClass('isINAV');
                     } else {
 
-                    	// Cleanflight 1.x and others
+                            // Cleanflight 1.x and others
                         that.sysConfig.firmwareVersion = '0.0.0';
                         that.sysConfig.firmware        = 0.0;
                         that.sysConfig.firmwarePatch   = 0;

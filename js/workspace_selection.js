@@ -11,16 +11,16 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
         activeId = 1
 
     function buildUI() {
-        
+
         buttonElem = $('<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="workspace-menu"></button>');
         numberSpan = $('<span class="workspace-selector-index">');
         titleSpan = $('<span class="workspace-selector-title">');
         var caretElem = $('<span class="caret"></span>')
-        
+
         editButton = $('<span class="glyphicon glyphicon-pencil workspace-selector-editButton" aria-hidden="true" data-toggle="tooltip" title="Edit Workspace Name"></span>');
         editButton.click(editTitle);
         editButton.tooltip({ trigger: "hover", placement: "auto bottom" });
-        
+
         menuElem = $('<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="workspace-menu"></ul>');
 
         targetElem.empty();
@@ -54,7 +54,7 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
 
     function update() {
         menuElem.empty();
-        // Sort for non-programmers with 1-9 and then 0 last. 
+        // Sort for non-programmers with 1-9 and then 0 last.
         for (let index = 1; index < 11; index++) {
             let id = index % 10
             let element = workspaces[id % 10];

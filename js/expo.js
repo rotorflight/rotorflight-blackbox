@@ -3,12 +3,12 @@
 /**
  * Creates a lookup-table based expo curve, which takes values that range between -inputrange and +inputRange, and
  * scales them to -outputRange to +outputRange with the given power curve (curve <1.0 exaggerates values near the origin,
- * curve = 1.0 is a straight line mapping). 
+ * curve = 1.0 is a straight line mapping).
  */
 function ExpoCurve(offset, power, inputRange, outputRange, steps) {
     var
         curve, inputScale, rawInputScale;
-    
+
     function lookupStraightLine(input) {
         return (input + offset) * inputScale;
     }
@@ -30,7 +30,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
     /**
      * An approximation of lookupMathPow by precomputing several expo curve points and interpolating between those
      * points using straight line interpolation.
-     * 
+     *
      * The error will be largest in the area of the curve where the slope changes the fastest with respect to input
      * (e.g. the approximation will be too straight near the origin when power < 1.0, but a good fit far from the origin)
      */
@@ -52,7 +52,7 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
         }
 
         //Straight-line interpolation between the two curve points
-        var 
+        var
             proportion = valueInCurve - prevStepIndex,
             result = curve[prevStepIndex] + (curve[prevStepIndex + 1] - curve[prevStepIndex]) * proportion;
 
@@ -60,43 +60,43 @@ function ExpoCurve(offset, power, inputRange, outputRange, steps) {
             return -result;
         return result;
     }
-    
+
     function lookupMathPow(input) {
         input += offset;
-        
-        var 
+
+        var
             result = Math.pow(Math.abs(input) / inputRange, power) * outputRange;
-        
+
         if (input < 0)
             return -result;
         return result;
     }
-    
+
     rawInputScale = outputRange / inputRange;
 
     // If steps argument isn't supplied, use a reasonable default
     if (steps === undefined) {
         steps = 12;
     }
-    
+
     if (steps <= 2 || power == 1.0) {
         //Curve is actually a straight line
         inputScale = outputRange / inputRange;
-        
+
         this.lookup = lookupStraightLine;
     } else {
-        var 
+        var
             stepSize = 1.0 / (steps - 1),
             i;
 
         curve = new Array(steps);
-    
+
         inputScale = (steps - 1) / inputRange;
 
         for (i = 0; i < steps; i++) {
             curve[i] = Math.pow(i * stepSize, power) * outputRange;
         }
-        
+
         this.lookup = lookupInterpolatedCurve;
     }
 }

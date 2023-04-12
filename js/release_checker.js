@@ -2,12 +2,12 @@
 
 var ReleaseChecker = function (releaseName, releaseUrl) {
     var self = this;
-    
+
     self._releaseName = releaseName;
     self._releaseDataTag = `${self._releaseName}ReleaseData`;
     self._releaseLastUpdateTag = `${self._releaseName}ReleaseLastUpdate`
     self._releaseUrl = releaseUrl;
-    
+
 
 }
 
@@ -25,7 +25,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
                 data[self._releaseDataTag] = releaseData
                 data[self._releaseLastUpdateTag] = releaseDataTimestamp
                 chrome.storage.local.set(data, function () {});
-                    
+
                 self._processReleaseData(releaseData, processFunction);
             }).fail(function (data) {
                 var message = '';
@@ -33,7 +33,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
                     message = data['responseJSON'].message;
                 }
                 GUI.log(`<b>GitHub query for ${self._releaseName} releases failed, using cached information. Reason: <code>${message}</code></b>`);
-            
+
                 self._processReleaseData(cacheReleaseData, processFunction);
             });
         } else {
@@ -45,7 +45,7 @@ ReleaseChecker.prototype.loadReleaseData = function (processFunction) {
         }
     });
 }
-    
+
 
 ReleaseChecker.prototype._processReleaseData = function (releaseData, processFunction) {
     if (releaseData) {

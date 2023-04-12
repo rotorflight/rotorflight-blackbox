@@ -8,7 +8,7 @@ const
         ANALYSER_LARGE_HEIGHT_MARGIN  = 20,
         ANALYSER_LARGE_WIDTH_MARGIN   = 20;
 
-var 
+var
     that = this,
 
     analyserZoomX = 1.0, /* 100% */
@@ -75,7 +75,7 @@ var
             }
         };
 
-       	this.resize = function() {
+               this.resize = function() {
 
             var newSize = getSize();
 
@@ -125,9 +125,9 @@ var
         };
 
         /* This function is called from the canvas drawing routines within grapher.js
-           It is only used to record the current curve positions, collect the data and draw the 
+           It is only used to record the current curve positions, collect the data and draw the
            analyser on screen*/
-        this.plotSpectrum =	function (fieldIndex, curve, fieldName) {
+        this.plotSpectrum =        function (fieldIndex, curve, fieldName) {
             // Store the data pointers
             dataBuffer = {
                     fieldIndex: fieldIndex,
@@ -138,7 +138,7 @@ var
             // Detect change of selected field.... reload and redraw required.
             if ((fftData == null) || (fieldIndex != fftData.fieldIndex) || dataReload) {
                 dataReload = false;
-                dataLoad();			
+                dataLoad();
                 GraphSpectrumPlot.setData(fftData, userSettings.spectrumType);
             }
 
@@ -227,7 +227,7 @@ var
         // track frequency under mouse
         var lastMouseX = 0,
             lastMouseY = 0;
-         
+
         function trackFrequency(e, analyser) {
             if(e.shiftKey) {
 

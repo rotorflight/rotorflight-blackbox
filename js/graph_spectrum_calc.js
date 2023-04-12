@@ -8,7 +8,7 @@ const
     THROTTLE_VALUES = 100;
 
 var GraphSpectrumCalc = GraphSpectrumCalc || {
-    _analyserTimeRange : { 
+    _analyserTimeRange : {
             in: 0,
             out: MAX_ANALYSER_LENGTH
     },
@@ -25,7 +25,7 @@ var GraphSpectrumCalc = GraphSpectrumCalc || {
 
 GraphSpectrumCalc.initialize = function(flightLog, sysConfig) {
 
-    this._flightLog = flightLog; 
+    this._flightLog = flightLog;
     this._sysConfig = sysConfig;
 
     var gyroRate = (1000000 / this._sysConfig['looptime']).toFixed(0);
@@ -74,8 +74,8 @@ GraphSpectrumCalc.dataLoadFrequencyVsThrottle = function() {
 
     var flightSamples = this._getFlightSamplesFreqVsThrottle();
 
-    // We divide it into FREQ_VS_THR_CHUNK_TIME_MS FFT chunks, we calculate the average throttle 
-    // for each chunk. We use a moving window to get more chunks available. 
+    // We divide it into FREQ_VS_THR_CHUNK_TIME_MS FFT chunks, we calculate the average throttle
+    // for each chunk. We use a moving window to get more chunks available.
     var fftChunkLength = this._blackBoxRate * FREQ_VS_THR_CHUNK_TIME_MS / 1000;
     var fftChunkWindow = Math.round(fftChunkLength / FREQ_VS_THR_WINDOW_DIVISOR);
 
@@ -85,10 +85,10 @@ GraphSpectrumCalc.dataLoadFrequencyVsThrottle = function() {
 
     var fft = new FFT.complex(fftChunkLength, false);
     for (var fftChunkIndex = 0; fftChunkIndex + fftChunkLength < flightSamples.samples.length; fftChunkIndex += fftChunkWindow) {
-        
+
         var fftInput = flightSamples.samples.slice(fftChunkIndex, fftChunkIndex + fftChunkLength);
         var fftOutput = new Float64Array(fftChunkLength * 2);
-        
+
         // Hanning window applied to input data
         if(userSettings.analyserHanning) {
             this._hanningWindow(fftInput, fftChunkLength);
@@ -107,10 +107,10 @@ GraphSpectrumCalc.dataLoadFrequencyVsThrottle = function() {
         }
 
         // Calculate average throttle
-        var avgThrottle = 0; 
+        var avgThrottle = 0;
         for (var indexThrottle = fftChunkIndex; indexThrottle < fftChunkIndex + fftChunkLength; indexThrottle++) {
             avgThrottle += flightSamples.throttle[indexThrottle];
-        } 
+        }
         // Average throttle, removing the decimal part
         avgThrottle = Math.round(avgThrottle / 10 / fftChunkLength);
 
@@ -128,15 +128,15 @@ GraphSpectrumCalc.dataLoadFrequencyVsThrottle = function() {
     for (var i = 0; i < THROTTLE_VALUES; i++) {
         if (numberSamplesThrottle[i] > 1) {
             for (var j = 0; j < matrixFftOutput[i].length; j++) {
-                matrixFftOutput[i][j] /= numberSamplesThrottle[i]; 
+                matrixFftOutput[i][j] /= numberSamplesThrottle[i];
             }
         } else if (numberSamplesThrottle[i] == 0) {
             matrixFftOutput[i] = new Float64Array(fftChunkLength * 2);
         }
     }
 
-    // The output data needs to be smoothed, the sampling is not perfect 
-    // but after some tests we let the data as is, an we prefer to apply a 
+    // The output data needs to be smoothed, the sampling is not perfect
+    // but after some tests we let the data as is, an we prefer to apply a
     // blur algorithm to the heat map image
 
     var fftData = {
@@ -216,13 +216,13 @@ GraphSpectrumCalc._getFlightChunks = function() {
         logStart = this._analyserTimeRange.in;
     } else {
         logStart = this._flightLog.getMinTime();
-    } 
+    }
 
-    var logEnd = 0; 
+    var logEnd = 0;
     if(this._analyserTimeRange.out) {
         logEnd = this._analyserTimeRange.out;
     } else {
-        logEnd = this._flightLog.getMaxTime(); 
+        logEnd = this._flightLog.getMaxTime();
     }
 
     // Limit size
@@ -236,7 +236,7 @@ GraphSpectrumCalc._getFlightChunks = function() {
 GraphSpectrumCalc._getFlightSamplesFreq = function() {
 
     var allChunks = this._getFlightChunks();
-    
+
     var maxVal = -9999;
     var minVal = 9999;
     var avgAccumulator = 0;
@@ -376,7 +376,7 @@ GraphSpectrumCalc._normalizeFft = function(fftOutput, fftLength) {
     var noiseLowEndIdx = 100 / maxFrequency * fftLength;
     var maxNoiseIdx = 0;
     var maxNoise = 0;
-    
+
     for (var i = 0; i < fftLength; i++) {
         fftOutput[i] = Math.abs(fftOutput[i]);
         if (i > noiseLowEndIdx && fftOutput[i] > maxNoise) {
