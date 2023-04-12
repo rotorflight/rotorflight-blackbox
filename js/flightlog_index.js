@@ -52,7 +52,7 @@ function FlightLogIndex(logData) {
                 },
 
                 imu = new IMU(),
-                gyroADC, accSmooth, magADC,
+                gyroADC, accADC, magADC,
 
                 iframeCount = 0,
                 motorFields = [],
@@ -79,7 +79,7 @@ function FlightLogIndex(logData) {
                     mainFrameDef = parser.frameDefs.I,
 
                     gyroADC = [mainFrameDef.nameToIndex["gyroADC[0]"], mainFrameDef.nameToIndex["gyroADC[1]"], mainFrameDef.nameToIndex["gyroADC[2]"]],
-                    accSmooth = [mainFrameDef.nameToIndex["accSmooth[0]"], mainFrameDef.nameToIndex["accSmooth[1]"], mainFrameDef.nameToIndex["accSmooth[2]"]],
+                    accADC = [mainFrameDef.nameToIndex["accADC[0]"], mainFrameDef.nameToIndex["accADC[1]"], mainFrameDef.nameToIndex["accADC[2]"]],
                     magADC = [mainFrameDef.nameToIndex["magADC[0]"], mainFrameDef.nameToIndex["magADC[1]"], mainFrameDef.nameToIndex["magADC[2]"]],
 
                     lastSlow = [],
@@ -146,7 +146,7 @@ function FlightLogIndex(logData) {
 
                             imu.updateEstimatedAttitude(
                                 [frame[gyroADC[0]], frame[gyroADC[1]], frame[gyroADC[2]]],
-                                [frame[accSmooth[0]], frame[accSmooth[1]], frame[accSmooth[2]]],
+                                [frame[accADC[0]], frame[accADC[1]], frame[accADC[2]]],
                                 frame[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME],
                                 sysConfig.acc_1G,
                                 sysConfig.gyroScale,

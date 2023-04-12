@@ -218,7 +218,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
                 var axisIndex = matches[1];
 
                 idents.gyroFields[axisIndex] = fieldIndex;
-            } else if ((matches = fieldName.match(/^accSmooth\[(\d+)]$/))) {
+            } else if ((matches = fieldName.match(/^accADC\[(\d+)]$/))) {
                 var axisIndex = matches[1];
 
                 idents.accFields[axisIndex] = fieldIndex;

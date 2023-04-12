@@ -180,7 +180,7 @@ GraphConfig.load = function(config) {
                 return 5000;
             } else if (fieldName.match(/^gyroADC.*\[/)) {
                 return 3000;
-            } else if (fieldName.match(/^accSmooth\[/)) {
+            } else if (fieldName.match(/^accADC\[/)) {
                 return 3000;
             } else if (fieldName.match(/^axis.+\[/)) {
                 return 3000;
@@ -273,7 +273,7 @@ GraphConfig.load = function(config) {
                     inputRange: 2200,
                     outputRange: 1.0
                 };
-            } else if (fieldName.match(/^accSmooth\[/)) {
+            } else if (fieldName.match(/^accADC\[/)) {
                 return {
                     offset: 0,
                     power: 0.5,

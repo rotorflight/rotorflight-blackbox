@@ -91,7 +91,7 @@ function IMU(copyFrom) {
     }
 
     // Rotate the accel values into the earth frame and subtract acceleration due to gravity from the result
-    function calculateAccelerationInEarthFrame(accSmooth, attitude, acc_1G)
+    function calculateAccelerationInEarthFrame(accADC, attitude, acc_1G)
     {
         var
             rpy = [
@@ -100,9 +100,9 @@ function IMU(copyFrom) {
                 -attitude.heading
             ],
             result = {
-                X: accSmooth[0],
-                Y: accSmooth[1],
-                Z: accSmooth[2]
+                X: accADC[0],
+                Y: accADC[1],
+                Z: accADC[2]
             };
 
         rotateVector(result, rpy);
@@ -133,7 +133,7 @@ function IMU(copyFrom) {
     /**
      * Using the given raw data, update the IMU state and return the new estimate for the attitude.
      */
-    this.updateEstimatedAttitude = function(gyroADC, accSmooth, currentTime, acc_1G, gyroScale, magADC) {
+    this.updateEstimatedAttitude = function(gyroADC, accADC, currentTime, acc_1G, gyroScale, magADC) {
         var
             accMag = 0,
             deltaTime,
@@ -153,7 +153,7 @@ function IMU(copyFrom) {
         for (var axis = 0; axis < 3; axis++) {
             deltaGyroAngle[axis] = gyroADC[axis] * scale;
 
-            accMag += accSmooth[axis] * accSmooth[axis];
+            accMag += accADC[axis] * accADC[axis];
         }
         accMag = accMag * 100 / (acc_1G * acc_1G);
 
@@ -163,9 +163,9 @@ function IMU(copyFrom) {
         // If accel magnitude >1.15G or <0.85G and ACC vector outside of the limit range => we neutralize the effect of accelerometers in the angle estimation.
         // To do that, we just skip filter, as EstV already rotated by Gyro
         if (72 < accMag && accMag < 133) {
-            this.estimateGyro.X = (this.estimateGyro.X * gyro_cmpf_factor + accSmooth[0]) * INV_GYR_CMPF_FACTOR;
-            this.estimateGyro.Y = (this.estimateGyro.Y * gyro_cmpf_factor + accSmooth[1]) * INV_GYR_CMPF_FACTOR;
-            this.estimateGyro.Z = (this.estimateGyro.Z * gyro_cmpf_factor + accSmooth[2]) * INV_GYR_CMPF_FACTOR;
+            this.estimateGyro.X = (this.estimateGyro.X * gyro_cmpf_factor + accADC[0]) * INV_GYR_CMPF_FACTOR;
+            this.estimateGyro.Y = (this.estimateGyro.Y * gyro_cmpf_factor + accADC[1]) * INV_GYR_CMPF_FACTOR;
+            this.estimateGyro.Z = (this.estimateGyro.Z * gyro_cmpf_factor + accADC[2]) * INV_GYR_CMPF_FACTOR;
         }
 
         var
