@@ -109,11 +109,6 @@ function FlightLogFieldPresenter() {
         'attitude[1]': 'Attitude [pitch]',
         'attitude[2]': 'Attitude [yaw]',
 
-        'heading[all]': 'Heading',
-        'heading[0]': 'Heading [roll]',
-        'heading[1]': 'Heading [pitch]',
-        'heading[2]': 'Heading [yaw]',
-
         'flightModeFlags': 'Flight Mode Flags',
         'stateFlags': 'State Flags',
         'failsafePhase': 'Failsafe Phase',
@@ -660,11 +655,6 @@ function FlightLogFieldPresenter() {
 
             case 'Ibat':
                 return (value / 100).toFixed(2) + "A";
-
-            case 'heading[0]':
-            case 'heading[1]':
-            case 'heading[2]':
-                return (value / Math.PI * 180).toFixed(1) + "°";
 
             case 'altitude':
                 return (value / 100).toFixed(1) + "m";

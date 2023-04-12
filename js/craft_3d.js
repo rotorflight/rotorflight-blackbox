@@ -305,10 +305,9 @@ function Craft3D(flightLog, canvas, propColors) {
         }
 
         // Display the craft's attitude
-        craftParent.rotation.x = -frame[frameFieldIndexes['heading[1]']] /*- Math.PI / 2*/; // pitch
-        craftParent.rotation.y = frame[frameFieldIndexes['heading[0]']]; // roll
-
-        //craftParent.rotation.z = -frame[frameFieldIndexes['heading[2]']]; // yaw
+        craftParent.rotation.x = -frame[frameFieldIndexes['attitude[1]']] / 1800 * Math.PI;
+        craftParent.rotation.y = frame[frameFieldIndexes['attitude[0]']] / 1800 * Math.PI;
+        craftParent.rotation.z = -frame[frameFieldIndexes['attitude[2]']] / 1800 * Math.PI;
 
         renderer.render(scene, camera);
     };

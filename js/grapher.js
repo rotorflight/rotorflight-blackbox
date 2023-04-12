@@ -185,7 +185,6 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             //Synthetic fields:
             roll:-1,
             pitch:-1,
-            heading:-1,
             axisPIDSum:[]
         };
 
@@ -241,9 +240,6 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
                     break;
                     case "pitch":
                         idents.pitch = fieldIndex;
-                    break;
-                    case "heading":
-                        idents.heading = fieldIndex;
                     break;
                     case "headspeed":
                         idents.headspeed = fieldIndex;

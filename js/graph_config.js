@@ -314,20 +314,6 @@ GraphConfig.load = function(config) {
                     inputRange: 500 * gyroScaleMargin, // +20% to let compare in the same scale with the rccommands
                     outputRange: 1.0
                 };
-            } else if (fieldName == "heading[2]") {
-                return {
-                    offset: -Math.PI,
-                    power: 1.0,
-                    inputRange: Math.PI,
-                    outputRange: 1.0
-                };
-            } else if (fieldName.match(/^heading\[/)) {
-                return {
-                    offset: 0,
-                    power: 1.0,
-                    inputRange: Math.PI,
-                    outputRange: 1.0
-                };
             } else if (fieldName.match(/^sonar.*/)) {
                 return {
                     offset: -200,
