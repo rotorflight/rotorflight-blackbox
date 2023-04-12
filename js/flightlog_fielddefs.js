@@ -271,7 +271,7 @@ var
     FLIGHT_LOG_FEATURES_RF_4_3 = makeReadOnly([
         'RX_PPM',
         'UNUSED1',
-        'INFLIGHT_ACC_CAL',
+        'UNUSED2',
         'RX_SERIAL',
         'UNUSED4',
         'UNUSED5',
