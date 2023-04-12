@@ -428,22 +428,26 @@ function HeaderDialog(dialog, onSave) {
 
     function builtSelectedFieldsList(sysConfig) {
 
-        const value = sysConfig.fields_disabled_mask;
+        const value = sysConfig.fields_mask;
 
         // generate features
         const fields = [
-            {name: 'PIDs', description: 'All axis PID values'},
-            {name: 'RC Commands', description: 'All axis RC Commands'},
-            {name: 'Setpoint', description: 'All axis setpoints'},
-            {name: 'Battery', description: 'Vbat and current values'},
-            {name: 'Magnetometer', description: ''},
-            {name: 'Altitude', description: 'Barometer and rangefinder'},
-            {name: 'RSSI', description: ''},
-            {name: 'Gyroscope', description: 'Raw gyro data'},
+            {name: 'RC Command', description: 'Three axis RC Commands'},
+            {name: 'Setpoint', description: 'Three axis Setpoints'},
+            {name: 'Mixer', description: 'Three axis Mixer inputs'},
+            {name: 'PIDs', description: 'Three axis PID terms'},
+            {name: 'Attitude', description: 'Three axis attitude'},
+            {name: 'Gyro-raw', description: 'Raw Gyro data'},
+            {name: 'Gyroscope', description: 'Gyro data'},
             {name: 'Accelerometer', description: 'Raw accelerometer data'},
-            {name: 'Debug', description: 'Debug values'},
-            {name: 'Motors', description: 'Motors and tricopter servo values'},
+            {name: 'Magnetometer', description: 'Three axis Compass'},
+            {name: 'Altitude', description: 'Altitude and Variometer'},
+            {name: 'Battery', description: 'Battery voltage and current'},
+            {name: 'RSSI', description: 'Receiver Signal Quality'},
             {name: 'GPS', description: 'All GPS-related values'},
+            {name: 'RPM', description: 'Rotor Speeds'},
+            {name: 'Motor', description: 'Motor throttle values'},
+            {name: 'Servo', description: 'Servo positions'},
         ];
 
         const fieldsList_e = $('.fields_list');

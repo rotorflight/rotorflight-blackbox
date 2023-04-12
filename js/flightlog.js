@@ -220,14 +220,14 @@ function FlightLog(logData) {
         }
 
         // Add names for our ADDITIONAL_COMPUTED_FIELDS
-        if (!that.isFieldDisabled().GYRO) {
+        if (that.isFieldEnabled().GYRO) {
             fieldNames.push("heading[0]", "heading[1]", "heading[2]");
         }
-        if (!that.isFieldDisabled().PID) {
+        if (that.isFieldEnabled().PID) {
             fieldNames.push("axisSum[0]", "axisSum[1]", "axisSum[2]");
         }
-        if (!(that.isFieldDisabled().GYRO || that.isFieldDisabled().PID)) {
-            fieldNames.push("axisError[0]", "axisError[1]", "axisError[2]"); // Custom calculated error field
+        if (that.isFieldEnabled().GYRO && that.isFieldEnabled().SETPOINT) {
+            fieldNames.push("axisError[0]", "axisError[1]", "axisError[2]");
         }
 
         fieldNameToIndex = {};
@@ -1254,20 +1254,24 @@ FlightLog.prototype.getFeatures = function(enabledFeatures) {
         };
 };
 
-FlightLog.prototype.isFieldDisabled = function() {
-    const disabledFields=this.getSysConfig().fields_disabled_mask;
+FlightLog.prototype.isFieldEnabled = function() {
+    const fields = this.getSysConfig().fields_mask;
         return {
-            PID           : (disabledFields & (1 << 0))!==0,
-            RC_COMMANDS   : (disabledFields & (1 << 1))!==0,
-            SETPOINT      : (disabledFields & (1 << 2))!==0,
-            BATTERY       : (disabledFields & (1 << 3))!==0,
-            MAGNETOMETER  : (disabledFields & (1 << 4))!==0,
-            ALTITUDE      : (disabledFields & (1 << 5))!==0,
-            RSSI          : (disabledFields & (1 << 6))!==0,
-            GYRO          : (disabledFields & (1 << 7))!==0,
-            ACC           : (disabledFields & (1 << 8))!==0,
-            DEBUG         : (disabledFields & (1 << 9))!==0,
-            MOTORS        : (disabledFields & (1 << 10))!==0,
-            GPS           : (disabledFields & (1 << 11))!==0,
+            RC_COMMAND    : (fields & (1 << 0))!==0,
+            SETPOINT      : (fields & (1 << 1))!==0,
+            MIXER         : (fields & (1 << 2))!==0,
+            PID           : (fields & (1 << 3))!==0,
+            ATTITUDE      : (fields & (1 << 4))!==0,
+            GYRORAW       : (fields & (1 << 5))!==0,
+            GYRO          : (fields & (1 << 6))!==0,
+            ACC           : (fields & (1 << 7))!==0,
+            MAG           : (fields & (1 << 8))!==0,
+            ALT           : (fields & (1 << 9))!==0,
+            BATTERY       : (fields & (1 << 10))!==0,
+            RSSI          : (fields & (1 << 11))!==0,
+            GPS           : (fields & (1 << 12))!==0,
+            RPM           : (fields & (1 << 13))!==0,
+            MOTOR         : (fields & (1 << 14))!==0,
+            SERVO         : (fields & (1 << 15))!==0,
         };
 };

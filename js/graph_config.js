@@ -627,32 +627,45 @@ GraphConfig.load = function(config) {
 
         const EXAMPLE_GRAPHS = [];
 
-        if (!flightLog.isFieldDisabled().MOTORS) {
-            EXAMPLE_GRAPHS.push({label: "Motors",fields: ["motor[all]", "headspeed"]},
-                                {label: "Servos",fields: ["servo[all]"]});
-        }
-        if (!flightLog.isFieldDisabled().GYRO) {
+        if (flightLog.isFieldEnabled().GYRO) {
             EXAMPLE_GRAPHS.push({label: "Gyros",fields: ["gyroADC[all]"]});
         }
-        if (!flightLog.isFieldDisabled().SETPOINT) {
+        if (flightLog.isFieldEnabled().GYRORAW) {
+            EXAMPLE_GRAPHS.push({label: "Gyros (pre-filter)",fields: ["gyroRAW[all]"]});
+        }
+        if (flightLog.isFieldEnabled().SETPOINT) {
             EXAMPLE_GRAPHS.push({label: "Setpoints",fields: ["setpoint[all]"]});
         }
-        if (!flightLog.isFieldDisabled().RC_COMMANDS) {
+        if (flightLog.isFieldEnabled().RC_COMMAND) {
             EXAMPLE_GRAPHS.push({label: "RC Command",fields: ["rcCommand[all]"]});
         }
-        if (!flightLog.isFieldDisabled().PID) {
-            EXAMPLE_GRAPHS.push({label: "PIDs",fields: ["axisSum[all]"]});
+        if (flightLog.isFieldEnabled().PID) {
+            EXAMPLE_GRAPHS.push({label: "PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]"]},
+                                {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]"]},
+                                {label: "PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]"]});
         }
-        if (!(flightLog.isFieldDisabled().GYRO || flightLog.isFieldDisabled().PID)) {
-            EXAMPLE_GRAPHS.push({label: "PID Error",fields: ["axisError[all]"]},
-                                {label: "Gyro + PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]"]},
-                                {label: "Gyro + PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]"]},
-                                {label: "Gyro + PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]"]});
+        if (flightLog.isFieldEnabled().RPM) {
+            EXAMPLE_GRAPHS.push({label: "Rotor Speeds",fields: ["headspeed", "tailspeed"]});
         }
-        if (!flightLog.isFieldDisabled().ACC) {
-            EXAMPLE_GRAPHS.push({label: "Accelerometers",fields: ["accSmooth[all]"]});
+        if (flightLog.isFieldEnabled().MOTOR) {
+            EXAMPLE_GRAPHS.push({label: "Motors",fields: ["motor[all]"]});
         }
-        if (!flightLog.isFieldDisabled().DEBUG) {
+        if (flightLog.isFieldEnabled().SERVO) {
+            EXAMPLE_GRAPHS.push({label: "Servos",fields: ["servo[all]"]});
+        }
+        if (flightLog.isFieldEnabled().BATTERY) {
+            EXAMPLE_GRAPHS.push({label: "Battery",fields: ["Vbat", "Ibat"]});
+        }
+        if (flightLog.isFieldEnabled().ALT) {
+            EXAMPLE_GRAPHS.push({label: "Altitude",fields: ["altitude", "variometer"]});
+        }
+        if (flightLog.isFieldEnabled().ATTITUDE) {
+            EXAMPLE_GRAPHS.push({label: "Attitude",fields: ["attitude[all]"]});
+        }
+        if (flightLog.isFieldEnabled().ACC) {
+            EXAMPLE_GRAPHS.push({label: "Accelerometer",fields: ["accADC[all]"]});
+        }
+        if (flightLog.isFieldEnabled().DEBUG) {
             EXAMPLE_GRAPHS.push({label: "Debug",fields: ["debug[all]"]});
         }
 

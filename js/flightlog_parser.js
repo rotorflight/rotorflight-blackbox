@@ -280,7 +280,7 @@ var FlightLogParser = function(logData) {
             dyn_notch_min_hz: null,                 // Dyn Notch min limit in Hz for the filter
             dyn_notch_max_hz: null,                 // Dyn Notch max limit in Hz for the filter
             rates_type: null,
-            fields_disabled_mask: null,
+            fields_mask: null,
             vbat_sag_compensation: null,
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
@@ -682,7 +682,7 @@ var FlightLogParser = function(logData) {
             case "dyn_notch_max_hz":
             case "rates_type":
             case "vbat_sag_compensation":
-            case "fields_disabled_mask":
+            case "fields_mask":
             case "motor_pwm_protocol":
             case "gyro_to_use":
             case "dynamic_idle_min_rpm":
