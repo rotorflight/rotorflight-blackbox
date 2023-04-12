@@ -203,9 +203,7 @@ GraphConfig.load = function(config) {
                                     sysConfig["rates"][1] * 10.0 * scale,
                                     sysConfig["rates"][2] * 10.0 * scale);
                 default:
-                    return Math.max(flightLog.rcCommandRawToDegreesPerSecond(500,0) * scale,
-                                    flightLog.rcCommandRawToDegreesPerSecond(500,1) * scale,
-                                    flightLog.rcCommandRawToDegreesPerSecond(500,2) * scale);
+                    return 500 * scale;
             }
         }
 
