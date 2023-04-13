@@ -162,7 +162,7 @@ var FlightLogParser = function(logData) {
             vbatmincellvoltage: 33,
             vbatmaxcellvoltage:43,
             vbatwarningcellvoltage: 35,
-            gyroScale: 0.0001, // Not even close to the default, but it's hardware specific so we can't do much better
+            gyroScale: 1,
             acc_1G: 4096, // Ditto ^
             minthrottle: 1150,
             maxthrottle: 1850,
@@ -841,16 +841,6 @@ var FlightLogParser = function(logData) {
             case "gyro.scale":
             case "gyro_scale":
                     that.sysConfig.gyroScale = hexToFloat(fieldValue);
-
-                    /* Baseflight uses a gyroScale that'll give radians per microsecond as output, whereas Cleanflight produces degrees
-                     * per second and leaves the conversion to radians per us to the IMU. Let's just convert Cleanflight's scale to
-                     * match Baseflight so we can use Baseflight's IMU for both: */
-                    if (that.sysConfig.firmwareType == FIRMWARE_TYPE_INAV ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_CLEANFLIGHT ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT ||
-                        that.sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) {
-                        that.sysConfig.gyroScale = that.sysConfig.gyroScale * (Math.PI / 180.0) * 0.000001;
-                    }
             break;
             case "Firmware revision":
 

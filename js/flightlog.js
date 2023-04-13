@@ -601,8 +601,8 @@ function FlightLog(logData) {
                     // Calculate the PID Error
                     if (axisPID && gyroADC) {
                         for (var axis = 0; axis < 3; axis++) {
-                            let gyroADCdegrees = (gyroADC[axis] !== undefined) ? that.gyroRawToDegreesPerSecond(srcFrame[gyroADC[axis]]) : 0;
-                            destFrame[fieldIndex++] = srcFrame[setpoint[axis]] - gyroADCdegrees;
+                            let gyroADCdeg = (gyroADC[axis] !== undefined) ? srcFrame[gyroADC[axis]] : 0;
+                            destFrame[fieldIndex++] = srcFrame[setpoint[axis]] - gyroADCdeg;
                         }
                     }
 
@@ -962,10 +962,6 @@ function FlightLog(logData) {
 
 FlightLog.prototype.accRawToGs = function(value) {
     return value / this.getSysConfig().acc_1G;
-};
-
-FlightLog.prototype.gyroRawToDegreesPerSecond = function(value) {
-    return this.getSysConfig().gyroScale * 1000000 / (Math.PI / 180.0) * value;
 };
 
 FlightLog.prototype.rcCommandRawToThrottle = function(value) {

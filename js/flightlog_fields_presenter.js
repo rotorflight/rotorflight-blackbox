@@ -638,8 +638,6 @@ function FlightLogFieldPresenter() {
             case 'gyroADC[0]':
             case 'gyroADC[1]':
             case 'gyroADC[2]':
-                return Math.round(flightLog.gyroRawToDegreesPerSecond(value)) + " °/s";
-
             case 'gyroRAW[0]':
             case 'gyroRAW[1]':
             case 'gyroRAW[2]':
@@ -744,7 +742,7 @@ function FlightLogFieldPresenter() {
                 case 'DUAL_GYRO_COMBINED':
                 case 'DUAL_GYRO_DIFF':
                 case 'DUAL_GYRO_RAW':
-                    return Math.round(flightLog.gyroRawToDegreesPerSecond(value)) + "°/s";
+                    return Math.round(value) + "°/s";
                 case 'ACCELEROMETER':
                     return flightLog.accRawToGs(value).toFixed(2) + "g";
                 case 'MIXER':
@@ -796,7 +794,7 @@ function FlightLogFieldPresenter() {
                     case 'debug[0]': // gyro scaled [for selected axis]
                     case 'debug[1]': // pre-dyn notch gyro [for selected axis]
                     case 'debug[2]': // pre-dyn notch gyro FFT downsampled [roll]
-                        return Math.round(flightLog.gyroRawToDegreesPerSecond(value)) + "°/s";
+                        return Math.round(value) + "°/s";
                     case 'debug[3]': // FFT bin mean index
                         return (value / 100).toFixed(2);
                     }
@@ -814,7 +812,7 @@ function FlightLogFieldPresenter() {
                     switch (fieldName) {
                     case 'debug[2]': // pre-dyn notch gyro [for selected axis]
                     case 'debug[3]': // raw gyro [for selected axis]
-                        return Math.round(flightLog.gyroRawToDegreesPerSecond(value)) + "°/s";
+                        return Math.round(value) + "°/s";
                     default:
                         return value.toFixed(0) + "Hz";
                     }
@@ -856,7 +854,7 @@ function FlightLogFieldPresenter() {
                     switch (fieldName) {
                         case 'debug[0]': // gyro scaled [for selected axis]
                         case 'debug[3]': // pre-dyn notch gyro [for selected axis]
-                            return Math.round(flightLog.gyroRawToDegreesPerSecond(value)) + "°/s";
+                            return Math.round(value) + "°/s";
                         default:
                             return value.toFixed(0) + "Hz";
                     }
