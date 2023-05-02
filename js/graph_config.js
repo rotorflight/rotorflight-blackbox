@@ -649,7 +649,7 @@ GraphConfig.load = function(config) {
         if (flightLog.isFieldEnabled().ACC) {
             EXAMPLE_GRAPHS.push({label: "Accelerometer",fields: ["accADC[all]"]});
         }
-        if (flightLog.isFieldEnabled().DEBUG) {
+        if (DEBUG_MODE[flightLog.getSysConfig().debug_mode] !== 'NONE') {
             EXAMPLE_GRAPHS.push({label: "Debug",fields: ["debug[all]"]});
         }
 
