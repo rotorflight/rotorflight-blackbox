@@ -454,6 +454,17 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Gov D',
             'debug[7]':'Gov F',
         },
+        'RX_TIMING' : {
+            'debug[all]':'Receiver Timing',
+            'debug[0]':'Average Refresh Rate',
+            'debug[1]':'ARR * currentMult',
+            'debug[2]':'Current Refresh Rate',
+            'debug[3]':'Not Used',
+            'debug[4]':'Frame Delta',
+            'debug[5]':'Local Delta',
+            'debug[6]':'Frame Age',
+            'debug[7]':'currentMult',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -894,6 +905,19 @@ function FlightLogFieldPresenter() {
                         case 'debug[6]': // gov.D * 1000
                         case 'debug[7]': // gov.F * 1000
                             return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
+                case 'RX_TIMING':
+                    switch (fieldName) {
+                        case 'debug[0]': // average rx refresh rate
+                        case 'debug[1]': // average rx refresh rate * currentMult
+                        case 'debug[2]': // current refresh rate
+                        case 'debug[4]': // frame delta us
+                        case 'debug[5]': // local delta us
+                        case 'debug[6]': // frame age us
+                           return value.toFixed(0) + 'µs';
+                        case 'debug[7]': // currentMult
+                            break;
                     }
                     break;
             }
