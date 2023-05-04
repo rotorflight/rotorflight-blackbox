@@ -465,6 +465,15 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Frame Age',
             'debug[7]':'currentMult',
         },
+        'FREQ_SENSOR' : {
+            'debug[all]':'Freq Sensor',
+            'debug[0]':'Input Freq',
+            'debug[1]':'Freq',
+            'debug[2]':'Input Period',
+            'debug[3]':'Period',
+            'debug[4]':'Zeros',
+            'debug[5]':'Prescaler',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -920,7 +929,20 @@ function FlightLogFieldPresenter() {
                             break;
                     }
                     break;
-            }
+                case 'FREQ_SENSOR':
+                    switch (fieldName) {
+                        case 'debug[0]': // input freq
+                        case 'debug[1]': // freq
+                            return (value / 1000).toFixed(2) + 'Hz';
+                        case 'debug[2]': // input period
+                        case 'debug[3]': // period
+                            return value.toFixed(0) + 'ticks';
+                        case 'debug[4]': // zeros
+                        case 'debug[5]': // prescaler
+                            break;
+                    }
+                    break;
+                }
             return value.toFixed(0);
         }
         return "";
