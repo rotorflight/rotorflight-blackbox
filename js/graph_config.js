@@ -278,8 +278,9 @@ GraphConfig.load = function(config) {
                     inputRange: sysConfig.acc_1G * 16.0, /* Reasonable typical maximum for acc */
                     outputRange: 1.0
                 };
-            } else if (fieldName.match(/^axisError\[/)  ||     // Gyro, Gyro Scaled, RC Command Scaled and axisError
-                       fieldName.match(/^gyroADC\[/)) {        // same range.
+            } else if (fieldName.match(/^setpoint\[/)  ||     // Gyro, Gyro Scaled, RC Command Scaled and axisError
+                       fieldName.match(/^gyroADC\[/) ||
+                       fieldName.match(/^gyroRAW\[/)) {
                 return {
                     offset: 0,
                     power: 0.25, /* Make this 1.0 to scale linearly */
@@ -289,8 +290,8 @@ GraphConfig.load = function(config) {
             } else if (fieldName.match(/^axis.+\[/)) {
                 return {
                     offset: 0,
-                    power: 0.3,
-                    inputRange: 1000, // Was 400 ?
+                    power: 0.25,
+                    inputRange: 1000,
                     outputRange: 1.0
                 };
             } else if (fieldName == "rcCommand[4]") { // Throttle
@@ -300,34 +301,31 @@ GraphConfig.load = function(config) {
                     inputRange: 500,
                     outputRange: 1.0
                 };
-            } else if (fieldName == "rcCommand[3]") { // Collective
-                return {
-                    offset: 0,
-                    power: 1.0, /* Scale linearly */
-                    inputRange: 500 * gyroScaleMargin,
-                    outputRange: 1.0
-                };
             } else if (fieldName.match(/^rcCommand\[/)) {
                 return {
                     offset: 0,
-                    power: 0.25,
+                    power: 1.0,
                     inputRange: 500 * gyroScaleMargin, // +20% to let compare in the same scale with the rccommands
                     outputRange: 1.0
                 };
-            } else if (fieldName.match(/^sonar.*/)) {
+            } else if (fieldName.match(/^sonar/)) {
                 return {
                     offset: -200,
                     power: 1.0,
                     inputRange: 200,
                     outputRange: 1.0
                 };
-            } else if (fieldName.match(/^rssi.*/)) {
+            } else if (fieldName.match(/^rssi/)) {
                 return {
                     offset: -512,
                     power: 1.0,
                     inputRange: 512,
                     outputRange: 1.0
                 };
+            } else if (fieldName.match(/^altitude/) ||
+                       fieldName.match(/^vario/)) {
+                return getCurveForMinMaxFieldsZeroOffset(fieldName);
+
             } else if (fieldName.match(/^debug.*/) && sysConfig.debug_mode!=null) {
 
                 var debugModeName = DEBUG_MODE[sysConfig.debug_mode];
