@@ -550,7 +550,7 @@ var
         "ACCELEROMETER",
         "PIDLOOP",
         "GYRO_SCALED",
-        "RC_INTERPOLATION",
+        "RC_COMMAND",
         "ANGLERATE",
         "ESC_SENSOR",
         "SCHEDULER",

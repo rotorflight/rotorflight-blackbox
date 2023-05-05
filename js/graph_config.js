@@ -404,13 +404,13 @@ GraphConfig.load = function(config) {
                                     outputRange: 1.0
                                 };
                         }
-                    case 'RC_INTERPOLATION':
-                        switch (fieldName) {
-                            case 'debug[0]': // Roll RC Command
-                            case 'debug[3]': // refresh period
-                                return getCurveForMinMaxFieldsZeroOffset(fieldName);
-                        }
-                        break;
+                    case 'RC_COMMAND':
+                        return {
+                            offset: -500,
+                            power: 1.0,
+                            inputRange: 500,
+                            outputRange: 1.0
+                        };
                     case 'RC_SMOOTHING':
                         switch (fieldName) {
                             case 'debug[0]': // raw RC command

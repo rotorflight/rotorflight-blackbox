@@ -191,12 +191,13 @@ function FlightLogFieldPresenter() {
             'debug[2]':'Gyro Scaled [yaw]',
             'debug[3]':'Not Used',
         },
-        'RC_INTERPOLATION' : {
-            'debug[all]':'Debug RC Interpolation',
-            'debug[0]':'Raw RC Command [roll]',
-            'debug[1]':'Current RX Refresh Rate',
-            'debug[2]':'Interpolation Step Count',
-            'debug[3]':'RC Setpoint [roll]',
+        'RC_COMMAND' : {
+            'debug[all]':'Debug RC Command',
+            'debug[0]':'Roll',
+            'debug[1]':'Pitch',
+            'debug[2]':'Rudder',
+            'debug[3]':'Collective',
+            'debug[4]':'Throttle',
         },
         'RC_SMOOTHING' : {
             'debug[all]':'Debug RC Smoothing',
@@ -772,13 +773,15 @@ function FlightLogFieldPresenter() {
                     return flightLog.accRawToGs(value).toFixed(2) + "g";
                 case 'MIXER':
                     return Math.round(flightLog.rcCommandRawToThrottle(value)) + " %";
-                case 'RC_INTERPOLATION':
+                case 'RC_COMMAND':
                     switch (fieldName) {
-                        case 'debug[1]': // current RX refresh rate
-                            return value.toFixed(0) + 'ms';
-                        case 'debug[3]': // setpoint [roll]
-                            return value.toFixed(0) + '°/s';
-                    }
+                        case 'debug[0]': // roll
+                        case 'debug[1]': // pitch
+                        case 'debug[2]': // rudder
+                        case 'debug[3]': // collective
+                        case 'debug[4]': // throttle
+                            return (value).toFixed(0) + " µs";
+                        }
                     break;
                 case 'RC_SMOOTHING':
                     switch (fieldName) {
