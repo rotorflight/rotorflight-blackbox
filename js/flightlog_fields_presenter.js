@@ -474,6 +474,11 @@ function FlightLogFieldPresenter() {
             'debug[4]':'Zeros',
             'debug[5]':'Prescaler',
         },
+        'PITCH_PRECOMP' : {
+            'debug[all]':'Pitch Precompensation',
+            'debug[0]':'Collective Deflection',
+            'debug[1]':'Pitch Precompensation',
+        }
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -940,6 +945,14 @@ function FlightLogFieldPresenter() {
                         case 'debug[4]': // zeros
                         case 'debug[5]': // prescaler
                             break;
+                    }
+                    break;
+                case 'PITCH_PRECOMP':
+                    switch (fieldName) {
+                        case 'debug[0]': // collective deflection
+                            return (value / 1000).toFixed(2);
+                        case 'debug[1]': // pitch precomp
+                            return (value / 10).toFixed(1);
                     }
                     break;
                 }
