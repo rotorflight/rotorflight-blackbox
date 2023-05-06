@@ -439,10 +439,14 @@ function FlightLogFieldPresenter() {
         },
         'YAW_PRECOMP' : {
             'debug[all]':'Yaw Precompensation',
-            'debug[0]':'Cyclic Feedforward',
+            'debug[0]':'Collective Deflection',
             'debug[1]':'Collective Feedforward',
-            'debug[2]':'Collective Impulse Feedforward',
-            'debug[3]':'Total Precompensation',
+            'debug[2]':'Collective High Freq FF',
+            'debug[3]':'Cyclic Deflection',
+            'debug[4]':'Yaw Collective Feedforward',
+            'debug[5]':'Yaw Collective High Freq FF',
+            'debug[6]':'Yaw Cyclic Feedforward',
+            'debug[7]':'Total Precompensation',
         },
         'GOVERNOR' : {
             'debug[all]':'Governor',
@@ -909,7 +913,18 @@ function FlightLogFieldPresenter() {
                         }
                         break;
                 case 'YAW_PRECOMP':
-                    return (value / 10).toFixed(1) + '%';
+                    switch (fieldName) {
+                        case 'debug[0]': // collective deflection
+                        case 'debug[1]': // collective ff
+                        case 'debug[2]': // collective hf
+                        case 'debug[3]': // cyclic deflection
+                        case 'debug[4]': // yaw collective ff
+                        case 'debug[5]': // yaw collective hf
+                        case 'debug[6]': // yaw cyclic ff
+                        case 'debug[7]': // yaw total precomp
+                            return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
                 case 'GOVERNOR':
                     switch (fieldName) {
                         case 'debug[0]': // requested head speed
@@ -953,9 +968,8 @@ function FlightLogFieldPresenter() {
                 case 'PITCH_PRECOMP':
                     switch (fieldName) {
                         case 'debug[0]': // collective deflection
-                            return (value / 1000).toFixed(2);
                         case 'debug[1]': // pitch precomp
-                            return (value / 10).toFixed(1);
+                            return (value / 10).toFixed(1) + '%';
                     }
                     break;
                 }
