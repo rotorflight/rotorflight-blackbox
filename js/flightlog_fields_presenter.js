@@ -483,7 +483,18 @@ function FlightLogFieldPresenter() {
             'debug[all]':'Pitch Precompensation',
             'debug[0]':'Collective Deflection',
             'debug[1]':'Pitch Precompensation',
-        }
+        },
+        'RESCUE' : {
+            'debug[all]':'Rescue',
+            'debug[0]':'Roll Attitude',
+            'debug[1]':'Pitch Attitude',
+            'debug[2]':'Yaw Attitude',
+            'debug[3]':'Cos Tilt Angle',
+            'debug[4]':'Setpoint Roll',
+            'debug[5]':'Setpoint Pitch',
+            'debug[6]':'Setpoint Yaw',
+            'debug[7]':'Setpoint Collective',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -970,6 +981,22 @@ function FlightLogFieldPresenter() {
                         case 'debug[0]': // collective deflection
                         case 'debug[1]': // pitch precomp
                             return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
+                case 'RESCUE':
+                    switch (fieldName) {
+                        case 'debug[0]': // roll attitude
+                        case 'debug[1]': // pitch attitude
+                        case 'debug[2]': // yaw attitude
+                            return (value / 10).toFixed(1) + 'deg';
+                        case 'debug[3]': // cos tilt angle
+                            return (value / 1000).toFixed(2);
+                        case 'debug[4]': // setpoint roll
+                        case 'debug[5]': // setpoint pitch
+                        case 'debug[6]': // setpoint yaw
+                            return value.toFixed(0) + " °/s";
+                        case 'debug[7]': // setpoint collective
+                            break;
                     }
                     break;
                 }
