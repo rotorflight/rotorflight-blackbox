@@ -324,6 +324,7 @@ function FlightLogFieldPresenter() {
             'debug[1]':'Motor Index',
             'debug[2]':'Motor RPM',
             'debug[3]':'Filter Hz',
+            'debug[4]':'Loop Rate',
         },
         'D_MIN' : {
             'debug[all]':'D_MIN',
@@ -869,10 +870,10 @@ function FlightLogFieldPresenter() {
                         case 'debug[2]': // motor rpm
                             return value.toFixed(0) + 'rpm';
                         case 'debug[3]': // filter Hz
+                        case 'debug[4]': // loop rate
                             return (value / 10).toFixed(1) + 'Hz';
                     }
                     break;
-                    return value.toFixed(0) + "Hz";
                 case 'D_MIN':
                     switch (fieldName) {
                         case 'debug[0]': // roll gyro factor
