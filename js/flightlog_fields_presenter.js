@@ -933,8 +933,7 @@ function FlightLogFieldPresenter() {
                             return (value / 100).toFixed(1) + 'deg';
                         default:
                             return value.toFixed(0);
-                        }
-                        break;
+                    }
                 case 'YAW_PRECOMP':
                     switch (fieldName) {
                         case 'debug[0]': // collective deflection
@@ -1011,22 +1010,22 @@ function FlightLogFieldPresenter() {
                             break;
                     }
                     break;
-                    case 'SETPOINT':
-                        switch (fieldName) {
-                            case 'debug[0]': // rc deflection
-                            case 'debug[1]': // sp after cyclic ring
-                            case 'debug[2]': // sp after slew limit
-                            case 'debug[3]': // sp after filter
-                                return (value / 10).toFixed(1) + "%";
-                            case 'debug[4]': // sp after rates
-                            case 'debug[5]': // maximum (or cutoff?)
-                            case 'debug[6]': // cutoff
-                                break;
-                            case 'debug[7]': // frame rate
-                                return value.toFixed(0) + " µs";
-                        }
-                        break;
+                case 'SETPOINT':
+                    switch (fieldName) {
+                        case 'debug[0]': // rc deflection
+                        case 'debug[1]': // sp after cyclic ring
+                        case 'debug[2]': // sp after slew limit
+                        case 'debug[3]': // sp after filter
+                            return (value / 10).toFixed(1) + "%";
+                        case 'debug[4]': // sp after rates
+                        case 'debug[5]': // maximum (or cutoff?)
+                        case 'debug[6]': // cutoff
+                            break;
+                        case 'debug[7]': // frame rate
+                            return value.toFixed(0) + " µs";
                     }
+                    break;
+            }
             return value.toFixed(0);
         }
         return "";
