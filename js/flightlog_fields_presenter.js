@@ -507,6 +507,17 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Cutoff',
             'debug[7]':'Frame Time',
         },
+        'AIRBORNE' : {
+            'debug[all]':'Setpoint',
+            'debug[0]':'Sqrt SP Max [roll]',
+            'debug[1]':'Sqrt SP Max [pitch]',
+            'debug[2]':'Sqrt SP Max [yaw]',
+            'debug[3]':'Sqrt SP Max [collective]',
+            'debug[4]':'Cos Tilt Angle',
+            'debug[5]':'Is Spooled Up',
+            'debug[6]':'Is Hands On',
+            'debug[7]':'Is Airborne',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -1023,6 +1034,20 @@ function FlightLogFieldPresenter() {
                             break;
                         case 'debug[7]': // frame rate
                             return value.toFixed(0) + " µs";
+                    }
+                    break;
+                case 'AIRBORNE':
+                    switch (fieldName) {
+                        case 'debug[0]': // sqrt sp max roll
+                        case 'debug[1]': // sqrt sp max pitch
+                        case 'debug[2]': // sqrt sp max yaw
+                        case 'debug[3]': // sqrt sp max collective
+                        case 'debug[4]': // cos tilt angle
+                            return (value / 1000).toFixed(2);
+                        case 'debug[5]': // is spooled up
+                        case 'debug[6]': // is hands on
+                        case 'debug[7]': // is airborne
+                            break;
                     }
                     break;
             }
