@@ -582,7 +582,7 @@ var
         "RTH",
         "ITERM_RELAX",
         "ACRO_TRAINER",
-        "RC_SMOOTHING",
+        "SETPOINT",
         "RX_SIGNAL_LOSS",
         "RC_RAW",
         "RC_DATA",

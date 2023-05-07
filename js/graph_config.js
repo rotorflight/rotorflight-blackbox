@@ -411,6 +411,20 @@ GraphConfig.load = function(config) {
                             inputRange: 500,
                             outputRange: 1.0
                         };
+                    case 'SETPOINT':
+                        switch (fieldName) {
+                            case 'debug[0]':
+                            case 'debug[1]':
+                            case 'debug[2]':
+                            case 'debug[3]':
+                                return {
+                                    offset: 0,
+                                    power: 1,
+                                    inputRange: 1000,
+                                    outputRange: 1.0
+                                };
+                            }
+                        break;
                     case 'RC_SMOOTHING':
                         switch (fieldName) {
                             case 'debug[0]': // raw RC command

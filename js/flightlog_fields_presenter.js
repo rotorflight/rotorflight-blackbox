@@ -496,6 +496,17 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Setpoint Yaw',
             'debug[7]':'Setpoint Collective',
         },
+        'SETPOINT' : {
+            'debug[all]':'Setpoint',
+            'debug[0]':'RC Deflection',
+            'debug[1]':'SP After Cyclic Ring',
+            'debug[2]':'SP After Slew Limit',
+            'debug[3]':'SP After Filter',
+            'debug[4]':'SP After Rates',
+            'debug[5]':'SP Maximum or Cutoff',
+            'debug[6]':'Cutoff',
+            'debug[7]':'Frame Time',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -1000,7 +1011,22 @@ function FlightLogFieldPresenter() {
                             break;
                     }
                     break;
-                }
+                    case 'SETPOINT':
+                        switch (fieldName) {
+                            case 'debug[0]': // rc deflection
+                            case 'debug[1]': // sp after cyclic ring
+                            case 'debug[2]': // sp after slew limit
+                            case 'debug[3]': // sp after filter
+                                return (value / 10).toFixed(1) + "%";
+                            case 'debug[4]': // sp after rates
+                            case 'debug[5]': // maximum (or cutoff?)
+                            case 'debug[6]': // cutoff
+                                break;
+                            case 'debug[7]': // frame rate
+                                return value.toFixed(0) + " µs";
+                        }
+                        break;
+                    }
             return value.toFixed(0);
         }
         return "";
