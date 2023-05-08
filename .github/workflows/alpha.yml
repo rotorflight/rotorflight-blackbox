@@ -76,7 +76,7 @@ jobs:
         path: rotorflight-blackbox*
 
 
-  windows:
+  win64:
 
     runs-on: windows-latest
 
@@ -99,6 +99,40 @@ jobs:
 
     - name: Build release for windows
       run: yarn gulp release --win64
+
+    - name: Move artifacts
+      run: move release/rotorflight-blackbox* .
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: rotorflight-blackbox-windows-alpha-${{ env.GIT_VER }}
+        path: rotorflight-blackbox*
+
+
+  win32:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.15.1
+
+    - name: Set build variables
+      run: |
+        $GIT_VER = $env:GITHUB_REF -replace '.*/',''
+        echo "GIT_VER=$GIT_VER" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    - name: Initialise build environment
+      run: yarn install
+
+    - name: Build release for windows
+      run: yarn gulp release --win32
 
     - name: Move artifacts
       run: move release/rotorflight-blackbox* .
