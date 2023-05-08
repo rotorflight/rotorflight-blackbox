@@ -503,7 +503,7 @@ function FlightLogFieldPresenter() {
             'debug[2]':'SP After Slew Limit',
             'debug[3]':'SP After Filter',
             'debug[4]':'SP After Rates',
-            'debug[5]':'SP Maximum or Cutoff',
+            'debug[5]':'SP Maximum',
             'debug[6]':'Cutoff',
             'debug[7]':'Frame Time',
         },
@@ -1029,7 +1029,7 @@ function FlightLogFieldPresenter() {
                         case 'debug[3]': // sp after filter
                             return (value / 10).toFixed(1) + "%";
                         case 'debug[4]': // sp after rates
-                        case 'debug[5]': // maximum (or cutoff?)
+                        case 'debug[5]': // maximum
                         case 'debug[6]': // cutoff
                             break;
                         case 'debug[7]': // frame rate
