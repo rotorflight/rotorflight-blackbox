@@ -229,10 +229,14 @@ function FlightLogFieldPresenter() {
         },
         'ESC_SENSOR' : {
             'debug[all]':'ESC Sensor',
-            'debug[0]':'Motor Index',
-            'debug[1]':'Timeouts',
-            'debug[2]':'CNC errors',
-            'debug[3]':'Data age',
+            'debug[0]':'Packet | Motor',
+            'debug[1]':'Bytes Read | Timeouts',
+            'debug[2]':'CRC Errors',
+            'debug[3]':'Data Age',
+            'debug[4]':'eRPM',
+            'debug[5]':'Temp',
+            'debug[6]':'Voltage',
+            'debug[7]':'Current',
         },
         'SCHEDULER' : {
             'debug[all]':'Scheduler',
@@ -844,9 +848,16 @@ function FlightLogFieldPresenter() {
                     switch (fieldName) {
                         case 'debug[3]':
                             return value.toFixed(0) + "\u03BCS";
-                        default:
-                            return value.toFixed(0) + "";
+                        case 'debug[4]':
+                            return value.toFixed(0) + "rpm";
+                        case 'debug[5]':
+                            return value.toFixed(0) + "°C";
+                        case 'debug[6]':
+                            return (value / 100).toFixed(2) + "V";
+                        case 'debug[7]':
+                            return (value / 100).toFixed(2) + "A";
                     }
+                    break;
                 case 'ESC_SENSOR_RPM':
                     return value.toFixed(0) + "rpm";
                 case 'ESC_SENSOR_TMP':
