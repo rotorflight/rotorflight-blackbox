@@ -506,7 +506,7 @@ GraphConfig.load = function(config) {
                     case 'ESC_SENSOR_RPM':
                     case 'DSHOT_RPM_TELEMETRY':
                     case 'RPM_FILTER':
-                        return getCurveForMinMaxFields('debug[0]', 'debug[1]', 'debug[2]', 'debug[3]');
+                        break;
                     case 'D_MIN':
                         switch (fieldName) {
                             case 'debug[0]': // roll gyro factor
