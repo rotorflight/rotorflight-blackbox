@@ -310,10 +310,9 @@ function FlightLogFieldPresenter() {
         },
         'ESC_SENSOR_RPM' : {
             'debug[all]':'ESC RPM',
-            'debug[0]':'ESC RPM [1]',
-            'debug[1]':'ESC RPM [2]',
-            'debug[2]':'ESC RPM [3]',
-            'debug[3]':'ESC RPM [4]',
+            'debug[0]':'RPM',
+            'debug[1]':'Throttle',
+            'debug[2]':'PWM',
         },
         'DSHOT_RPM_TELEMETRY' : {
             'debug[all]':'DShot Telemetry RPM',
@@ -859,7 +858,11 @@ function FlightLogFieldPresenter() {
                     }
                     break;
                 case 'ESC_SENSOR_RPM':
-                    return value.toFixed(0) + "rpm";
+                    switch (fieldName) {
+                        case 'debug[0]':
+                            return value.toFixed(0) + "rpm";
+                    }
+                    break;
                 case 'ESC_SENSOR_TMP':
                     return value.toFixed(0) + "°C";
                 case 'SCHEDULER':
