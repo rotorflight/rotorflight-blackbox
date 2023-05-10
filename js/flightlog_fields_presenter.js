@@ -191,12 +191,13 @@ function FlightLogFieldPresenter() {
             'debug[2]':'Gyro Scaled [yaw]',
             'debug[3]':'Not Used',
         },
-        'RC_INTERPOLATION' : {
-            'debug[all]':'Debug RC Interpolation',
-            'debug[0]':'Raw RC Command [roll]',
-            'debug[1]':'Current RX Refresh Rate',
-            'debug[2]':'Interpolation Step Count',
-            'debug[3]':'RC Setpoint [roll]',
+        'RC_COMMAND' : {
+            'debug[all]':'Debug RC Command',
+            'debug[0]':'Roll',
+            'debug[1]':'Pitch',
+            'debug[2]':'Rudder',
+            'debug[3]':'Collective',
+            'debug[4]':'Throttle',
         },
         'RC_SMOOTHING' : {
             'debug[all]':'Debug RC Smoothing',
@@ -228,10 +229,14 @@ function FlightLogFieldPresenter() {
         },
         'ESC_SENSOR' : {
             'debug[all]':'ESC Sensor',
-            'debug[0]':'Motor Index',
-            'debug[1]':'Timeouts',
-            'debug[2]':'CNC errors',
-            'debug[3]':'Data age',
+            'debug[0]':'Packet | Motor',
+            'debug[1]':'Bytes Read | Timeouts',
+            'debug[2]':'CRC Errors',
+            'debug[3]':'Data Age',
+            'debug[4]':'eRPM',
+            'debug[5]':'Temp',
+            'debug[6]':'Voltage',
+            'debug[7]':'Current',
         },
         'SCHEDULER' : {
             'debug[all]':'Scheduler',
@@ -305,10 +310,14 @@ function FlightLogFieldPresenter() {
         },
         'ESC_SENSOR_RPM' : {
             'debug[all]':'ESC RPM',
-            'debug[0]':'ESC RPM [1]',
-            'debug[1]':'ESC RPM [2]',
-            'debug[2]':'ESC RPM [3]',
-            'debug[3]':'ESC RPM [4]',
+            'debug[0]':'RPM',
+            'debug[1]':'Throttle',
+            'debug[2]':'PWM',
+        },
+        'ESC_SENSOR_TMP' : {
+            'debug[all]':'ESC Temp',
+            'debug[0]':'FET Temp',
+            'debug[1]':'BEC Temp',
         },
         'DSHOT_RPM_TELEMETRY' : {
             'debug[all]':'DShot Telemetry RPM',
@@ -323,6 +332,7 @@ function FlightLogFieldPresenter() {
             'debug[1]':'Motor Index',
             'debug[2]':'Motor RPM',
             'debug[3]':'Filter Hz',
+            'debug[4]':'Loop Rate',
         },
         'D_MIN' : {
             'debug[all]':'D_MIN',
@@ -438,10 +448,14 @@ function FlightLogFieldPresenter() {
         },
         'YAW_PRECOMP' : {
             'debug[all]':'Yaw Precompensation',
-            'debug[0]':'Cyclic Feedforward',
+            'debug[0]':'Collective Deflection',
             'debug[1]':'Collective Feedforward',
-            'debug[2]':'Collective Impulse Feedforward',
-            'debug[3]':'Total Precompensation',
+            'debug[2]':'Collective High Freq FF',
+            'debug[3]':'Cyclic Deflection',
+            'debug[4]':'Yaw Collective Feedforward',
+            'debug[5]':'Yaw Collective High Freq FF',
+            'debug[6]':'Yaw Cyclic Feedforward',
+            'debug[7]':'Total Precompensation',
         },
         'GOVERNOR' : {
             'debug[all]':'Governor',
@@ -453,6 +467,64 @@ function FlightLogFieldPresenter() {
             'debug[5]':'Gov I',
             'debug[6]':'Gov D',
             'debug[7]':'Gov F',
+        },
+        'RX_TIMING' : {
+            'debug[all]':'Receiver Timing',
+            'debug[0]':'Average Refresh Rate',
+            'debug[1]':'ARR * currentMult',
+            'debug[2]':'Current Refresh Rate',
+            'debug[3]':'Not Used',
+            'debug[4]':'Frame Delta',
+            'debug[5]':'Local Delta',
+            'debug[6]':'Frame Age',
+            'debug[7]':'currentMult',
+        },
+        'FREQ_SENSOR' : {
+            'debug[all]':'Freq Sensor',
+            'debug[0]':'Input Freq',
+            'debug[1]':'Freq',
+            'debug[2]':'Input Period',
+            'debug[3]':'Period',
+            'debug[4]':'Zeros',
+            'debug[5]':'Prescaler',
+        },
+        'PITCH_PRECOMP' : {
+            'debug[all]':'Pitch Precompensation',
+            'debug[0]':'Collective Deflection',
+            'debug[1]':'Pitch Precompensation',
+        },
+        'RESCUE' : {
+            'debug[all]':'Rescue',
+            'debug[0]':'Roll Attitude',
+            'debug[1]':'Pitch Attitude',
+            'debug[2]':'Yaw Attitude',
+            'debug[3]':'Cos Tilt Angle',
+            'debug[4]':'Setpoint Roll',
+            'debug[5]':'Setpoint Pitch',
+            'debug[6]':'Setpoint Yaw',
+            'debug[7]':'Setpoint Collective',
+        },
+        'SETPOINT' : {
+            'debug[all]':'Setpoint',
+            'debug[0]':'RC Deflection',
+            'debug[1]':'SP After Cyclic Ring',
+            'debug[2]':'SP After Slew Limit',
+            'debug[3]':'SP After Filter',
+            'debug[4]':'SP After Rates',
+            'debug[5]':'SP Maximum',
+            'debug[6]':'Cutoff',
+            'debug[7]':'Frame Time',
+        },
+        'AIRBORNE' : {
+            'debug[all]':'Setpoint',
+            'debug[0]':'Sqrt SP Max [roll]',
+            'debug[1]':'Sqrt SP Max [pitch]',
+            'debug[2]':'Sqrt SP Max [yaw]',
+            'debug[3]':'Sqrt SP Max [collective]',
+            'debug[4]':'Cos Tilt Angle',
+            'debug[5]':'Is Spooled Up',
+            'debug[6]':'Is Hands On',
+            'debug[7]':'Is Airborne',
         },
     };
 
@@ -747,13 +819,15 @@ function FlightLogFieldPresenter() {
                     return flightLog.accRawToGs(value).toFixed(2) + "g";
                 case 'MIXER':
                     return Math.round(flightLog.rcCommandRawToThrottle(value)) + " %";
-                case 'RC_INTERPOLATION':
+                case 'RC_COMMAND':
                     switch (fieldName) {
-                        case 'debug[1]': // current RX refresh rate
-                            return value.toFixed(0) + 'ms';
-                        case 'debug[3]': // setpoint [roll]
-                            return value.toFixed(0) + '°/s';
-                    }
+                        case 'debug[0]': // roll
+                        case 'debug[1]': // pitch
+                        case 'debug[2]': // rudder
+                        case 'debug[3]': // collective
+                        case 'debug[4]': // throttle
+                            return (value).toFixed(0) + " µs";
+                        }
                     break;
                 case 'RC_SMOOTHING':
                     switch (fieldName) {
@@ -778,13 +852,29 @@ function FlightLogFieldPresenter() {
                     switch (fieldName) {
                         case 'debug[3]':
                             return value.toFixed(0) + "\u03BCS";
-                        default:
-                            return value.toFixed(0) + "";
+                        case 'debug[4]':
+                            return value.toFixed(0) + "rpm";
+                        case 'debug[5]':
+                            return value.toFixed(0) + "°C";
+                        case 'debug[6]':
+                            return (value / 100).toFixed(2) + "V";
+                        case 'debug[7]':
+                            return (value / 100).toFixed(2) + "A";
                     }
+                    break;
                 case 'ESC_SENSOR_RPM':
-                    return value.toFixed(0) + "rpm";
+                    switch (fieldName) {
+                        case 'debug[0]':
+                            return value.toFixed(0) + "rpm";
+                    }
+                    break;
                 case 'ESC_SENSOR_TMP':
-                    return value.toFixed(0) + "°C";
+                    switch (fieldName) {
+                        case 'debug[0]':
+                        case 'debug[1]':
+                            return (value / 10).toFixed(1) + "°C";
+                    }
+                    break;
                 case 'SCHEDULER':
                     return value.toFixed(0) + "\u03BCS";
                 case 'STACK':
@@ -826,10 +916,10 @@ function FlightLogFieldPresenter() {
                         case 'debug[2]': // motor rpm
                             return value.toFixed(0) + 'rpm';
                         case 'debug[3]': // filter Hz
+                        case 'debug[4]': // loop rate
                             return (value / 10).toFixed(1) + 'Hz';
                     }
                     break;
-                    return value.toFixed(0) + "Hz";
                 case 'D_MIN':
                     switch (fieldName) {
                         case 'debug[0]': // roll gyro factor
@@ -878,10 +968,20 @@ function FlightLogFieldPresenter() {
                             return (value / 100).toFixed(1) + 'deg';
                         default:
                             return value.toFixed(0);
-                        }
-                        break;
+                    }
                 case 'YAW_PRECOMP':
-                    return (value / 10).toFixed(1) + '%';
+                    switch (fieldName) {
+                        case 'debug[0]': // collective deflection
+                        case 'debug[1]': // collective ff
+                        case 'debug[2]': // collective hf
+                        case 'debug[3]': // cyclic deflection
+                        case 'debug[4]': // yaw collective ff
+                        case 'debug[5]': // yaw collective hf
+                        case 'debug[6]': // yaw cyclic ff
+                        case 'debug[7]': // yaw total precomp
+                            return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
                 case 'GOVERNOR':
                     switch (fieldName) {
                         case 'debug[0]': // requested head speed
@@ -894,6 +994,84 @@ function FlightLogFieldPresenter() {
                         case 'debug[6]': // gov.D * 1000
                         case 'debug[7]': // gov.F * 1000
                             return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
+                case 'RX_TIMING':
+                    switch (fieldName) {
+                        case 'debug[0]': // average rx refresh rate
+                        case 'debug[1]': // average rx refresh rate * currentMult
+                        case 'debug[2]': // current refresh rate
+                        case 'debug[4]': // frame delta us
+                        case 'debug[5]': // local delta us
+                        case 'debug[6]': // frame age us
+                           return value.toFixed(0) + 'µs';
+                        case 'debug[7]': // currentMult
+                            break;
+                    }
+                    break;
+                case 'FREQ_SENSOR':
+                    switch (fieldName) {
+                        case 'debug[0]': // input freq
+                        case 'debug[1]': // freq
+                            return (value / 1000).toFixed(2) + 'Hz';
+                        case 'debug[2]': // input period
+                        case 'debug[3]': // period
+                            return value.toFixed(0) + 'ticks';
+                        case 'debug[4]': // zeros
+                        case 'debug[5]': // prescaler
+                            break;
+                    }
+                    break;
+                case 'PITCH_PRECOMP':
+                    switch (fieldName) {
+                        case 'debug[0]': // collective deflection
+                        case 'debug[1]': // pitch precomp
+                            return (value / 10).toFixed(1) + '%';
+                    }
+                    break;
+                case 'RESCUE':
+                    switch (fieldName) {
+                        case 'debug[0]': // roll attitude
+                        case 'debug[1]': // pitch attitude
+                        case 'debug[2]': // yaw attitude
+                            return (value / 10).toFixed(1) + 'deg';
+                        case 'debug[3]': // cos tilt angle
+                            return (value / 1000).toFixed(2);
+                        case 'debug[4]': // setpoint roll
+                        case 'debug[5]': // setpoint pitch
+                        case 'debug[6]': // setpoint yaw
+                            return value.toFixed(0) + " °/s";
+                        case 'debug[7]': // setpoint collective
+                            break;
+                    }
+                    break;
+                case 'SETPOINT':
+                    switch (fieldName) {
+                        case 'debug[0]': // rc deflection
+                        case 'debug[1]': // sp after cyclic ring
+                        case 'debug[2]': // sp after slew limit
+                        case 'debug[3]': // sp after filter
+                            return (value / 10).toFixed(1) + "%";
+                        case 'debug[4]': // sp after rates
+                        case 'debug[5]': // maximum
+                        case 'debug[6]': // cutoff
+                            break;
+                        case 'debug[7]': // frame rate
+                            return value.toFixed(0) + " µs";
+                    }
+                    break;
+                case 'AIRBORNE':
+                    switch (fieldName) {
+                        case 'debug[0]': // sqrt sp max roll
+                        case 'debug[1]': // sqrt sp max pitch
+                        case 'debug[2]': // sqrt sp max yaw
+                        case 'debug[3]': // sqrt sp max collective
+                        case 'debug[4]': // cos tilt angle
+                            return (value / 1000).toFixed(2);
+                        case 'debug[5]': // is spooled up
+                        case 'debug[6]': // is hands on
+                        case 'debug[7]': // is airborne
+                            break;
                     }
                     break;
             }

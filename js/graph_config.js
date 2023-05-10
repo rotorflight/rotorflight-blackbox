@@ -402,12 +402,26 @@ GraphConfig.load = function(config) {
                                     outputRange: 1.0
                                 };
                         }
-                    case 'RC_INTERPOLATION':
+                    case 'RC_COMMAND':
+                        return {
+                            offset: -500,
+                            power: 1.0,
+                            inputRange: 500,
+                            outputRange: 1.0
+                        };
+                    case 'SETPOINT':
                         switch (fieldName) {
-                            case 'debug[0]': // Roll RC Command
-                            case 'debug[3]': // refresh period
-                                return getCurveForMinMaxFieldsZeroOffset(fieldName);
-                        }
+                            case 'debug[0]':
+                            case 'debug[1]':
+                            case 'debug[2]':
+                            case 'debug[3]':
+                                return {
+                                    offset: 0,
+                                    power: 1,
+                                    inputRange: 1000,
+                                    outputRange: 1.0
+                                };
+                            }
                         break;
                     case 'RC_SMOOTHING':
                         switch (fieldName) {
@@ -490,7 +504,7 @@ GraphConfig.load = function(config) {
                     case 'ESC_SENSOR_RPM':
                     case 'DSHOT_RPM_TELEMETRY':
                     case 'RPM_FILTER':
-                        return getCurveForMinMaxFields('debug[0]', 'debug[1]', 'debug[2]', 'debug[3]');
+                        break;
                     case 'D_MIN':
                         switch (fieldName) {
                             case 'debug[0]': // roll gyro factor
