@@ -873,7 +873,7 @@ function FlightLogFieldPresenter() {
                         case 'debug[0]':
                         case 'debug[1]':
                             return (value / 10).toFixed(1) + "°C";
-                        }
+                    }
                     break;
                 case 'SCHEDULER':
                     return value.toFixed(0) + "\u03BCS";
