@@ -2852,7 +2852,7 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha512-4jbtZXNAsfZbAHiiqjLPBiCl16dES1zI4Hpzzxw61Tk+loF+sBDBKx1ICKKKwIqQ7M0mFn1TmkN7euSncWgHiQ==
 
-nw-builder@^3.7.4:
+nw-builder@~3.7.4:
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/nw-builder/-/nw-builder-3.7.4.tgz#7b8ebfcacf58ed1a80db052a8478b07b87721248"
   integrity sha512-rkjoeGBl8YmFobIcsnJZsawr6yBvLJ74ml+j04LRDVRsqevDspih6zI1+ybA28RLLrcqzgR7nJivKaUlAcuS7g==
