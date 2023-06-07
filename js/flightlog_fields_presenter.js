@@ -229,14 +229,14 @@ function FlightLogFieldPresenter() {
         },
         'ESC_SENSOR' : {
             'debug[all]':'ESC Sensor',
-            'debug[0]':'Packet | Motor',
-            'debug[1]':'Bytes Read | Timeouts',
-            'debug[2]':'CRC Errors',
-            'debug[3]':'Data Age',
-            'debug[4]':'eRPM',
-            'debug[5]':'Temp',
-            'debug[6]':'Voltage',
-            'debug[7]':'Current',
+            'debug[0]':'ESC 1 RPM',
+            'debug[1]':'ESC 1 Temp',
+            'debug[2]':'ESC 1 Voltage',
+            'debug[3]':'ESC 1 Current',
+            'debug[4]':'ESC 2 RPM',
+            'debug[5]':'ESC 2 Temp',
+            'debug[6]':'ESC 2 Voltage',
+            'debug[7]':'ESC 2 Current',
         },
         'SCHEDULER' : {
             'debug[all]':'Scheduler',
@@ -308,16 +308,27 @@ function FlightLogFieldPresenter() {
             'debug[2]':'Gyro Diff [yaw]',
             'debug[3]':'Not Used',
         },
-        'ESC_SENSOR_RPM' : {
-            'debug[all]':'ESC RPM',
+        'ESC_SENSOR_DATA' : {
+            'debug[all]':'ESC Data',
             'debug[0]':'RPM',
-            'debug[1]':'Throttle',
-            'debug[2]':'PWM',
+            'debug[1]':'PWM',
+            'debug[2]':'Temp',
+            'debug[3]':'Voltage',
+            'debug[4]':'Current',
+            'debug[5]':'Capacity',
+            'debug[6]':'Extra',
+            'debug[7]':'Age',
         },
-        'ESC_SENSOR_TMP' : {
-            'debug[all]':'ESC Temp',
-            'debug[0]':'FET Temp',
-            'debug[1]':'BEC Temp',
+        'ESC_SENSOR_FRAME' : {
+            'debug[all]':'ESC Framing',
+            'debug[0]':'Byte Count',
+            'debug[1]':'Frame Count',
+            'debug[2]':'Sync Count',
+            'debug[3]':'Sync Errors',
+            'debug[4]':'CRC Errors',
+            'debug[5]':'Timeouts',
+            'debug[6]':'Buffer size',
+            'debug[6]':'Not Used',
         },
         'DSHOT_RPM_TELEMETRY' : {
             'debug[all]':'DShot Telemetry RPM',
@@ -850,31 +861,41 @@ function FlightLogFieldPresenter() {
                     return value.toFixed(0) + "°/s";
                 case 'ESC_SENSOR':
                     switch (fieldName) {
-                        case 'debug[3]':
-                            return value.toFixed(0) + "\u03BCS";
+                        case 'debug[0]':
                         case 'debug[4]':
-                            return value.toFixed(0) + "rpm";
-                        case 'debug[5]':
-                            return value.toFixed(0) + "°C";
-                        case 'debug[6]':
-                            return (value / 100).toFixed(2) + "V";
-                        case 'debug[7]':
-                            return (value / 100).toFixed(2) + "A";
-                    }
-                    break;
-                case 'ESC_SENSOR_RPM':
-                    switch (fieldName) {
-                        case 'debug[0]':
-                            return value.toFixed(0) + "rpm";
-                    }
-                    break;
-                case 'ESC_SENSOR_TMP':
-                    switch (fieldName) {
-                        case 'debug[0]':
+                            return value.toFixed(0) + " erpm";
                         case 'debug[1]':
-                            return (value / 10).toFixed(1) + "°C";
+                        case 'debug[5]':
+                            return (value / 10).toFixed(1) + " °C";
+                        case 'debug[2]':
+                        case 'debug[6]':
+                            return (value / 100).toFixed(2) + " V";
+                        case 'debug[3]':
+                        case 'debug[7]':
+                            return (value / 100).toFixed(2) + " A";
                     }
                     break;
+                case 'ESC_SENSOR_DATA':
+                    switch (fieldName) {
+                        case 'debug[0]':
+                            return value.toFixed(0) + " [erpm]";
+                        case 'debug[1]':
+                            return value.toFixed(0) + " [%]";
+                        case 'debug[2]':
+                            return value.toFixed(0) + " [°C]";
+                        case 'debug[3]':
+                            return value.toFixed(2) + " [V]";
+                        case 'debug[4]':
+                            return value.toFixed(2) + " [A]";
+                        case 'debug[5]':
+                            return value.toFixed(0) + " [mAh]";
+                        case 'debug[6]':
+                        case 'debug[7]':
+                            return value.toFixed(0);
+                    }
+                    break;
+                case 'ESC_SENSOR_FRAME':
+                    return value.toFixed(0);
                 case 'SCHEDULER':
                     return value.toFixed(0) + "\u03BCS";
                 case 'STACK':

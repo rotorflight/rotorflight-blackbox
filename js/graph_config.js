@@ -501,7 +501,6 @@ GraphConfig.load = function(config) {
                             inputRange: 100,
                             outputRange: 1.0
                         };
-                    case 'ESC_SENSOR_RPM':
                     case 'DSHOT_RPM_TELEMETRY':
                     case 'RPM_FILTER':
                         break;
