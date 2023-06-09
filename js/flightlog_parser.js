@@ -1445,39 +1445,6 @@ var FlightLogParser = function(logData) {
             case FlightLogEvent.DISARM:
                 lastEvent.data.reason = stream.readUnsignedVB();
             break;
-            case FlightLogEvent.AUTOTUNE_CYCLE_START:
-                lastEvent.data.phase = stream.readByte();
-
-                var cycleAndRising = stream.readByte();
-
-                lastEvent.data.cycle = cycleAndRising & 0x7F;
-                lastEvent.data.rising = (cycleAndRising >> 7) & 0x01;
-
-                lastEvent.data.p = stream.readByte();
-                lastEvent.data.i = stream.readByte();
-                lastEvent.data.d = stream.readByte();
-            break;
-            case FlightLogEvent.AUTOTUNE_CYCLE_RESULT:
-                lastEvent.data.overshot = stream.readByte();
-                lastEvent.data.p = stream.readByte();
-                lastEvent.data.i = stream.readByte();
-                lastEvent.data.d = stream.readByte();
-            break;
-            case FlightLogEvent.AUTOTUNE_TARGETS:
-                //Convert the angles from decidegrees back to plain old degrees for ease of use
-                lastEvent.data.currentAngle = stream.readS16() / 10.0;
-
-                lastEvent.data.targetAngle = stream.readS8();
-                lastEvent.data.targetAngleAtPeak = stream.readS8();
-
-                lastEvent.data.firstPeakAngle = stream.readS16() / 10.0;
-                lastEvent.data.secondPeakAngle = stream.readS16() / 10.0;
-            break;
-            case FlightLogEvent.GTUNE_CYCLE_RESULT:
-                lastEvent.data.axis = stream.readU8();
-                lastEvent.data.gyroAVG = stream.readSignedVB();
-                lastEvent.data.newP = stream.readS16();
-            break;
             case FlightLogEvent.INFLIGHT_ADJUSTMENT:
                 var tmp = stream.readU8();
                 lastEvent.data.func = tmp & 127;
@@ -1496,26 +1463,15 @@ var FlightLogParser = function(logData) {
                     lastEvent.data.value = Math.round((lastEvent.data.value * scale) * 10000) / 10000;
                 }
             break;
-            case FlightLogEvent.TWITCH_TEST:
-                //lastEvent.data.stage = stream.readU8();
-                var tmp = stream.readU8();
-                switch (tmp) {
-                    case(1):
-                        lastEvent.data.name = "Response Time->";
-                        break;
-                    case(2):
-                        lastEvent.data.name = "Half Setpoint Time->";
-                        break;
-                    case(3):
-                        lastEvent.data.name = "Setpoint Time->";
-                        break;
-                    case(4):
-                        lastEvent.data.name = "Negative Setpoint->";
-                        break;
-                    case(5):
-                        lastEvent.data.name = "Initial Setpoint->";
-                }
-                lastEvent.data.value = uint32ToFloat(stream.readU32());
+            case FlightLogEvent.CUSTOM_DATA:
+                lastEvent.data.length = stream.readByte();
+                lastEvent.data.buffer = [];
+                for (let i = 0; i<lastEvent.data.length; i++)
+                    lastEvent.data.buffer.push(stream.readByte());
+            break;
+            case FlightLogEvent.CUSTOM_STRING:
+                lastEvent.data.length = stream.readByte();
+                lastEvent.data.string = stream.readString(lastEvent.data.length);
             break;
             case FlightLogEvent.LOGGING_RESUME:
                 lastEvent.data.logIteration = stream.readUnsignedVB();

@@ -18,19 +18,17 @@ var
     FlightLogEvent = makeReadOnly({
         SYNC_BEEP: 0,
 
-        AUTOTUNE_CYCLE_START: 10,
-        AUTOTUNE_CYCLE_RESULT: 11,
-        AUTOTUNE_TARGETS: 12,
         INFLIGHT_ADJUSTMENT: 13,
         LOGGING_RESUME: 14,
         DISARM: 15,
 
-        GTUNE_CYCLE_RESULT: 20,
         FLIGHT_MODE: 30,
-        TWITCH_TEST: 40, // Feature for latency testing
-        GOVERNOR_STATE: 50,  // Main motor governor state
+        GOVERNOR_STATE: 50,
         RESCUE_STATE: 51,
         AIRBORNE_STATE: 52,
+
+        CUSTOM_DATA: 100,
+        CUSTOM_STRING: 101,
 
         CUSTOM : 250, // Virtual Event Code - Never part of Log File.
         CUSTOM_BLANK : 251, // Virtual Event Code - Never part of Log File. - No line shown

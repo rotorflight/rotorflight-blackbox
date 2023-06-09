@@ -519,14 +519,6 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             labelY = (sequenceNum + 1) * (drawingParams.fontSizeEventLabel + 10);
 
         switch (event.event) {
-            case FlightLogEvent.AUTOTUNE_TARGETS:
-                canvasContext.beginPath();
-
-                canvasContext.moveTo(x, canvas.height / 2 - 25);
-                canvasContext.lineTo(x, canvas.height / 2 + 25);
-
-                canvasContext.stroke();
-            break;
             case FlightLogEvent.LOGGING_RESUME:
                 drawEventLine(x, labelY, "Logging resumed", "rgba(50,50,50,0.75)", 3);
             break;
@@ -542,20 +534,20 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
             case FlightLogEvent.AIRBORNE_STATE:
                 drawEventLine(x, labelY, `Airborne: ${FlightLogFieldPresenter.presentEnum(event.data.airborneState, FLIGHT_LOG_AIRBORNE_STATES)}`, "rgba(255,150,0,0.75)", 2);
             break;
-            case FlightLogEvent.GTUNE_CYCLE_RESULT:
-                drawEventLine(x, labelY, "GTune result - axis:" + event.data.axis + " gyroAVG:" + event.data.gyroAVG + " newP:" + event.data.newP, "rgba(255,255,255,0.5)");
-            break;
             case FlightLogEvent.INFLIGHT_ADJUSTMENT:
                 drawEventLine(x, labelY, event.data.name + " = " + event.data.value, "rgba(0,255,255,0.5)", 2);
             break
-            case FlightLogEvent.TWITCH_TEST:
-                drawEventLine(x, labelY, "Twitch Test: " + event.data.name + event.data.value.toFixed(3) + "ms", "rgba(0,133,255,0.5)", 2);
-            break;
             case FlightLogEvent.FLIGHT_MODE:
                 drawEventLine(x, labelY, "Flight Mode Change" + FlightLogFieldPresenter.presentChangeEvent(event.data.newFlags, event.data.lastFlags, FLIGHT_LOG_FLIGHT_MODE_NAME), "rgba(0,0,255,0.75)", 3);
             break;
             case FlightLogEvent.DISARM:
                 drawEventLine(x, labelY, `Disarm: ${FlightLogFieldPresenter.presentEnum(event.data.reason, FLIGHT_LOG_DISARM_REASON)}`, "rgba(128,0,255,0.75)", 3);
+            break;
+            case FlightLogEvent.CUSTOM_DATA:
+                drawEventLine(x, labelY, 'DATA: ' + event.data.buffer.join(), "rgba(0,133,255,0.5)", 3);
+            break;
+            case FlightLogEvent.CUSTOM_STRING:
+                drawEventLine(x, labelY, event.data.string, "rgba(0,133,255,0.5)", 3);
             break;
             case FlightLogEvent.CUSTOM: // Virtual Events shown in RED
                 drawEventLine(x, labelY, (event.label)?event.label:'EVENT', "rgba(255,0,0,0.75)", 3, null, event.align);
