@@ -79,8 +79,16 @@ var FlightLogParser = function(logData) {
 
         INFLIGHT_ADJUSTMENT_FUNCTIONS = [
             { name: 'None',                           },
+
+            // Profile change
+            { name: 'Rate Profile',                   },
+            { name: 'PID Profile',                    },
+            { name: 'LED Profile',                    },
+            { name: 'OSD Profile',                    },
+
+            // Rates
             { name: 'Pitch Rate',                     },
-            { nam : 'Roll Rate',                      },
+            { name: 'Roll Rate',                      },
             { name: 'Yaw Rate',                       },
             { name: 'Pitch RC Rate',                  },
             { name: 'Roll RC Rate',                   },
@@ -88,6 +96,8 @@ var FlightLogParser = function(logData) {
             { name: 'Pitch RC Expo',  scale: 0.01,    },
             { name: 'Roll RC Expo',   scale: 0.01,    },
             { name: 'Yaw RC Expo',    scale: 0.01,    },
+
+            // PID
             { name: 'Pitch P-gain',                   },
             { name: 'Pitch I-gain',                   },
             { name: 'Pitch D-gain',                   },
@@ -100,49 +110,61 @@ var FlightLogParser = function(logData) {
             { name: 'Yaw I-gain',                     },
             { name: 'Yaw D-gain',                     },
             { name: 'Yaw F-gain',                     },
-            { name: 'Yaw Center',                     },
+
             { name: 'Yaw CW Stop Gain',               },
             { name: 'Yaw CCW Stop Gain',              },
             { name: 'Yaw Cyclic FF',                  },
             { name: 'Yaw Collective FF',              },
-            { name: 'Yaw Impulse FF',                 },
+            { name: 'Yaw Collective Dyn',             },
+            { name: 'Yaw Collective Decay',           },
             { name: 'Pitch Collective FF',            },
-            { name: 'Pitch Impulse FF',               },
-            { name: 'Rescue Collective',              },
-            { name: 'Rescue Collective Boost',        },
+
+            // Gyro cutoffs
+            { name: 'Pitch Gyro Cutoff',              },
+            { name: 'Roll Gyro Cutoff',               },
+            { name: 'Yaw Gyro Cutoff',                },
+
+            // Dterm cutoffs
+            { name: 'Pitch D-term Cutoff',            },
+            { name: 'Roll D-term Cutoff',             },
+            { name: 'Yaw D-term Cutoff',              },
+
+            // Rescue
+            { name: 'Rescue Climb Collective',        },
+            { name: 'Rescue Hover Collective',        },
+            { name: 'Rescue Hover Altitude',          },
+            { name: 'Rescue Alt P-gain',              },
+            { name: 'Rescue Alt I-gain',              },
+            { name: 'Rescue Alt D-gain',              },
+
+            // Leveling
             { name: 'Angle Level Gain',               },
             { name: 'Horizon Level Gain',             },
             { name: 'Acro Trainer Gain',              },
+
+            // Governor
             { name: 'Governor Gain',                  },
             { name: 'Governor P-gain',                },
             { name: 'Governor I-gain',                },
             { name: 'Governor D-gain',                },
             { name: 'Governor F-gain',                },
             { name: 'Governor TTA-gain',              },
-            { name: 'Governor Cyclic Weight',         },
-            { name: 'Governor Collective Weight',     },
-            { name: 'Tail Motor Idle',                },
-            { name: 'Swash Phase',                    },
+            { name: 'Governor Cyclic FF',             },
+            { name: 'Governor Collective FF',         },
 
-            { name: 'Rate Profile'                    },
-            { name: 'Profile'                         },
-            { name: 'OSD Profile'                     },
-            { name: 'LED Profile'                     },
+            // Boost gains
+            { name: 'Pitch B-gain',                   },
+            { name: 'Roll B-gain',                    },
+            { name: 'Yaw B-gain',                     },
 
-            { name: 'Way P-gain',                     },
-            { name: 'Way I-gain',                     },
-            { name: 'Way D-gain',                     },
-            { name: 'Way F-gain',                     },
+            // Offset gains
+            { name: 'Pitch O-gain'                    },
+            { name: 'Roll O-gain'                     },
 
-            { name: 'Pitch Error Cutoff',             },
-            { name: 'Pitch D-term Cutoff',            },
-            { name: 'Pitch F-term Cutoff',            },
-            { name: 'Roll Error Cutoff',              },
-            { name: 'Roll D-term Cutoff',             },
-            { name: 'Roll F-term Cutoff',             },
-            { name: 'Yaw Error Cutoff',               },
-            { name: 'Yaw D-term Cutoff',              },
-            { name: 'Yaw F-term Cutoff',              },
+            // Cross coupling
+            { name: 'Cross Coupling Gain'             },
+            { name: 'Cross Coupling Ratio'            },
+            { name: 'Cross Coupling Cutoff'           }
         ];
 
     //Private variables:
