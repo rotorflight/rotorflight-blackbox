@@ -2127,7 +2127,7 @@ function BlackboxLogViewer() {
 
             const item = e.dataTransfer.items[0];
             const entry = item.webkitGetAsEntry();
-            if (entry.isFile) {
+            if (entry?.isFile) {
               var file = e.dataTransfer.files[0];
               loadFiles([file]);
             }
