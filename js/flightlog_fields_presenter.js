@@ -339,11 +339,14 @@ function FlightLogFieldPresenter() {
         },
         'RPM_FILTER' : {
             'debug[all]':'RPM Filter',
-            'debug[0]':'Filter Bank',
-            'debug[1]':'Motor Index',
-            'debug[2]':'Motor RPM',
-            'debug[3]':'Filter Hz',
-            'debug[4]':'Loop Rate',
+            'debug[0]':'Motor RPM',
+            'debug[1]':'Freq',
+            'debug[2]':'Notch',
+            'debug[3]':'Update rate',
+            'debug[4]':'Motor',
+            'debug[5]':'Min Hz',
+            'debug[6]':'Max Hz',
+            'debug[7]':'Notch Q',
         },
         'D_MIN' : {
             'debug[all]':'D_MIN',
@@ -931,14 +934,18 @@ function FlightLogFieldPresenter() {
                     return (value * 200 / flightLog.getSysConfig()['motor_poles']).toFixed(0) + " rpm";
                 case 'RPM_FILTER':
                     switch (fieldName) {
-                        case 'debug[0]': // bank index
-                        case 'debug[1]': // motor index
-                            return value.toFixed(0);
-                        case 'debug[2]': // motor rpm
+                        case 'debug[0]': // motor rpm
                             return value.toFixed(0) + 'rpm';
-                        case 'debug[3]': // filter Hz
-                        case 'debug[4]': // loop rate
-                            return (value / 10).toFixed(1) + 'Hz';
+                        case 'debug[1]': // freq
+                        case 'debug[2]': // notch
+                        case 'debug[3]': // update rate
+                        case 'debug[5]': // min hz
+                        case 'debug[6]': // max hz
+                            return (value/10).toFixed(1) + 'Hz';
+                        case 'debug[4]': // motor
+                            return value.toFixed(0);
+                        case 'debug[7]': // notch q
+                            return (value/10).toFixed(1);
                     }
                     break;
                 case 'D_MIN':
