@@ -278,6 +278,13 @@ GraphConfig.load = function(config) {
                     inputRange: sysConfig.acc_1G * 16.0, /* Reasonable typical maximum for acc */
                     outputRange: 1.0
                 };
+            } else if (fieldName == "setpoint[3]") { // Collective
+                return {
+                    offset: 0,
+                    power: 1.0,
+                    inputRange: 1250,
+                    outputRange: 1.0
+                };
             } else if (fieldName.match(/^setpoint\[/)  ||     // Gyro, Gyro Scaled, RC Command Scaled and axisError
                        fieldName.match(/^gyroADC\[/) ||
                        fieldName.match(/^gyroRAW\[/)) {

@@ -685,12 +685,12 @@ function FlightLogFieldPresenter() {
             case 'setpoint[2]':
                 return value.toFixed(0) + " °/s";
             case 'setpoint[3]':
-            case 'setpoint[4]':
-                return value.toFixed(1) + "%";
+                return (value * 0.012).toFixed(1) + "°";
 
             case 'mixer[0]':
             case 'mixer[1]':
             case 'mixer[2]':
+                return (value * 0.012).toFixed(1) + "°";
             case 'mixer[3]':
                 return (value / 10).toFixed(1) + '%';
 
