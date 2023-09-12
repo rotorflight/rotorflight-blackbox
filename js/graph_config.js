@@ -473,17 +473,21 @@ GraphConfig.load = function(config) {
                         break;
                     case 'FFT_FREQ':
                         switch (fieldName) {
-                            case 'debug[0]': // roll center freq
-                            case 'debug[1]': // pitch center freq
-                                return getCurveForMinMaxFields('debug[0]', 'debug[1]');
-                            case 'debug[2]': // pre-dyn notch gyro [for selected axis]
-                            case 'debug[3]': // raw gyro [for selected axis]
+                            case 'debug[0]': // pre-dyn notch gyro [for selected axis]
                                 return {
                                     offset: 0,
                                     power: 0.25,
                                     inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
                                     outputRange: 1.0
                                 };
+                            case 'debug[1]': // pitch center freq 1 [for selected axis]
+                            case 'debug[2]': // pitch center freq 2 [for selected axis]
+                            case 'debug[3]': // pitch center freq 3 [for selected axis]
+                            case 'debug[4]': // pitch center freq 4 [for selected axis]
+                            case 'debug[5]': // pitch center freq 5 [for selected axis]
+                            case 'debug[6]': // pitch center freq 6 [for selected axis]
+                            case 'debug[7]': // pitch center freq 7 [for selected axis]
+                                return getCurveForMinMaxFields('debug[1]', 'debug[2]', 'debug[2]', 'debug[3]', 'debug[4]', 'debug[5]', 'debug[6]', 'debug[7]');
                         }
                         break;
                     case 'DYN_LPF':

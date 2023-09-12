@@ -111,6 +111,7 @@ function HeaderDialog(dialog, onSave) {
         {name:'rc_smoothing_active_cutoffs_sp',    type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'rc_smoothing_active_cutoffs_thr',   type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_notch_count'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
+        {name:'dyn_notch_count'               , type:FIRMWARE_TYPE_ROTORFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'rpm_filter_fade_range_hz'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_p_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_i_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -667,7 +668,7 @@ function HeaderDialog(dialog, onSave) {
                 setParameter('gyro_lowpass_hz'                        ,sysConfig.gyro_lowpass_hz,0);
                 setParameter('gyro_lowpass2_hz'         ,sysConfig.gyro_lowpass2_hz,0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) || activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT)  {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_count        , 0);
         } else {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_width_percent, 0);

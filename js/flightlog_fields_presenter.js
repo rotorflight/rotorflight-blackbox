@@ -268,10 +268,14 @@ function FlightLogFieldPresenter() {
         },
         'FFT_FREQ' : {
             'debug[all]':'Debug FFT FREQ',
-            'debug[0]':'Center Freq [roll]',
-            'debug[1]':'Center Freq [pitch]',
-            'debug[2]':'Gyro Pre-Dyn [dbg-axis]',
-            'debug[3]':'Gyro Scaled [dbg-axis]',
+            'debug[0]':'Gyro Pre-Dyn [dbg-axis]',
+            'debug[1]':'Peak 1 [dbg-axis]',
+            'debug[2]':'Peak 2 [dbg-axis]',
+            'debug[3]':'Peak 3 [dbg-axis]',
+            'debug[4]':'Peak 4 [dbg-axis]',
+            'debug[5]':'Peak 5 [dbg-axis]',
+            'debug[6]':'Peak 6 [dbg-axis]',
+            'debug[7]':'Peak 7 [dbg-axis]',
         },
         'GYRO_RAW' : {
             'debug[all]':'Debug Gyro Raw',
@@ -924,11 +928,10 @@ function FlightLogFieldPresenter() {
                     break;
                 case 'FFT_FREQ':
                     switch (fieldName) {
-                    case 'debug[2]': // pre-dyn notch gyro [for selected axis]
-                    case 'debug[3]': // raw gyro [for selected axis]
+                    case 'debug[0]': // pre-dyn notch gyro [for selected axis]
                         return Math.round(value) + "°/s";
                     default:
-                        return value.toFixed(0) + "Hz";
+                        return (value * 0.1).toFixed(1) + "Hz";
                     }
                 case 'DSHOT_RPM_TELEMETRY':
                     return (value * 200 / flightLog.getSysConfig()['motor_poles']).toFixed(0) + " rpm";
