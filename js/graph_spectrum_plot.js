@@ -635,7 +635,7 @@ GraphSpectrumPlot._drawGradientBackground = function(canvasCtx, WIDTH, HEIGHT) {
 };
 
 GraphSpectrumPlot._drawInterestFrequency = function(canvasCtx, frequency, sampleRate, label, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {
-    const interestLabel = `${label} ${frequency.toFixed(0)}Hz`;
+    const interestLabel = `${label} ${frequency.toFixed(1)}Hz`;
     return this._drawVerticalMarkerLine(canvasCtx, frequency, sampleRate / 2, interestLabel, WIDTH, HEIGHT, OFFSET, stroke, lineWidth);
 };
 
