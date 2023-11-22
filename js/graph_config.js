@@ -458,34 +458,34 @@ GraphConfig.load = function(config) {
                             inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
                             outputRange: 1.0
                         };
-                    case 'FFT':
+                    case 'DYN_NOTCH':
                         switch (fieldName) {
                             case 'debug[0]': // gyro scaled [for selected axis]
                             case 'debug[1]': // pre-dyn notch gyro [for selected axis]
-                            case 'debug[2]': // pre-dyn notch gyro FFT downsampled [roll]
+                            case 'debug[2]':
+                            case 'debug[3]': // pre-dyn notch gyro downsampled
                                 return {
                                     offset: 0,
                                     power: 0.25,
                                     inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
                                     outputRange: 1.0
                                 };
+                            case 'debug[4]':
+                            case 'debug[5]':
+                            case 'debug[6]':
+                            case 'debug[7]':
+                                return getCurveForMinMaxFields('debug[4]', 'debug[5]', 'debug[6]', 'debug[7]');
                         }
                         break;
-                    case 'FFT_FREQ':
-                        switch (fieldName) {
-                            case 'debug[0]': // roll center freq
-                            case 'debug[1]': // pitch center freq
-                                return getCurveForMinMaxFields('debug[0]', 'debug[1]');
-                            case 'debug[2]': // pre-dyn notch gyro [for selected axis]
-                            case 'debug[3]': // raw gyro [for selected axis]
-                                return {
-                                    offset: 0,
-                                    power: 0.25,
-                                    inputRange: maxDegreesSecond(gyroScaleMargin), // Maximum grad/s + 20%
-                                    outputRange: 1.0
-                                };
-                        }
-                        break;
+                    case 'DYN_NOTCH_FREQ':
+                        return getCurveForMinMaxFields('debug[1]', 'debug[2]', 'debug[2]', 'debug[3]', 'debug[4]', 'debug[5]', 'debug[6]', 'debug[7]');
+                    case 'DYN_NOTCH_TIME':
+                        return {
+                            offset: 0,
+                            power: 1.0,
+                            inputRange: 100,
+                            outputRange: 1.0
+                        };
                     case 'DYN_LPF':
                         switch (fieldName) {
                             case 'debug[1]': // Notch center
@@ -501,13 +501,6 @@ GraphConfig.load = function(config) {
                                 };
                         }
                         break;
-                    case 'FFT_TIME':
-                        return {
-                            offset: 0,
-                            power: 1.0,
-                            inputRange: 100,
-                            outputRange: 1.0
-                        };
                     case 'DSHOT_RPM_TELEMETRY':
                     case 'RPM_FILTER':
                         break;

@@ -172,10 +172,14 @@ function FlightLogFieldPresenter() {
         },
         'PIDLOOP' : {
             'debug[all]':'Debug PID',
-            'debug[0]':'Wait Time',
-            'debug[1]':'Sub Update Time',
-            'debug[2]':'PID Update Time',
-            'debug[3]':'Motor Update Time',
+            'debug[0]':'Step 1',
+            'debug[1]':'Step 2',
+            'debug[2]':'Step 3',
+            'debug[3]':'Step 4',
+            'debug[4]':'Step 5',
+            'debug[5]':'Step 6',
+            'debug[6]':'Step 7',
+            'debug[7]':'Step 8',
         },
         'NOTCH' : {
             'debug[all]':'Debug Notch',
@@ -252,26 +256,38 @@ function FlightLogFieldPresenter() {
             'debug[2]':'Stack Current',
             'debug[3]':'Stack p',
         },
-        'FFT' : {
-            'debug[all]':'Debug FFT',
-            'debug[0]':'Gyro Scaled [dbg-axis]',
-            'debug[1]':'Gyro Pre-Dyn [dbg-axis]',
-            'debug[2]':'Gyro Downsampled [roll]',
-            'debug[3]':'FFT Center Index [roll]',
+        'DYN_NOTCH' : {
+            'debug[all]':'Dyn Notch [debug-axis]',
+            'debug[0]':'Gyro Pre-filter',
+            'debug[1]':'Gyro Post-filter',
+            'debug[2]':'Not Used',
+            'debug[3]':'Gyro Average',
+            'debug[4]':'Notch 1',
+            'debug[5]':'Notch 2',
+            'debug[6]':'Notch 3',
+            'debug[7]':'Notch 4',
         },
-        'FFT_TIME' : {
-            'debug[all]':'Debug FFT TIME',
-            'debug[0]':'Active calc step',
-            'debug[1]':'Step duration',
-            'debug[2]':'Additional steps',
-            'debug[3]':'Not used',
+        'DYN_NOTCH_TIME' : {
+            'debug[all]':'Dyn Notch timing',
+            'debug[0]':'dynNotchUpdate duration',
+            'debug[1]':'sdftPushBatch duration',
+            'debug[2]':'stepWindow duration',
+            'debug[3]':'stepDetectPeaks duration',
+            'debug[4]':'stepCalcFreqs duration',
+            'debug[5]':'stepUpdate duration',
+            'debug[6]':'stateTick',
+            'debug[7]':'sampleIndex',
         },
-        'FFT_FREQ' : {
-            'debug[all]':'Debug FFT FREQ',
-            'debug[0]':'Center Freq [roll]',
-            'debug[1]':'Center Freq [pitch]',
-            'debug[2]':'Gyro Pre-Dyn [dbg-axis]',
-            'debug[3]':'Gyro Scaled [dbg-axis]',
+        'DYN_NOTCH_FREQ' : {
+            'debug[all]':'Dyn Notches [debug-axis]',
+            'debug[0]':'Notch 1',
+            'debug[1]':'Notch 2',
+            'debug[2]':'Notch 3',
+            'debug[3]':'Notch 4',
+            'debug[4]':'Notch 5',
+            'debug[5]':'Notch 6',
+            'debug[6]':'Notch 7',
+            'debug[7]':'Notch 8',
         },
         'GYRO_RAW' : {
             'debug[all]':'Debug Gyro Raw',
@@ -328,7 +344,7 @@ function FlightLogFieldPresenter() {
             'debug[4]':'CRC Errors',
             'debug[5]':'Timeouts',
             'debug[6]':'Buffer size',
-            'debug[6]':'Not Used',
+            'debug[7]':'Not Used',
         },
         'DSHOT_RPM_TELEMETRY' : {
             'debug[all]':'DShot Telemetry RPM',
@@ -809,10 +825,10 @@ function FlightLogFieldPresenter() {
                         case 'debug[1]':
                             return value.toFixed(0) + "%";
                         default:
-                            return value.toFixed(0) + "\u03BCS";
+                            return value.toFixed(0) + " µs";
                     }
                 case 'PIDLOOP':
-                    return value.toFixed(0) + "\u03BCS";
+                    return value.toFixed(0) + " µs";
                 case 'BATTERY':
                     switch (fieldName) {
                         case 'debug[0]':
@@ -900,48 +916,41 @@ function FlightLogFieldPresenter() {
                 case 'ESC_SENSOR_FRAME':
                     return value.toFixed(0);
                 case 'SCHEDULER':
-                    return value.toFixed(0) + "\u03BCS";
+                    return value.toFixed(0) + " µs";
                 case 'STACK':
                     return value.toFixed(0);
-                case 'FFT':
+                case 'DYN_NOTCH':
                     switch (fieldName) {
-                    case 'debug[0]': // gyro scaled [for selected axis]
-                    case 'debug[1]': // pre-dyn notch gyro [for selected axis]
-                    case 'debug[2]': // pre-dyn notch gyro FFT downsampled [roll]
-                        return Math.round(value) + "°/s";
-                    case 'debug[3]': // FFT bin mean index
-                        return (value / 100).toFixed(2);
+                        case 'debug[0]':
+                        case 'debug[1]':
+                            return value.toFixed(0) + "°/s";
+                        default:
+                            return value.toFixed(0) + " Hz";
                     }
                     break;
-                case 'FFT_TIME':
+                case 'DYN_NOTCH_TIME':
                     switch (fieldName) {
-                    case 'debug[0]':
-                        return FlightLogFieldPresenter.presentEnum(value, FFT_CALC_STEPS);
-                    case 'debug[1]':
-                    case 'debug[2]':
-                        return value.toFixed(0) + "\u03BCs";
+                        case 'debug[6]':
+                        case 'debug[7]':
+                            return value.toFixed(0);
+                        default:
+                            return value.toFixed(0) + " µs";
                     }
                     break;
-                case 'FFT_FREQ':
-                    switch (fieldName) {
-                    case 'debug[2]': // pre-dyn notch gyro [for selected axis]
-                    case 'debug[3]': // raw gyro [for selected axis]
-                        return Math.round(value) + "°/s";
-                    default:
-                        return value.toFixed(0) + "Hz";
-                    }
+                case 'DYN_NOTCH_FREQ':
+                    return (value / 10).toFixed(1) + " Hz";
                 case 'DSHOT_RPM_TELEMETRY':
                     return (value * 200 / flightLog.getSysConfig()['motor_poles']).toFixed(0) + " rpm";
                 case 'RPM_FILTER':
                     switch (fieldName) {
                         case 'debug[0]': // motor rpm
-                            return value.toFixed(0) + 'rpm';
+                            return value.toFixed(0) + ' rpm';
                         case 'debug[1]': // freq
                         case 'debug[2]': // notch
                         case 'debug[3]': // update rate
                         case 'debug[5]': // min hz
                         case 'debug[6]': // max hz
-                            return (value/10).toFixed(1) + 'Hz';
+                            return (value/10).toFixed(1) + ' Hz';
                         case 'debug[4]': // motor
                             return value.toFixed(0);
                         case 'debug[7]': // notch q
@@ -971,10 +980,9 @@ function FlightLogFieldPresenter() {
                 case 'DYN_LPF':
                     switch (fieldName) {
                         case 'debug[0]': // gyro scaled [for selected axis]
-                        case 'debug[3]': // pre-dyn notch gyro [for selected axis]
                             return Math.round(value) + "°/s";
                         default:
-                            return value.toFixed(0) + "Hz";
+                            return value.toFixed(0) + " Hz";
                     }
                     break;
                 case 'DYN_IDLE':
