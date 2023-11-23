@@ -693,8 +693,9 @@ function FlightLogFieldPresenter() {
             case 'rcCommand[1]':
             case 'rcCommand[2]':
             case 'rcCommand[3]':
+                return (value / 5).toFixed(1) + ' %';
             case 'rcCommand[4]':
-                return value.toFixed(0) + " µs";
+                return (value / 10).toFixed(1) + " %";
 
             case 'setpoint[0]':
             case 'setpoint[1]':
