@@ -19,7 +19,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 16.15.1
+        node-version-file: '.nvmrc'
 
     - name: Set build variables
       run: |
@@ -53,7 +53,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 16.15.1
+        node-version-file: '.nvmrc'
 
     - name: Set build variables
       run: |
@@ -87,7 +87,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 16.15.1
+        node-version-file: '.nvmrc'
 
     - name: Set build variables
       run: |
@@ -121,7 +121,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 16.15.1
+        node-version-file: '.nvmrc'
 
     - name: Set build variables
       run: |
