@@ -1,5 +1,8 @@
 "use strict";
 
+var   Rotorspeed,
+      tailRotorspeed;
+
 const BLUR_FILTER_PIXEL       = 1,
       DEFAULT_FONT_FACE       = "Verdana, Arial, sans-serif",
       DEFAULT_MARK_LINE_WIDTH = 2,
@@ -23,7 +26,8 @@ const SPECTRUM_OVERDRAW_TYPE = {
         DTERM_FILTERS    : 2,
         YAW_FILTERS      : 3,
         HIDE_FILTERS     : 4,
-        AUTO             : 5,
+        ROTOR_FREQ       : 5,
+        AUTO             : 6,
       };
 
 window.GraphSpectrumPlot = window.GraphSpectrumPlot || {
@@ -346,6 +350,20 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
 
     let offset = 2; // make some space! Includes the space for the mouse frequency. In this way the other elements don't move in the screen when used
 
+    // Rotor Frequencies
+    if (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ROTOR_FREQ && (Rotorspeed > 0)) {
+
+        let freq = Rotorspeed/60;
+        this._drawRotorFreq(canvasCtx, freq, PLOTTED_BLACKBOX_RATE, 'Rotor Fundamental', WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(71, 86, 158, 0.8)");
+        offset++;
+        this._drawRotorFreq(canvasCtx, freq*2, PLOTTED_BLACKBOX_RATE, 'Rotor 2nd', WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(71, 86, 158, 0.8)");
+        offset++;
+        this._drawRotorFreq(canvasCtx, freq*3, PLOTTED_BLACKBOX_RATE, 'Rotor 3rd', WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(71, 86, 158, 0.8)");
+        offset++;
+        this._drawRotorFreq(canvasCtx, freq*4, PLOTTED_BLACKBOX_RATE, 'Rotor 4th', WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(71, 86, 158, 0.8)");
+        offset++;
+    }
+
     // Gyro filters
     if (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS ||
         this._overdrawType === SPECTRUM_OVERDRAW_TYPE.GYRO_FILTERS ||
@@ -642,6 +660,11 @@ GraphSpectrumPlot._drawInterestFrequency = function(canvasCtx, frequency, sample
 GraphSpectrumPlot._drawLowpassFilter = function(canvasCtx, frequency, sampleRate, label, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {
     const lpfLabel = `${label} ${frequency.toFixed(0)}Hz`;
     return this._drawVerticalMarkerLine(canvasCtx, frequency, sampleRate / 2, lpfLabel, WIDTH, HEIGHT, OFFSET, stroke, lineWidth);
+};
+
+GraphSpectrumPlot._drawRotorFreq = function(canvasCtx, frequency, sampleRate, label, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {
+    const rotorLabel = `${label} ${frequency.toFixed(0)}Hz`;
+    return this._drawVerticalMarkerLine(canvasCtx, frequency, sampleRate / 2, rotorLabel, WIDTH, HEIGHT, OFFSET, stroke, lineWidth);
 };
 
 GraphSpectrumPlot._drawLowpassDynFilter = function(canvasCtx, frequency1, frequency2, sampleRate, label, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {

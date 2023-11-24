@@ -750,8 +750,11 @@ function FlightLogFieldPresenter() {
                 return (value / 1024 * 100).toFixed(2) + "%";
 
             case 'headspeed':
+                Rotorspeed = (value).toFixed(0); 
+                return (value).toFixed(0) + " rpm";
             case 'tailspeed':
-                    return (value).toFixed(0) + " rpm";
+                tailRotorspeed = (value).toFixed(0); 
+                return (value).toFixed(0) + " rpm";
 
             case 'motor[0]':
             case 'motor[1]':
