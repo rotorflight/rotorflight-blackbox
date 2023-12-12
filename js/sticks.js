@@ -212,7 +212,7 @@ function FlightLogSticks(flightLog, rcCommandFields, canvas) {
             }
         }
 
-        var yawValue = ((userSettings.stickInvertYaw) ? 1 : -1) * rcCommand[2];
+        var yawValue = ((userSettings.stickInvertYaw) ? -1 : 1) * rcCommand[2];
         // map the stick positions based upon selected stick mode (default is mode 2)
 
         //Compute the position of the sticks in the range [-1..1] (left stick x, left stick y, right stick x, right stick y)
