@@ -713,17 +713,10 @@ var
         "HANNING"
     ]),
 
-    ITERM_RELAX = makeReadOnly([
+    ITERM_RELAX_TYPE = makeReadOnly([
         "OFF",
         "RP",
         "RPY",
-        "RP_INC",
-        "RPY_INC",
-    ]),
-
-    ITERM_RELAX_TYPE = makeReadOnly([
-        "GYRO",
-        "SETPOINT",
     ]),
 
     DYN_NOTCH_RANGE = makeReadOnly([

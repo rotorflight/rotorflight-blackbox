@@ -216,9 +216,12 @@ var FlightLogParser = function(logData) {
             gyro_sync_denom:null,                   // Gyro Sync Denom
             pid_process_denom:null,                 // PID Process Denom
             pidController:null,                     // Active PID Controller
-            rollPID:[null, null, null],             // Roll [P, I, D]
-            pitchPID:[null, null, null],            // Pitch[P, I, D]
-            yawPID:[null, null, null],              // Yaw  [P, I, D]
+            rollPID:[null, null, null, null, null, null],       // Roll [P, I, D, F, B, O]
+            pitchPID:[null, null, null, null, null, null],      // Pitch[P, I, D, F, B, O]
+            yawPID:[null, null, null, null, null],              // Yaw  [P, I, D, F, B]
+            rollBandwidth: [null, null, null],
+            pitchBandwidth: [null, null, null],
+            yawBandwidth: [null, null, null],
             altPID:[null, null, null],              // Altitude Hold [P, I, D]
             posPID:[null, null, null],              // Position Hold [P, I, D]
             posrPID:[null, null, null],             // Position Rate [P, I, D]
@@ -293,9 +296,17 @@ var FlightLogParser = function(logData) {
             d_min : [null, null, null],             // D_Min [P, I, D]
             d_min_gain : null,                      // D_Min gain
             d_min_advance : null,                   // D_Min advance
+            error_rotation: null,
+            error_decay: null,
             iterm_relax: null,                      // ITerm Relax mode
             iterm_relax_type: null,                 // ITerm Relax type
             iterm_relax_cutoff: null,               // ITerm Relax cutoff
+            iterm_relax_cutoff_roll: null,
+            iterm_relax_cutoff_pitch: null,
+            iterm_relax_cutoff_yaw: null,
+            error_limit_roll: null,
+            error_limit_pitch: null,
+            error_limit_yaw: null,
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
             dyn_notch_q: null,                      // Dyn Notch width of each dynamic filter
@@ -326,19 +337,6 @@ var FlightLogParser = function(logData) {
             dyn_idle_i_gain: null,
             dyn_idle_d_gain: null,
             dyn_idle_max_increase: null,
-            simplified_pids_mode: null,             // Simplified / slider PIDS
-            simplified_pi_gain: null,
-            simplified_i_gain: null,
-            simplified_d_gain: null,
-            simplified_dmax_gain: null,
-            simplified_feedforward_gain: null,
-            simplified_pitch_d_gain: null,
-            simplified_pitch_pi_gain: null,
-            simplified_master_multiplier: null,
-            simplified_dterm_filter: null,
-            simplified_dterm_filter_multiplier: null,
-            simplified_gyro_filter: null,
-            simplified_gyro_filter_multiplier: null,
             motor_output_limit: null,                // motor output limit
             throttle_limit_type: null,               // throttle limit
             throttle_limit_percent: null,
@@ -693,9 +691,15 @@ var FlightLogParser = function(logData) {
             case "dterm_rpm_notch_harmonics":
             case "dterm_rpm_notch_q":
             case "dterm_rpm_notch_min":
-            case "iterm_relax":
+            case "error_rotation":
+            case "error_decay":
             case "iterm_relax_type":
-            case "iterm_relax_cutoff":
+            case "iterm_relax_cutoff_roll":
+            case "iterm_relax_cutoff_pitch":
+            case "iterm_relax_cutoff_yaw":
+            case "error_limit_roll":
+            case "error_limit_pitch":
+            case "error_limit_yaw":
             case "dyn_notch_range":
             case "dyn_notch_width_percent":
             case "dyn_notch_q":
@@ -712,21 +716,6 @@ var FlightLogParser = function(logData) {
             case "dyn_idle_i_gain":
             case "dyn_idle_d_gain":
             case "dyn_idle_max_increase":
-            case "simplified_pids_mode":
-            case "simplified_pi_gain":
-            case "simplified_i_gain":
-            case "simplified_d_gain":
-            case "simplified_dmax_gain":
-            case "simplified_feedforward_gain":
-            case "simplified_pitch_d_gain":
-            case "simplified_pitch_pi_gain":
-            case "simplified_master_multiplier":
-
-            case "simplified_dterm_filter":
-            case "simplified_dterm_filter_multiplier":
-            case "simplified_gyro_filter":
-            case "simplified_gyro_filter_multiplier":
-
             case "motor_output_limit":
             case "throttle_limit_type":
             case "throttle_limit_percent":
@@ -818,6 +807,9 @@ var FlightLogParser = function(logData) {
             case "rollPID":
             case "pitchPID":
             case "yawPID":
+            case "rollBandwidth":
+            case "pitchBandwidth":
+            case "yawBandwidth":
             case "altPID":
             case "posPID":
             case "posrPID":

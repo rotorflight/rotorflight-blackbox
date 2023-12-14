@@ -702,6 +702,12 @@
                                                 <th name="Feedforward">
                                                     <label>Feedforward</label>
                                                 </th>
+                                                <th name="Boost">
+                                                    <label>Boost</label>
+                                                </th>
+                                                <th name="Offset">
+                                                    <label>Offset</label>
+                                                </th>
                                             </tr>
                                             <tr class="rollPID">
                                                 <!-- 0 -->
@@ -718,7 +724,12 @@
                                                 <td>
                                                     <input type="text" name="f" step="1" min="0" max="255" />
                                                 </td>
-                                            </tr>
+                                                <td>
+                                                    <input type="text" name="b" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="O" step="1" min="0" max="255" />
+                                                </td>                                            </tr>
                                             <tr class="pitchPID">
                                                 <!-- 1 -->
                                                 <td>Pitch</td>
@@ -733,6 +744,12 @@
                                                 </td>
                                                 <td>
                                                     <input type="text" name="f" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="b" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="O" step="1" min="0" max="255" />
                                                 </td>
                                             </tr>
                                             <tr class="yawPID">
@@ -749,6 +766,137 @@
                                                 </td>
                                                 <td>
                                                     <input type="text" name="f" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="b" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                 <!-- "Leave me blank. No O gain for yaw"-->
+                                                </td>
+                                            </tr>
+                                        </table>
+
+<!-- I-Term Relax -->
+                                        <table class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="6">PID Controller Settings</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="static-features">
+                                                <tr>
+                                                    <td name="error_rotation">
+                                                        <label class="option">Error Rotation
+                                                            <input class="ios-switch" type="checkbox" />
+                                                            <div>
+                                                                <div></div>
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                    <td name="ground-error-decay">
+                                                        <label>Ground Error</label>
+                                                        <label>Decay</label>
+                                                        <input type="text" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td name="iterm-relax-type">
+                                                        <label>i-term Relax</label>
+                                                        <label>Mode</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name="iterm-relax-cutoff-roll">
+                                                        <label>i-term Relax</label> 
+                                                        <label>Roll Cutoff</label>
+                                                        <input type="text" step="1" min="0" max="200" class="relax_RP"/>
+                                                    </td>
+                                                    <td name="iterm-relax-cutoff-pitch">
+                                                        <label>i-term Relax</label>
+                                                        <label>Pitch Cutoff</label>
+                                                        <input type="text" step="1" min="0" max="200" class="relax_RP"/>
+                                                    </td>
+                                                    <td name="iterm-relax-cutoff-yaw">
+                                                        <label>i-term Relax</label>
+                                                        <label>Yaw Cutoff</label>
+                                                        <input type="text" step="1" min="0" max="200" class="relax_RPY" />
+                                                    </td>
+                                                </tr>
+                                                <tr class="error_limits">
+                                                    <td colspan="2" name="error-limit-roll">
+                                                        <label>Roll Error Limit</label>
+                                                        <input type="text" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td colspan="2" name="error-limit-pitch">
+                                                        <label>Pitch Error Limit</label>
+                                                        <input type="text" step="1" min="0" max="200" />
+                                                    </td>
+                                                    <td colspan="2" name="error-limit-yaw">
+                                                        <label>Yaw Error Limit</label>
+                                                        <input type="text" step="1" min="0" max="200" />
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+<!-- PID Bandwidth -->
+                                        <table id="pid_bandwidth_header" class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th>PID Bandwith</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <table id="pid_bandwidth" class="pid_bandwidth">
+                                             <tr class = "bandwidth_labels">
+                                                <th name="Blank">
+                                                    <label>&nbsp</label>
+                                                </th>
+                                                <th name="Bandwidth">
+                                                    <label>Bandwidth</label>
+                                                </th>
+                                                <th name="Dterm-cutoff">
+                                                    <label>D Term Cutoff</label>
+                                                </th>
+                                                <th name="Bterm-cutoff">
+                                                    <label>B Term Cutoff</label>
+                                                </th>
+                                            </tr>
+                                            <tr class="rollBandwidth">
+                                                <!-- 0 -->
+                                                <td>Roll</td>
+                                                <td>
+                                                    <input type="text" name="p" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="i" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="d" step="1" min="0" max="255" />
+                                                </td>
+                                            </tr>
+                                            <tr class="pitchBandwidth">
+                                                <!-- 1 -->
+                                                <td>Pitch</td>
+                                                <td>
+                                                    <input type="text" name="p" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="i" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="d" step="1" min="0" max="255" />
+                                                </td>
+                                            </tr>
+                                            <tr class="yawBandwidth">
+                                                <!-- 2 -->
+                                                <td>Yaw</td>
+                                                <td>
+                                                    <input type="text" name="p" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="i" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="d" step="1" min="0" max="255" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -888,180 +1036,6 @@
                                                     <td name="d_min_advance" class="bf-only">
                                                         <label>Advance</label>
                                                         <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="5">PID Sliders</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td name="simplified_pids_mode" class="bf-only">
-                                                        <label>Status</label>                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name="simplified_pi_gain" class="bf-only">
-                                                        <label>PI gain</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="simplified_i_gain" class="bf-only">
-                                                        <label>I gain</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="simplified_d_gain" class="bf-only">
-                                                        <label>D gain</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="simplified_dmax_gain" class="bf-only">
-                                                        <label>Dmax</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td name = blankSimplPIDs>
-                                                        <label>&nbsp&nbsp&nbsp</label>
-                                                    </td>
-                                                    <td name="simplified_feedforward_gain" class="bf-only">
-                                                        <label>FF gain</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="simplified_pitch_d_gain" class="bf-only">
-                                                        <label>Pitch:Roll</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="simplified_pitch_pi_gain" class="bf-only">
-                                                        <label>Pitch Gain</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                    <td name="simplified_master_multiplier" class="bf-only">
-                                                        <label>Master Gain</label>
-                                                        <input type="text" step="1" min="0" max="200" />
-                                                    </td>
-                                                </tr>
-                                             </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="5">TPA and Airmode</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td name="dynThrPID">
-                                                        <label>TPA amount</label>
-                                                        <input type="text" step="0.01" min="0" max="1.00" />
-                                                    </td>
-                                                    <td name="tpa-breakpoint">
-                                                        <label>TPA Breakpoint</label>
-                                                        <input type="text" step="10" min="1000" max="2000" />
-                                                    </td>
-                                                    <td name="airmode_activate_throttle" class="bf-only">
-                                                        <label>Airmode Activate</label>
-                                                        <input type="text" step="10" min="1000" max="2000" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="row" colspan="6">Feedforward</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td name="feedforwardTransition" class="bf-only">
-                                                        <label>Transition</label>
-                                                        <input type="text" step="0.01" min="0" max="999" />
-                                                    </td>
-                                                    <td name="feedforwardAveraging" class="bf-only">
-                                                        <label>Averaging</label>
-                                                        <select>
-                                                            <!~~ list generated here ~~>
-                                                        </select>
-                                                    </td>
-                                                    <td name="feedforwardSmoothing" class="bf-only">
-                                                        <label>Smoothing</label>
-                                                        <input type="text" step="0" min="0" max="100" />
-                                                    </td>
-                                                    <td name="feedforwardJitter" class="bf-only">
-                                                        <label>Jitter</label>
-                                                        <input type="text" step="0" min="0" max="100" />
-                                                    </td>
-                                                    <td name="feedforwardBoost" class="bf-only">
-                                                        <label>Boost</label>
-                                                        <input type="text" step="0" min="0" max="100" />
-                                                    </td>
-                                                    <td name="feedforwardMaxRate" class="bf-only">
-                                                        <label>MaxRate</label>
-                                                        <input type="text" step="0" min="0" max="100" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="row" colspan="6">AntiGravity</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td name="antiGravityMode" class="bf-only">
-                                                        <label>Mode</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name="antiGravityGain" class="bf-only">
-                                                        <label>Gain</label>
-                                                        <input type="text" step="0.01" min="0" max="999" />
-                                                    </td>
-                                                    <td name="antiGravityThreshold" class="bf-only">
-                                                        <label>AG Threshold</label>
-                                                        <input type="text" step="0.01" min="0" max="999" />
-                                                    </td>
-                                                    <td name="itermWindupPointPercent" class="bf-only">
-                                                        <label>Windup Threshold</label>
-                                                        <input type="text" step="1" min="0" max="999" />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="parameter cf">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="row" colspan="6">Iterm Relax</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td name="iterm_relax" class="bf-only">
-                                                        <label>Mode</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name="iterm_relax_type" class="bf-only">
-                                                        <label>Type</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name="iterm_relax_cutoff" class="bf-only">
-                                                        <label>Cutoff</label>
-                                                        <input type="text" step="0.01" min="0" max="999" />
                                                     </td>
                                                 </tr>
                                             </tbody>

@@ -27,7 +27,6 @@ function HeaderDialog(dialog, onSave) {
         {name:'rcYawRate'                    , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'999.9.9'},
         {name:'airmode_activate_throttle'    , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'999.9.9'},
         {name:'rollPitchItermIgnoreRate'     , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'3.0.1'},
-        {name:'vbat_pid_compensation'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'4.2.999'},
         {name:'yawItermIgnoreRate'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'3.0.1'},
         {name:'gyro_notch_hz'                , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.0.0', max:'999.9.9'},
         {name:'gyro_notch_cutoff'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.0.0', max:'999.9.9'},
@@ -116,19 +115,6 @@ function HeaderDialog(dialog, onSave) {
         {name:'dyn_idle_i_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_d_gain'               , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dyn_idle_max_increase'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_pids_mode'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_pi_gain'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_i_gain'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_d_gain'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_dmax_gain'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_feedforward_gain'   , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_pitch_d_gain'       , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_pitch_pi_gain'      , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_master_multiplier'  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_dterm_filter'       , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_dterm_filter_multiplier' , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_gyro_filter'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'simplified_gyro_filter_multiplier'  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'motor_output_limit'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'throttle_limit_type'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'throttle_limit_percent'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -176,12 +162,11 @@ function HeaderDialog(dialog, onSave) {
                         } else {
                                 parameterElem.addClass('missing');
                         }
-
-    }
+        }
 
     function setParameter(name, data, decimalPlaces) {
-            var parameterElem = $('.parameter td[name="' + name + '"]');
-                var nameElem = $('input', parameterElem);
+            const parameterElem = $('.parameter td[name="' + name + '"]');
+                const nameElem = $('input', parameterElem);
                 if(data!=null) {
                         nameElem.val((data/Math.pow(10,decimalPlaces)).toFixed(decimalPlaces));
                         nameElem.attr('decPl', decimalPlaces);
@@ -191,7 +176,6 @@ function HeaderDialog(dialog, onSave) {
                         parameterElem.addClass('missing');
                 }
                 parameterElem.css('display', isParameterValid(name)?('table-cell'):('none'));
-
         }
 
     function setParameterFloat(name, data, decimalPlaces) {
@@ -225,8 +209,8 @@ function HeaderDialog(dialog, onSave) {
         }
 
         function populatePID(name, data) {
-                var i = 0;
-        var nameElem = $('.pid_tuning .' + name + ' input');
+                let i = 0;
+        const nameElem = $('.pid_tuning .' + name + ' input');
         nameElem.each(function () {
                         $(this).attr('name', name + '[' + i + ']');
                         if(data!=null) {
@@ -234,45 +218,124 @@ function HeaderDialog(dialog, onSave) {
                                 switch (i) {
                                         case 0:
                                                 if(data[i]!=null) {
-                                                                $(this).val((data[i]).toFixed(0));
-                                                                $(this).attr('decPl', 1);
-                                                                $(this).removeClass('missing');
-                                                        } else {
-                                                                $(this).addClass('missing');
-                                                        }
+                                                        $(this).val((data[i]).toFixed(0));
+                                                        $(this).attr('decPl', 1);
+                                                        $(this).removeClass('missing');
+                                                        console.log($(this).val(data[i].toFixed(0)));
+                                                } else {
+                                                        $(this).addClass('missing');
+                                                }
                                                 i++;
                                                 break;
                                         case 1:
                                                 if(data[i]!=null) {
-                                                                $(this).val((data[i]).toFixed(0));
-                                                                $(this).attr('decPl', 3);
-                                                                $(this).removeClass('missing');
-                                                        } else {
-                                                                $(this).addClass('missing');
-                                                        }
+                                                        $(this).val((data[i]).toFixed(0));
+                                                        $(this).attr('decPl', 3);
+                                                        $(this).removeClass('missing');
+                                                } else {
+                                                        $(this).addClass('missing');
+                                                }
                                                 i++;
                                                 break;
                                         case 2:
                                                 if(data[i]!=null) {
-                                                                $(this).val(data[i].toFixed(0));
-                                                                $(this).attr('decPl', 0);
-                                                                $(this).removeClass('missing');
-                                                        } else {
-                                                                $(this).addClass('missing');
-                                                        }
+                                                        $(this).val(data[i].toFixed(0));
+                                                        $(this).attr('decPl', 0);
+                                                        $(this).removeClass('missing');
+                                                        console.log($(this).val(data[i].toFixed(0)));
+                                                } else {
+                                                        $(this).addClass('missing');
+                                                }
                                                 i++;
                                                 break;
-                    case 3:
-                        if(data[i]!=null) {
-                            $(this).val(data[i].toFixed(0));
-                            $(this).attr('decPl', 2);
-                            $(this).removeClass('missing');
-                        } else {
-                            $(this).val('');
-                            $(this).addClass('missing');
-                        }
-                        i++;
-                        break;
+                                        case 3:
+                                                if(data[i]!=null) {
+                                                        $(this).val(data[i].toFixed(0));
+                                                        $(this).attr('decPl', 2);
+                                                        $(this).removeClass('missing');
+                                                        console.log($(this).val(data[i].toFixed(0)));
+                                                } else {
+                                                        $(this).val('');
+                                                        $(this).addClass('missing');                                                        }
+                                                i++;
+                                                break;
+                                        case 4:
+                                                if(data[i]!=null) {
+                                                        $(this).val(data[i].toFixed(0));
+                                                        $(this).attr('decPl', 3);
+                                                        $(this).removeClass('missing');
+                                                        console.log($(this).val(data[i].toFixed(0)));
+                                                } else {
+                                                        $(this).val('');
+                                                        $(this).addClass('missing');
+                                                }
+                                                i++;
+                                                break;
+                                        case 5:
+                                                if(data[i]!=null) {
+                                                        $(this).val(data[i].toFixed(0));
+                                                        $(this).attr('decPl', 3);
+                                                        $(this).removeClass('missing');
+                                                        console.log($(this).val(data[i].toFixed(0)));
+                                                } else {
+                                                        $(this).val('');
+                                                        $(this).addClass('missing');
+                                                }
+                                                i++;
+                                                break;
+                                        }
+                                } else $(this).closest('tr').addClass('missing');
+            })
+        }
+
+        function populateBandwidth(name, data) {
+                let i = 0;
+        const nameElem = $('.pid_bandwidth .' + name + ' input');
+        nameElem.each(function () {
+                        $(this).attr('name', name + '[' + i + ']');
+                        if(data!=null) {
+                                $(this).closest('tr').removeClass('missing');
+                                switch (i) {
+                                        case 0:
+                                                if(data[i]!=null) {
+                                                        $(this).val((data[i]).toFixed(0));
+                                                        $(this).attr('decPl', 1);
+                                                        $(this).removeClass('missing');
+                                                } else {
+                                                        $(this).addClass('missing');
+                                                }
+                                                i++;
+                                                break;
+                                        case 1:
+                                                if(data[i]!=null) {
+                                                        $(this).val((data[i]).toFixed(0));
+                                                        $(this).attr('decPl', 3);
+                                                        $(this).removeClass('missing');
+                                                } else {
+                                                        $(this).addClass('missing');
+                                                }
+                                                i++;
+                                                break;
+                                        case 2:
+                                                if(data[i]!=null) {
+                                                        $(this).val(data[i].toFixed(0));
+                                                        $(this).attr('decPl', 0);
+                                                        $(this).removeClass('missing');
+                                                } else {
+                                                        $(this).addClass('missing');
+                                                }
+                                                i++;
+                                                break;
+                                        case 3:
+                                                if(data[i]!=null) {
+                                                        $(this).val(data[i].toFixed(0));
+                                                        $(this).attr('decPl', 2);
+                                                        $(this).removeClass('missing');
+                                                } else {
+                                                        $(this).val('');
+                                                        $(this).addClass('missing');                                                        }
+                                                i++;
+                                                break;
                                         }
                                 } else $(this).closest('tr').addClass('missing');
             })
@@ -307,7 +370,7 @@ function HeaderDialog(dialog, onSave) {
             {bit: 14, group: 'rxMode', mode: 'group', name: 'RX_MSP', description: 'Controller over MSP'},
             {bit: 15, group: 'other', name: 'RSSI_ADC', description: 'ADC RSSI Monitoring'},
             {bit: 16, group: 'other', name: 'LED_STRIP', description: 'Addressible RGB LED strip support'},
-                        {bit: 17, group: 'other', name: 'DISPLAY', description: 'OLED Screen Display'},
+            {bit: 17, group: 'other', name: 'DISPLAY', description: 'OLED Screen Display'},
             {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', description: 'Forward aux channels to servo outputs'},
             {bit: 21, group: 'other', name: 'TRANSPONDER', description: 'Race Transponder'},
         ];
@@ -564,6 +627,11 @@ function HeaderDialog(dialog, onSave) {
         populatePID('pitchPID'                                        , sysConfig.pitchPID);
         populatePID('yawPID'                                        , sysConfig.yawPID);
 
+        // Populate the bandwidth
+        populateBandwidth('rollBandwidth'                       , sysConfig.rollBandwidth);
+        populateBandwidth('pitchBandwidth'                      , sysConfig.pitchBandwidth);
+        populateBandwidth('yawBandwidth'                        , sysConfig.yawBandwidth);
+
         // Removed since GPS Rescue
         if (semver.lt(sysConfig.firmwareVersion, "3.4.0")) {
             populatePID('altPID'                , sysConfig.altPID);
@@ -746,9 +814,19 @@ function HeaderDialog(dialog, onSave) {
             $("#rate_limits").hide();
         }
 
-        renderSelect('iterm_relax'       , sysConfig.iterm_relax       , ITERM_RELAX);
-        renderSelect('iterm_relax_type'  , sysConfig.iterm_relax_type  , ITERM_RELAX_TYPE);
-        setParameter('iterm_relax_cutoff', sysConfig.iterm_relax_cutoff, 0);
+        setParameter('ground-error-decay',              sysConfig.error_decay, 1);
+
+        renderSelect('iterm-relax-type',                sysConfig.iterm_relax_type  , ITERM_RELAX_TYPE);
+        setParameter('iterm-relax-cutoff-roll',         sysConfig.iterm_relax_cutoff_roll, 0);
+        setParameter('iterm-relax-cutoff-pitch',        sysConfig.iterm_relax_cutoff_pitch, 0);
+        setParameter('iterm-relax-cutoff-yaw',          sysConfig.iterm_relax_cutoff_yaw, 0);
+        $('.relax_RP').toggle(sysConfig.iterm_relax_type != 0);
+        $('.relax_RPY').toggle(sysConfig.iterm_relax_type == 2);
+
+        setParameter('error-limit-roll',                sysConfig.error_limit_roll, 0);
+        setParameter('error-limit-pitch',               sysConfig.error_limit_pitch, 0);
+        setParameter('error-limit-yaw',                 sysConfig.error_limit_yaw, 0);
+
 
             renderSelect('unsynced_fast_pwm'                ,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
             renderSelect('fast_pwm_protocol'                ,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
@@ -810,20 +888,6 @@ function HeaderDialog(dialog, onSave) {
         setParameter('dyn_idle_i_gain'          , sysConfig.dyn_idle_i_gain, 0);
         setParameter('dyn_idle_d_gain'          , sysConfig.dyn_idle_d_gain, 0);
         setParameter('dyn_idle_max_increase'    , sysConfig.dyn_idle_max_increase, 0);
-        renderSelect('simplified_pids_mode'         , sysConfig.simplified_pids_mode, SIMPLIFIED_PIDS_MODE);
-        setParameter('simplified_pi_gain'           , sysConfig.simplified_pi_gain, 0);
-        setParameter('simplified_i_gain'            , sysConfig.simplified_i_gain, 0);
-        setParameter('simplified_d_gain'            , sysConfig.simplified_d_gain, 0);
-        setParameter('simplified_dmax_gain'         , sysConfig.simplified_dmax_gain, 0);
-        setParameter('simplified_feedforward_gain'  , sysConfig.simplified_feedforward_gain, 0);
-        setParameter('simplified_pitch_d_gain'      , sysConfig.simplified_pitch_d_gain, 0);
-        setParameter('simplified_pitch_pi_gain'     , sysConfig.simplified_pitch_pi_gain, 0);
-        setParameter('simplified_master_multiplier' , sysConfig.simplified_master_multiplier, 0);
-
-        renderSelect('simplified_dterm_filter'            , sysConfig.simplified_dterm_filter, OFF_ON);
-        setParameter('simplified_dterm_filter_multiplier' , sysConfig.simplified_dterm_filter_multiplier, 0);
-        renderSelect('simplified_gyro_filter'             , sysConfig.simplified_gyro_filter, OFF_ON);
-        setParameter('simplified_gyro_filter_multiplier'  , sysConfig.simplified_gyro_filter_multiplier, 0);
 
         setParameter('motor_output_limit'        , sysConfig.motor_output_limit, 0);
         renderSelect('throttle_limit_type'       , sysConfig.throttle_limit_type, THROTTLE_LIMIT_TYPE);
@@ -833,7 +897,6 @@ function HeaderDialog(dialog, onSave) {
 
         renderSelect('pidAtMinThrottle'         ,sysConfig.pidAtMinThrottle, OFF_ON);
         renderSelect('use_integrated_yaw'       ,sysConfig.use_integrated_yaw, OFF_ON);
-
 
         // Dynamic filters of Betaflight 4.0
         if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
@@ -880,9 +943,9 @@ function HeaderDialog(dialog, onSave) {
             setParameter('motor_poles'                            ,sysConfig.motor_poles, 0);
 
                 /* Booleans */
-        setCheckbox('gyro_cal_on_first_arm'                ,sysConfig.gyro_cal_on_first_arm);
-        setCheckbox('vbat_pid_compensation'                ,sysConfig.vbat_pid_compensation);
-        setCheckbox('rc_smoothing'                                ,sysConfig.rc_smoothing);
+        setCheckbox('gyro_cal_on_first_arm'     ,               sysConfig.gyro_cal_on_first_arm);
+        setCheckbox('rc_smoothing'              ,               sysConfig.rc_smoothing);
+        setCheckbox('error_rotation'            ,               sysConfig.error_rotation);
 
         /* Selected Fields */
         if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
@@ -952,10 +1015,10 @@ function HeaderDialog(dialog, onSave) {
                 $(".pid_tuning input").each(function() {
                         if($(this).val()!=null) {
                                 if($(this).attr('decPl')!=null) {
-                                        var matches=$(this).attr('name').match(/(.+)\[(\d+)\]/);
+                                        const matches=$(this).attr('name').match(/(.+)\[(\d+)\]/);
                                         if(matches!=null) {
                                                 if(newSysConfig[matches[1]]==null) newSysConfig[matches[1]] = [null, null, null];
-                                                var newArray = newSysConfig[matches[1]];
+                                                const newArray = newSysConfig[matches[1]];
                                                 newArray[matches[2]] = (parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));
                                         } else (parseFloat($(this).val()) * Math.pow(10, $(this).attr('decPl')));
                                 } else {

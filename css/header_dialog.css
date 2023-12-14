@@ -175,7 +175,7 @@ select {
 }
 
 .header-dialog .modal-dialog {
-    width:75%;
+    width:95%;
     min-width:954px;
 }
 
@@ -290,7 +290,7 @@ select {
 .header-dialog table td,
 .header-dialog .pid_titlebar th {
     padding: 1px;
-    width: 20%;
+    width: 10%;
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
 }
@@ -380,6 +380,10 @@ select {
     width: 25%;
 }
 
+.header-dialog .boost {
+    width: 25%;
+}
+
 .header-dialog .cbox {
     width: 5%;
 }
@@ -423,6 +427,15 @@ html:not(.isBF28) .bf-only {
 
 .header-dialog .spacer_box {
     float: left;
+}
+
+.bandwidth_labels th{
+    text-align: center;
+}
+
+.bandwidth_labels th label{
+    font-weight: normal;
+    font-size: 12px;
 }
 
 .pid_labels th{
@@ -530,6 +543,14 @@ html:not(.isBF28) .bf-only {
     border: 0 solid #ccc;
 }
 
+.header-dialog .other table td:last-child {
+    width: 10%;
+}
+
+.header-dialog .error_limits table td {
+    width: 30%;
+}
+
 .header-dialog .noline td {
     border: 0 solid #ccc;
 }
@@ -538,7 +559,7 @@ html:not(.isBF28) .bf-only {
 .header-dialog .static-features label{
     /* width: 70px; */
     /* padding-left: 3px; */
-    text-align: left;
+    text-align: center;
     border: 0 solid silver;
     border-radius: 3px;
     margin-right: 11px;
@@ -552,7 +573,7 @@ html:not(.isBF28) .bf-only {
     padding-right: 3px;
     height: 18px;
     line-height: 18px;
-    text-align: left;
+    text-align: center;
     border: 0 solid silver;
     border-radius: 3px;
     margin-right: 11px;
@@ -583,7 +604,7 @@ html:not(.isBF28) .bf-only {
 
 .header-dialog .pids {
     float: left;
-    width: 25%;
+    width: 20%;
 }
 
 .header-dialog .leftzero {
