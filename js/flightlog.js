@@ -1119,5 +1119,8 @@ FlightLog.prototype.isFieldEnabled = function() {
             RPM           : (fields & (1 << 13))!==0,
             MOTOR         : (fields & (1 << 14))!==0,
             SERVO         : (fields & (1 << 15))!==0,
+            VBEC          : (fields & (1 << 16))!==0,
+            VBUS          : (fields & (1 << 17))!==0,
+            TEMP          : (fields & (1 << 18))!==0,
         };
 };

@@ -88,6 +88,12 @@ function FlightLogFieldPresenter() {
         'Vbat': 'Battery voltage',
         'Ibat': 'Battery current',
 
+        'Vbec': 'BEC Voltage',
+        'Vbus': '5V Voltage',
+
+        'Tmcu': 'MCU Temperature',
+        'Tesc': 'ESC Temperature',
+
         'motor[all]': 'Motors',
         'motor[0]': 'Motor [1]',
         'motor[1]': 'Motor [2]',
@@ -756,6 +762,14 @@ function FlightLogFieldPresenter() {
 
             case 'Ibat':
                 return (value / 100).toFixed(2) + "A";
+
+            case 'Vbec':
+            case 'Vbus':
+                return (value / 100).toFixed(2) + "V";
+
+            case 'Tmcu':
+            case 'Tesc':
+                return (value).toFixed(0) + "°C";
 
             case 'altitude':
                 return (value / 100).toFixed(1) + "m";

@@ -651,6 +651,12 @@ GraphConfig.load = function(config) {
         if (flightLog.isFieldEnabled().BATTERY) {
             EXAMPLE_GRAPHS.push({label: "Battery",fields: ["Vbat", "Ibat"]});
         }
+        if (flightLog.isFieldEnabled().VBEC || flightLog.isFieldEnabled().VBUS) {
+            EXAMPLE_GRAPHS.push({label: "Voltages",fields: ["Vbec", "Vbus"]});
+        }
+        if (flightLog.isFieldEnabled().TEMP) {
+            EXAMPLE_GRAPHS.push({label: "Temperatures",fields: ["Tmcu", "Tesc"]});
+        }
         if (flightLog.isFieldEnabled().ALT) {
             EXAMPLE_GRAPHS.push({label: "Altitude",fields: ["altitude", "variometer"]});
         }
