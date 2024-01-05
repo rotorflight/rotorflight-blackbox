@@ -634,6 +634,9 @@ GraphConfig.load = function(config) {
         if (flightLog.isFieldEnabled().RC_COMMAND) {
             EXAMPLE_GRAPHS.push({label: "RC Command",fields: ["rcCommand[all]"]});
         }
+        if (flightLog.isFieldEnabled().MIXER) {
+            EXAMPLE_GRAPHS.push({label: "Controls",fields: ["mixer[all]"]});
+        }
         if (flightLog.isFieldEnabled().PID) {
             EXAMPLE_GRAPHS.push({label: "PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]"]},
                                 {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]"]},
@@ -657,8 +660,11 @@ GraphConfig.load = function(config) {
         if (flightLog.isFieldEnabled().TEMP) {
             EXAMPLE_GRAPHS.push({label: "Temperatures",fields: ["Tmcu", "Tesc"]});
         }
+        if (flightLog.isFieldEnabled().RSSI) {
+            EXAMPLE_GRAPHS.push({label: "RSSI",fields: ["rssi"]});
+        }
         if (flightLog.isFieldEnabled().ALT) {
-            EXAMPLE_GRAPHS.push({label: "Altitude",fields: ["altitude", "variometer"]});
+            EXAMPLE_GRAPHS.push({label: "Altitude",fields: ["altitude", "vario"]});
         }
         if (flightLog.isFieldEnabled().ATTITUDE) {
             EXAMPLE_GRAPHS.push({label: "Attitude",fields: ["attitude[all]"]});
