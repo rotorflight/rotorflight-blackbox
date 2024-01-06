@@ -757,28 +757,28 @@ function FlightLogFieldPresenter() {
             case 'accADC[2]':
                 return flightLog.accRawToGs(value).toFixed(2) + "g";
 
+                return (value / 100).toFixed(2) + "V";
+
             case 'Vbat':
-                return (value / 100).toFixed(2) + "V" + ", " + (value / 100 / flightLog.getNumCellsEstimate()).toFixed(2) + "V/cell";
-
-            case 'Ibat':
-                return (value / 100).toFixed(2) + "A";
-
             case 'Vbec':
             case 'Vbus':
                 return (value / 100).toFixed(2) + "V";
+
+            case 'Ibat':
+                return (value / 100).toFixed(2) + "A";
 
             case 'Tmcu':
             case 'Tesc':
                 return (value).toFixed(0) + "°C";
 
             case 'altitude':
-                return (value / 100).toFixed(1) + "m";
+                return (value / 100).toFixed(2) + "m";
 
             case 'vario':
-                return (value / 100).toFixed(1) + "m/s";
+                return (value / 100).toFixed(2) + "m/s";
 
             case 'rssi':
-                return (value / 1024 * 100).toFixed(2) + "%";
+                return (value / 1024 * 100).toFixed(1) + "%";
 
             case 'headspeed':
             case 'tailspeed':
