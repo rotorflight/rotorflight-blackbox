@@ -540,6 +540,15 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Setpoint Yaw',
             'debug[7]':'Setpoint Collective',
         },
+        'RESCUE_ALTHOLD' : {
+            'debug[all]':'Rescue Altitude Hold',
+            'debug[0]':'Error',
+            'debug[1]':'Sqrt Error',
+            'debug[2]':'P-term',
+            'debug[3]':'I-term',
+            'debug[4]':'D-term',
+            'debug[5]':'PID Sum',
+        },
         'SETPOINT' : {
             'debug[all]':'Setpoint',
             'debug[0]':'RC Deflection',
