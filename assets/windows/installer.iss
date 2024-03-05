@@ -1,7 +1,7 @@
 ; ------------------------------------------
 ; Installer for Rotorflight Blackbox Viewer
 ; ------------------------------------------
-; It receives from the command line with /D the parameters: 
+; It receives from the command line with /D the parameters:
 ; version
 ; archName
 ; archAllowed
@@ -11,7 +11,7 @@
 
 #define ApplicationName "Rotorflight Blackbox"
 #define CompanyName "The Rotorflight open source project"
-#define CompanyUrl "https://rotorflight.com/"
+#define CompanyUrl "https://www.rotorflight.org/"
 #define ExecutableFileName "rotorflight-blackbox.exe"
 #define GroupName "Rotorflight"
 #define InstallerFileName "rotorflight-blackbox-installer_" + version + "_" + archName
@@ -23,13 +23,13 @@
 LaunchProgram=Start %1
 
 [Files]
-Source: "{#SourcePath}\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: "{#SourcePath}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 ; Programs group
 Name: "{group}\{#ApplicationName}"; Filename: "{app}\{#ExecutableFileName}";
 ; Desktop icon
-Name: "{autodesktop}\{#ApplicationName}"; Filename: "{app}\{#ExecutableFileName}"; 
+Name: "{autodesktop}\{#ApplicationName}"; Filename: "{app}\{#ExecutableFileName}";
 ; Non admin users, uninstall icon
 Name: "{group}\Uninstall {#ApplicationName}"; Filename: "{uninstallexe}"; Check: not IsAdminInstallMode
 
@@ -81,23 +81,23 @@ var
     ResultStr: String;
     ParameterStr : String;
 begin
-    
+
     Result := True;
 
     // Check if the application is already installed by the old NSIS installer, and uninstall it
     // Look into the different registry entries: win32, win64 and without user rights
-    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Rotorflight Blackbox', 'UninstallString', ResultStr) then     
+    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Rotorflight Blackbox', 'UninstallString', ResultStr) then
     begin
-        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Rotorflight Blackbox', 'UninstallString', ResultStr) then     
+        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Rotorflight Blackbox', 'UninstallString', ResultStr) then
         begin
-            RegQueryStringValue(HKCU, 'SOFTWARE\Rotorflight\Rotorflight Blackbox', 'UninstallString', ResultStr) 
+            RegQueryStringValue(HKCU, 'SOFTWARE\Rotorflight\Rotorflight Blackbox', 'UninstallString', ResultStr)
         end;
     end;
 
     // Found, start uninstall
-    if ResultStr <> '' then 
+    if ResultStr <> '' then
     begin
-        
+
         ResultStr:=RemoveQuotes(ResultStr);
 
         // Add this parameter to not return until uninstall finished. The drawback is that the uninstaller file is not deleted
@@ -112,7 +112,7 @@ begin
         else begin
             Result := False;
             MsgBox('Error uninstalling old Blackbox ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
-        end;        
-    end;    
+        end;
+    end;
 
 end;
