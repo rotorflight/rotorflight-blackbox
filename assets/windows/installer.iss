@@ -23,7 +23,7 @@
 LaunchProgram=Start %1
 
 [Files]
-Source: "{#SourcePath}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "{#SourcePath}\*"; DestDir: "{app}"; Flags: recursesubdirs
 
 [Icons]
 ; Programs group
@@ -75,41 +75,33 @@ WizardSmallImageFile=rf_installer_small.bmp
 WizardStyle=modern
 
 [Code]
+function GetQuietUninstallerPath(): String;
+var
+    RegKey: String;
+begin
+    Result := '';
+    RegKey := Format('%s\%s_is1', ['Software\Microsoft\Windows\CurrentVersion\Uninstall', '{#emit SetupSetting("AppId")}']);
+    if not RegQueryStringValue(HKEY_LOCAL_MACHINE, RegKey, 'QuietUninstallString', Result) then
+    begin
+        RegQueryStringValue(HKEY_CURRENT_USER, RegKey, 'QuietUninstallString', Result);
+    end;
+end;
+
 function InitializeSetup(): Boolean;
 var
     ResultCode: Integer;
-    ResultStr: String;
     ParameterStr : String;
+    UninstPath : String;
 begin
 
     Result := True;
 
-    // Check if the application is already installed by the old NSIS installer, and uninstall it
-    // Look into the different registry entries: win32, win64 and without user rights
-    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Rotorflight Blackbox', 'UninstallString', ResultStr) then
+    // Search for new Inno Setup installations
+    UninstPath := GetQuietUninstallerPath();
+    if UninstPath <> '' then
     begin
-        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Rotorflight Blackbox', 'UninstallString', ResultStr) then
+        if not Exec('>', UninstPath, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
         begin
-            RegQueryStringValue(HKCU, 'SOFTWARE\Rotorflight\Rotorflight Blackbox', 'UninstallString', ResultStr)
-        end;
-    end;
-
-    // Found, start uninstall
-    if ResultStr <> '' then
-    begin
-
-        ResultStr:=RemoveQuotes(ResultStr);
-
-        // Add this parameter to not return until uninstall finished. The drawback is that the uninstaller file is not deleted
-        ParameterStr := '_?=' + ExtractFilePath(ResultStr);
-
-        if Exec(ResultStr, ParameterStr, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
-        begin
-          // Delete the unistaller file and empty folders. Not deleting the files.
-          DeleteFile(ResultStr);
-          DelTree(ExtractFilePath(ResultStr), True, False, True);
-        end
-        else begin
             Result := False;
             MsgBox('Error uninstalling old Blackbox ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
         end;
