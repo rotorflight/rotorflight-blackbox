@@ -560,6 +560,17 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Cutoff',
             'debug[7]':'Frame Time',
         },
+        'TTA' : {
+            'debug[all]':'Tail Torque Assist',
+            'debug[0]':'Stabilized Yaw',
+            'debug[1]':'TTA',
+            'debug[2]':'Headroom',
+            'debug[3]':'TTA Add',
+            'debug[4]':'Gov P',
+            'debug[5]':'Gov I',
+            'debug[6]':'Gov PID Sum',
+            'debug[7]':'Gov Target Headspeed',
+        },
         'AIRBORNE' : {
             'debug[all]':'Setpoint',
             'debug[0]':'Sqrt SP Max [roll]',
