@@ -364,6 +364,7 @@ GraphConfig.load = function(config) {
                     case 'GYRO':
                     case 'GYRO_FILTERED':
                     case 'GYRO_SCALED':
+                    case 'GYRO_SAMPLE':
                     case 'DUAL_GYRO':
                     case 'DUAL_GYRO_COMBINED':
                     case 'DUAL_GYRO_DIFF':
