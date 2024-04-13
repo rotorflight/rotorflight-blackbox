@@ -1,31 +1,77 @@
 # Rotorflight Blackbox
 
-**Rotorflight** is a _Flight Control_/_FBL_ Software Suite for traditional single-rotor RC helicopters. It is based on Betaflight 4.2, enjoying all the great features of the Betaflight platform, plus many new features added for helicopters. Rotorflight borrows ideas and code also from Heliflight3D, an earlier fork of Betaflight for helicopters.
+[Rotorflight](https://github.com/rotorflight) is a Flight Control software suite designed for
+single-rotor helicopters. It consists of:
 
-**Rotorflight Blackbox** is a cross-platform log viewer and analyser for logs recorded with the Rotorflight flight control system. It is available for Windows, Mac OS, and Linux.
+- Rotorflight Flight Controller Firmware
+- Rotorflight Configurator, for flashing and configuring the flight controller
+- Rotorflight Blackbox Explorer, for analyzing blackbox flight logs (this repository)
+- Rotorflight LUA Scripts, for configuring the flight controller using a transmitter
 
-Rotorflight does **NOT** support multi-rotor 'drones', nor airplanes; it is only for traditinal RC helicopters, including co-axial and tandem helicopters.
+Built on Betaflight 4.3, Rotorflight incorporates numerous advanced features specifically
+tailored for helicopters. It's important to note that Rotorflight does _not_ support multi-rotor
+crafts or airplanes; it's exclusively designed for RC helicopters.
+
+This version of Rotorflight is also known as **Rotorflight 2** or **RF2**.
+
+
+## Information
+
+Tutorials, documentation, and flight videos can be found on the [Rotorflight website](https://www.rotorflight.org/).
 
 
 ## Installation
 
-Please download the latest version from github:
+Please download the latest version from [github](https://github.com/rotorflight/rotorflight-blackbox/releases/).
 
- - https://github.com/rotorflight/rotorflight-blackbox/releases
+
+## Features
+
+Rotorflight has many features:
+
+* Many receiver protocols: CRSF, S.BUS, F.Port, DSM, IBUS, XBUS, EXBUS, GHOST, CPPM
+* Support for various telemetry protocols: CSRF, S.Port, HoTT, etc.
+* ESC telemetry protocols: BLHeli32, Hobbywing, Scorpion, Kontronik, OMP Hobby, ZTW, APD, YGE
+* Advanced PID control tuned for helicopters
+* Stabilisation modes (6D)
+* Rotor speed governor
+* Motorised tail support with Tail Torque Assist (TTA, also known as TALY)
+* Remote configuration and tuning with the transmitter
+  - With knobs / switches assigned to functions
+  - With LUA scripts on EdgeTX, OpenTX and Ethos
+* Extra servo/motor outputs for AUX functions
+* Fully customisable servo/motor mixer
+* Sensors for battery voltage, current, BEC, etc.
+* Advanced gyro filtering
+  - Dynamic RPM based notch filters
+  - Dynamic notch filters based on FFT
+  - Dynamic LPF
+* High-speed Blackbox logging
+
+Plus lots of features inherited from Betaflight:
+
+* Configuration profiles for changing various tuning parameters
+* Rates profiles for changing the stick feel and agility
+* Multiple ESC protocols: PWM, DSHOT, Multishot, etc.
+* Configurable buzzer sounds
+* Multi-color RGB LEDs
+* GPS support
+
+And many more...
 
 
 ## Notes
 
-#### MacOS X users
+#### Windows
 
-Changes to the security model used in the latest versions of MacOS X 10.14 (Mojave) and 10.15 (Catalina) mean that the operating system will show an error message ('"Rotorflight Configurator.app" is damaged and can’t be opened. You should move it to the Trash.') when trying to install the application. To work around this, run the following command in a terminal after installing: `sudo xattr -rd com.apple.quarantine /Applications/Rotorflight\ Configurator.app`.
+Rotorflight Blackbox requires Windows 10 or later. Windows 7 is not supported.
 
 
 ## Usage
 
 Click the "Open log file/video" button at the top right and select your log file and your flight video (if you recorded one).
 
-You can scroll through the log by clicking or dragging on the seek bar that appears underneath the main graph. The 
+You can scroll through the log by clicking or dragging on the seek bar that appears underneath the main graph. The
 current time is represented by the vertical red bar in the center of the graph. You can also click and drag left and
 right on the graph area to scrub backwards and forwards.
 
@@ -40,7 +86,7 @@ Or you may want to plot vbat against throttle to examine your battery's performa
 The blackbox plays a short beep on the buzzer when arming, and this corresponds with the start of the logged data.
 You can sync your log against your flight video by pressing the "start log here" button when you hear the beep in the
 video. You can tune the alignment of the log manually by pressing the nudge left and nudge right buttons in the log
-sync section, or by editing the value in the "log sync" box. Positive values move the log toward the end of the video, 
+sync section, or by editing the value in the "log sync" box. Positive values move the log toward the end of the video,
 negative values move it towards the beginning.
 
 ### Flight video won't load, or jumpy flight video upon export
@@ -60,46 +106,31 @@ B-frames. Do that by adding "keyint=1" into the Additional Options box.
 
 ## Contributing
 
-Contributions are welcome and encouraged. You can contribute in many ways:
+Rotorflight is an open-source community project. Anybody can join in and help to make it better by:
 
- - testing Rotorflight with different types of helicopters
- - improving the documentation in the Wiki
- - writing How-To guides
- - provide a new translation for the configurator
- - implement new features or fix bugs
- - reporting bugs
- - new ideas & suggestions
- - helping other users
-
-
-For reporting Rotorflight issues or bugs, please raise them here:
-
- - [Feature requests](https://github.com/rotorflight/rotorflight/issues)
- - [Configurator issue tracker](https://github.com/rotorflight/rotorflight-configurator/issues)
- - [Blackbox issue tracker](https://github.com/rotorflight/rotorflight-blackbox/issues)
- - [Firmware issue tracker](https://github.com/rotorflight/rotorflight-firmware/issues)
+* helping other users on Rotorflight Discord or other online forums
+* [reporting](https://github.com/rotorflight?tab=repositories) bugs and issues, and suggesting improvements
+* testing new software versions, new features and fixes; and providing feedback
+* participating in discussions on new features
+* create or update content on the [Website](https://www.rotorflight.org)
+* [contributing](https://www.rotorflight.org/docs/Contributing/intro) to the software development - fixing bugs, implementing new features and improvements
+* [translating](https://www.rotorflight.org/docs/Contributing/intro#translations) Rotorflight Configurator into a new language, or helping to maintain an existing translation
 
 
-## Credits
+## Origins
 
-Rotorflight is Free Software. Meaning, it is available free of charge _without warranty_, the source code is available, and it is supported by the users themselves as a community. Rotorflight is under the GPLv3 license.
+Rotorflight is software that is **open source** and is available free of charge without warranty.
 
-Rotorflight is forked from Betaflight, which in turn is forked from Cleanflight.
-Rotorflight borrows ideas and code also from Heliflight-3D, another Betaflight fork for helis.
+Rotorflight is forked from [Betaflight](https://github.com/betaflight), which in turn is forked from [Cleanflight](https://github.com/cleanflight).
+Rotorflight borrows ideas and code also from [HeliFlight3D](https://github.com/heliflight3d/), another Betaflight fork for helicopters.
 
-So thanks goes to all those whom have contributed along the way.
+Big thanks to everyone who has contributed along the journey!
 
-Origins for Rotorflight:
 
- - **Petri Mattila** (Dr.Rudder) - author and maintainer
- - **pkaig** - wiki, resource mapping, testing
- - **egon** - wiki, Dutch translation, Lua Scripts, testing
- - **mopatop** - wiki, testing
- - **Mike_PSL** - wiki, testing
- - **mattis** - German translation, testing
- - **Simon Stummer** (simonsummer) - testing
+## Contact
 
-And many others.
+Team Rotorflight can be contacted by email at rotorflightfc@gmail.com.
+
 
 [Handbrake]: https://handbrake.fr/
 [Google Bug #66631]: http://code.google.com/p/chromium/issues/detail?id=66631

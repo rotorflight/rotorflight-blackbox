@@ -2,10 +2,11 @@
 
 ### Setup
 
-1. Install node.js
-2. Install yarn: `npm install yarn -g`.
-3. Change to project folder and run `yarn install`.
-4. Run `yarn start` to build & run the debug flavor.
+1. Change to the project folder
+2. Install Node.js: `nvm install`
+3. Install yarn: `npm install yarn -g`
+4. Install dependencies: `yarn install`
+5. Run `yarn start`
 
 ### App build and release
 
