@@ -393,10 +393,9 @@ var
     ]),
 
     FILTER_TYPE = makeReadOnly([
-        "PT1",
-        "BIQUAD",
-        "PT2",
-        "PT3",
+        "NONE", "FIRST_ORDER", "SECOND_ORDER",
+        "PT1", "PT2", "PT3",
+        "ORDER1", "BUTTER", "BESSEL", "DAMPED",
     ]),
 
     DEBUG_MODE = [],
@@ -772,6 +771,7 @@ var
     ]),
 
     RATES_TYPE = makeReadOnly([
+        "NONE",
         "BETAFLIGHT",
         "RACEFLIGHT",
         "KISS",
