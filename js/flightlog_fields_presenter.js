@@ -201,6 +201,17 @@ function FlightLogFieldPresenter() {
             'debug[2]':'Gyro Scaled [yaw]',
             'debug[3]':'Not Used',
         },
+        'GYRO_SAMPLE' : {
+            'debug[all]':'Gyro Sample [debug-axis]',
+            'debug[0]':'Gyro Raw',
+            'debug[1]':'Gyro Downsampled',
+            'debug[2]':'After RPM-filter',
+            'debug[3]':'After Lowpass',
+            'debug[4]':'After Static Notches',
+            'debug[5]':'After Dynamic Notches',
+            'debug[6]':'Not Used',
+            'debug[7]':'Not Used',
+        },
         'RC_COMMAND' : {
             'debug[all]':'Debug RC Command',
             'debug[0]':'Roll',
@@ -874,6 +885,7 @@ function FlightLogFieldPresenter() {
                 case 'GYRO':
                 case 'GYRO_FILTERED':
                 case 'GYRO_SCALED':
+                case 'GYRO_SAMPLE':
                 case 'NOTCH':
                 case 'DUAL_GYRO':
                 case 'DUAL_GYRO_COMBINED':

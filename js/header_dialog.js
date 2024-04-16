@@ -667,7 +667,8 @@ function HeaderDialog(dialog, onSave) {
                 setParameter('gyro_lowpass_hz'                        ,sysConfig.gyro_lowpass_hz,0);
                 setParameter('gyro_lowpass2_hz'         ,sysConfig.gyro_lowpass2_hz,0);
 
-        if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
+        if ((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) ||
+            (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.3.0'))) {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_count        , 0);
         } else {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_width_percent, 0);
