@@ -286,7 +286,7 @@ var FlightLogParser = function(logData) {
             features:null,                          // Activated features (e.g. MOTORSTOP etc)
             Craft_name:null,                        // Craft Name
             motorOutput:[null,null],                // Minimum and maximum outputs to motor's
-            collectiveRange:[-1500,1500],           // Minimum and maximum collective outputs (raw 1000 equals 12 deg)
+            collectiveRange:[-1250,1250],           // Minimum and maximum collective outputs (raw 1000 equals 12 deg)
             digitalIdleOffset:null,                 // min throttle for d-shot (as a percentage)
             pidSumLimit:null,                       // PID sum limit
             pidSumLimitYaw:null,                    // PID sum limit yaw
