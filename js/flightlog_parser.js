@@ -164,7 +164,11 @@ var FlightLogParser = function(logData) {
             // Cross coupling
             { name: 'Cross Coupling Gain'             },
             { name: 'Cross Coupling Ratio'            },
-            { name: 'Cross Coupling Cutoff'           }
+            { name: 'Cross Coupling Cutoff'           },
+
+            // Accelerometer trims
+            { name: 'Accelerometer Pitch Trim'        },
+            { name: 'Accelerometer Roll Trim'         }
         ];
 
     //Private variables:
