@@ -220,9 +220,10 @@ var FlightLogParser = function(logData) {
             gyro_sync_denom:null,                   // Gyro Sync Denom
             pid_process_denom:null,                 // PID Process Denom
             pidController:null,                     // Active PID Controller
-            rollPID:[null, null, null],             // Roll [P, I, D]
-            pitchPID:[null, null, null],            // Pitch[P, I, D]
-            yawPID:[null, null, null],              // Yaw  [P, I, D]
+            rollPID:[null, null, null, null, null, null],  // Roll [P, I, D, F, B, O]
+            pitchPID:[null, null, null, null, null, null], // Pitch[P, I, D, F, B, O]
+            yawPID:[null, null, null, null, null, null],   // Yaw  [P, I, D, F, B]
+            govPID:[null, null, null, null, null, null],   // Gov  [P, I, D, F, M]
             altPID:[null, null, null],              // Altitude Hold [P, I, D]
             posPID:[null, null, null],              // Position Hold [P, I, D]
             posrPID:[null, null, null],             // Position Rate [P, I, D]
@@ -287,6 +288,7 @@ var FlightLogParser = function(logData) {
             gyro_soft_type:null,                    // Gyro soft filter type (PT1, BIQUAD, PT2, PT3)
             gyro_soft2_type:null,                   // Gyro soft filter 2 type (PT1, BIQUAD, PT2, PT3)
             debug_mode:null,                        // Selected Debug Mode
+            debug_axis:null,                        // Selected Debug Axis
             features:null,                          // Activated features (e.g. MOTORSTOP etc)
             Craft_name:null,                        // Craft Name
             motorOutput:[null,null],                // Minimum and maximum outputs to motor's
@@ -683,6 +685,7 @@ var FlightLogParser = function(logData) {
             case "gyro_soft_type":
             case "gyro_soft2_type":
             case "debug_mode":
+            case "debug_axis":
             case "anti_gravity_mode":
             case "anti_gravity_gain":
             case "abs_control_gain":
@@ -823,6 +826,7 @@ var FlightLogParser = function(logData) {
             case "rollPID":
             case "pitchPID":
             case "yawPID":
+            case "govPID":
             case "altPID":
             case "posPID":
             case "posrPID":

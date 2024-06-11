@@ -225,56 +225,22 @@ function HeaderDialog(dialog, onSave) {
         }
 
         function populatePID(name, data) {
-                var i = 0;
-        var nameElem = $('.pid_tuning .' + name + ' input');
-        nameElem.each(function () {
-                        $(this).attr('name', name + '[' + i + ']');
-                        if(data!=null) {
-                                $(this).closest('tr').removeClass('missing');
-                                switch (i) {
-                                        case 0:
-                                                if(data[i]!=null) {
-                                                                $(this).val((data[i]).toFixed(0));
-                                                                $(this).attr('decPl', 1);
-                                                                $(this).removeClass('missing');
-                                                        } else {
-                                                                $(this).addClass('missing');
-                                                        }
-                                                i++;
-                                                break;
-                                        case 1:
-                                                if(data[i]!=null) {
-                                                                $(this).val((data[i]).toFixed(0));
-                                                                $(this).attr('decPl', 3);
-                                                                $(this).removeClass('missing');
-                                                        } else {
-                                                                $(this).addClass('missing');
-                                                        }
-                                                i++;
-                                                break;
-                                        case 2:
-                                                if(data[i]!=null) {
-                                                                $(this).val(data[i].toFixed(0));
-                                                                $(this).attr('decPl', 0);
-                                                                $(this).removeClass('missing');
-                                                        } else {
-                                                                $(this).addClass('missing');
-                                                        }
-                                                i++;
-                                                break;
-                    case 3:
-                        if(data[i]!=null) {
-                            $(this).val(data[i].toFixed(0));
-                            $(this).attr('decPl', 2);
-                            $(this).removeClass('missing');
-                        } else {
-                            $(this).val('');
-                            $(this).addClass('missing');
-                        }
-                        i++;
-                        break;
-                                        }
-                                } else $(this).closest('tr').addClass('missing');
+            const DECPL_MAP = { 0: 1, 1: 3, 2: 0, 3: 1 };
+            var i = 0;
+            var nameElem = $('.pid_tuning .' + name + ' input');
+            nameElem.each(function () {
+                $(this).attr('name', name + '[' + i + ']');
+                if(data!=null) {
+                    $(this).closest('tr').removeClass('missing');
+                    if(data[i] == null) {
+                        $(this).val('').addClass('missing');
+                    } else {
+                        $(this).val((data[i]).toFixed(0)).attr('decPl', DECPL_MAP[i] || 0).removeClass('missing');
+                    }
+                    i++;
+                } else {
+                    $(this).closest('tr').addClass('missing');
+                }
             })
         }
 
@@ -563,6 +529,7 @@ function HeaderDialog(dialog, onSave) {
         populatePID('rollPID'                                        , sysConfig.rollPID);
         populatePID('pitchPID'                                        , sysConfig.pitchPID);
         populatePID('yawPID'                                        , sysConfig.yawPID);
+        populatePID('govPID'                                        , sysConfig.govPID);
 
         // Removed since GPS Rescue
         if (semver.lt(sysConfig.firmwareVersion, "3.4.0")) {
@@ -786,6 +753,7 @@ function HeaderDialog(dialog, onSave) {
         renderSelect('gyro_soft_type'                        ,sysConfig.gyro_soft_type, FILTER_TYPE);
         renderSelect('gyro_soft2_type'          ,sysConfig.gyro_soft2_type, FILTER_TYPE);
         renderSelect('debug_mode'                                ,sysConfig.debug_mode, DEBUG_MODE);
+        setParameter('debug_axis'                                ,sysConfig.debug_axis,0);
                 setParameter('motorOutputLow'                        ,sysConfig.motorOutput[0],0);
                 setParameter('motorOutputHigh'                        ,sysConfig.motorOutput[1],0);
                 setParameter('digitalIdleOffset'                ,sysConfig.digitalIdleOffset,2);

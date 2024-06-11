@@ -702,6 +702,12 @@
                                                 <th name="Feedforward">
                                                     <label>Feedforward</label>
                                                 </th>
+                                                <th name="Boost">
+                                                    <label>Boost</label>
+                                                </th>
+                                                <th name="Offset">
+                                                    <label>Offset</label>
+                                                </th>
                                             </tr>
                                             <tr class="rollPID">
                                                 <!-- 0 -->
@@ -717,6 +723,12 @@
                                                 </td>
                                                 <td>
                                                     <input type="text" name="f" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="b" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="o" step="1" min="0" max="255" />
                                                 </td>
                                             </tr>
                                             <tr class="pitchPID">
@@ -734,6 +746,12 @@
                                                 <td>
                                                     <input type="text" name="f" step="1" min="0" max="255" />
                                                 </td>
+                                                <td>
+                                                    <input type="text" name="b" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="o" step="1" min="0" max="255" />
+                                                </td>
                                             </tr>
                                             <tr class="yawPID">
                                                 <!-- 2 -->
@@ -749,6 +767,58 @@
                                                 </td>
                                                 <td>
                                                     <input type="text" name="f" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="b" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+
+                                        <table id="pid_gov_header" class="parameter cf">
+                                            <thead>
+                                                <tr>
+                                                    <th>Governor</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        <table id="pid_gov" class="pid_tuning">
+                                            <tr class="pid_labels">
+                                                <th name="Blank">
+                                                    <label>&nbsp</label>
+                                                </th>
+                                                <th name="Proportional">
+                                                    <label>Proportional</label>
+                                                </th>
+                                                <th name="Integral">
+                                                    <label>Integral</label>
+                                                </th>
+                                                <th name="Derivative">
+                                                    <label>Derivative</label>
+                                                </th>
+                                                <th name="Feedforward">
+                                                    <label>Feedforward</label>
+                                                </th>
+                                                <th name="Master Gain">
+                                                    <label>Master Gain</label>
+                                                </th>
+                                            </tr>
+                                            <tr class="govPID">
+                                                <td>Governor</td>
+                                                <td>
+                                                    <input type="text" name="p" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="i" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="d" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="f" step="1" min="0" max="255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="m" step="1" min="0" max="255" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -1071,7 +1141,7 @@
 
                                 <div class="gui_box grey debug">
                                     <div class="gui_box_titlebar">
-                                        <div class="spacer_box_title">DEBUG MODE</div>
+                                        <div class="spacer_box_title">DEBUG</div>
                                     </div>
                                     <div class="spacer_box">
 
@@ -1079,9 +1149,14 @@
                                             <tbody>
                                                 <tr>
                                                     <td name='debug_mode'>
+                                                        <label>Debug Mode</label>
                                                         <select>
                                                             <!-- list generated here -->
                                                         </select>
+                                                    </td>
+                                                    <td name='debug_axis'>
+                                                        <label>Debug Axis</label>
+                                                        <input type="text" step="1" min="0" max="100" />
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -1228,7 +1303,7 @@
                                     </div>
                                     <div class="spacer_box">
                                         <table class="parameter cf">
-                                            <tbody">
+                                            <tbody>
                                                 <tr>
                                                     <td name='pidAtMinThrottle'>
                                                         <label>PID at MinThrottle</label>
@@ -1267,6 +1342,9 @@
                                                 <th name="angle_strength">
                                                     <label>Angle strength</label>
                                                 </th>
+                                                <th name="angle_limit">
+                                                    <label>Angle limit</label>
+                                                </th>
                                                 <th name="horizon_strength">
                                                     <label>Horizon strength</label>
                                                 </th>
@@ -1281,10 +1359,13 @@
                                                     <input type="text" name="p" step="0.1" min="0" max="25.5" />
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="i" step="0.001" min="0" max="0.255" />
+                                                    <input type="text" name="i" step="0.1" min="0" max="25.5" />
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="d" step="1" min="0" max="255" />
+                                                    <input type="text" name="d" step="0.001" min="0" max="0.255" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="f" step="1" min="0" max="255" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -1657,7 +1738,7 @@
                                                    </tr>
                                                </thead>
                                                     <td name='dynNotchCount'>
-                                                        <label>Count/Width</label>
+                                                        <label>Count</label>
                                                         <input type="text" step="1" min="0" max="10" />
                                                     </td>
                                                     <td name="dynNotchQ">
