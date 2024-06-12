@@ -749,7 +749,16 @@ GraphSpectrumPlot._drawMousePosition = function(canvasCtx, mouseX, mouseY, WIDTH
 
         const mouseFrequency = ((mouseX - marginLeft) / WIDTH) * ((this._fftData.blackBoxRate / this._zoomX) / 2);
         if (mouseFrequency >= 0 && mouseFrequency <= sampleRate) {
-            this._drawInterestFrequency(canvasCtx, mouseFrequency, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.50)", 3);
+            this._drawInterestFrequency(canvasCtx, mouseFrequency, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+        }
+        if (mouseFrequency >= 0 && mouseFrequency * 2 <= sampleRate) {
+            this._drawInterestFrequency(canvasCtx, mouseFrequency * 2, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+        }
+        if (mouseFrequency >= 0 && mouseFrequency * 3 <= sampleRate) {
+            this._drawInterestFrequency(canvasCtx, mouseFrequency * 3, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+        }
+        if (mouseFrequency >= 0 && mouseFrequency * 4 <= sampleRate) {
+            this._drawInterestFrequency(canvasCtx, mouseFrequency * 4, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
         }
 
         // Y axis
