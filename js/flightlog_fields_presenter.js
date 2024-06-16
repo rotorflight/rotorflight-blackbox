@@ -788,9 +788,8 @@ function FlightLogFieldPresenter() {
             case 'accADC[2]':
                 return flightLog.accRawToGs(value).toFixed(2) + "g";
 
-                return (value / 100).toFixed(2) + "V";
-
             case 'Vbat':
+                return (value / 100).toFixed(2) + "V (" + (value / 100 / flightLog.getNumCellsEstimate()).toFixed(2) + " V/cell)";
             case 'Vbec':
             case 'Vbus':
                 return (value / 100).toFixed(2) + "V";

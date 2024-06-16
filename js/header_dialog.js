@@ -27,7 +27,6 @@ function HeaderDialog(dialog, onSave) {
         {name:'rcYawRate'                    , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'999.9.9'},
         {name:'airmode_activate_throttle'    , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'999.9.9'},
         {name:'rollPitchItermIgnoreRate'     , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'3.0.1'},
-        {name:'vbat_pid_compensation'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'4.2.999'},
         {name:'yawItermIgnoreRate'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'2.8.0', max:'3.0.1'},
         {name:'gyro_notch_hz'                , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.0.0', max:'999.9.9'},
         {name:'gyro_notch_cutoff'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'3.0.0', max:'999.9.9'},
@@ -92,7 +91,6 @@ function HeaderDialog(dialog, onSave) {
         {name:'dyn_notch_max_hz'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.2.0', max:'999.9.9'},
         {name:'rates_type'                   , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.2.0', max:'999.9.9'},
         {name:'fields_disabled_mask'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
-        {name:'vbat_sag_compensation'        , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'gyro_to_use'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'dynamic_idle_min_rpm'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
         {name:'motor_poles'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
@@ -591,10 +589,10 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rcYawRate'                ,sysConfig.rc_rates[2],2);
         setParameter('rcYawExpo'                ,sysConfig.rc_expo[2],2);
         setParameter('vbatscale'                                ,sysConfig.vbatscale,0);
-        setParameter('vbatref'                                        ,sysConfig.vbatref,0);
-        setParameter('vbatmincellvoltage'                ,sysConfig.vbatmincellvoltage,1);
-        setParameter('vbatmaxcellvoltage'                ,sysConfig.vbatmaxcellvoltage,1);
-        setParameter('vbatwarningcellvoltage'        ,sysConfig.vbatwarningcellvoltage,1);
+        setParameter('vbatref'                                        ,sysConfig.vbatref,2);
+        setParameter('vbatmincellvoltage'                ,sysConfig.vbatmincellvoltage,2);
+        setParameter('vbatmaxcellvoltage'                ,sysConfig.vbatmaxcellvoltage,2);
+        setParameter('vbatwarningcellvoltage'        ,sysConfig.vbatwarningcellvoltage,2);
         setParameter('minthrottle'                                ,sysConfig.minthrottle,0);
         setParameter('maxthrottle'                                ,sysConfig.maxthrottle,0);
         setParameter('currentMeterOffset'                ,sysConfig.currentMeterOffset,0);
@@ -804,8 +802,6 @@ function HeaderDialog(dialog, onSave) {
                 setParameter('pidSumLimit'                             ,sysConfig.pidSumLimit,0);
         setParameter('pidSumLimitYaw'                        ,sysConfig.pidSumLimitYaw,0);
 
-        setParameter('vbat_sag_compensation'    ,sysConfig.vbat_sag_compensation,0);
-
         setParameter('dynamic_idle_min_rpm'     , sysConfig.dynamic_idle_min_rpm, 0);
         setParameter('dyn_idle_p_gain'          , sysConfig.dyn_idle_p_gain, 0);
         setParameter('dyn_idle_i_gain'          , sysConfig.dyn_idle_i_gain, 0);
@@ -882,7 +878,6 @@ function HeaderDialog(dialog, onSave) {
 
                 /* Booleans */
         setCheckbox('gyro_cal_on_first_arm'                ,sysConfig.gyro_cal_on_first_arm);
-        setCheckbox('vbat_pid_compensation'                ,sysConfig.vbat_pid_compensation);
         setCheckbox('rc_smoothing'                                ,sysConfig.rc_smoothing);
 
         /* Selected Fields */

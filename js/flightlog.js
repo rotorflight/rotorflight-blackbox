@@ -261,7 +261,7 @@ function FlightLog(logData) {
         }
 
         //Are we even logging VBAT?
-        if (!fieldNameToIndex.vbatLatest) {
+        if (!fieldNameToIndex.Vbat) {
             numCells = false;
         } else {
             for (i = 1; i < 8; i++) {
