@@ -344,7 +344,7 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
     const WIDTH  = this._canvasCtx.canvas.width - this._getActualMarginLeft();
     const PLOTTED_BLACKBOX_RATE = this._fftData.blackBoxRate / this._zoomX;
 
-    let offset = 2; // make some space! Includes the space for the mouse frequency. In this way the other elements don't move in the screen when used
+    let offset = 3; // make some space! Includes the space for the mouse frequency. In this way the other elements don't move in the screen when used
 
     // Gyro filters
     if (this._overdrawType === SPECTRUM_OVERDRAW_TYPE.ALL_FILTERS ||
@@ -449,7 +449,7 @@ GraphSpectrumPlot._drawFiltersAndMarkers = function(canvasCtx) {
     }
 
     if (this._spectrumType === SPECTRUM_TYPE.FREQUENCY) {
-        this._drawInterestFrequency(canvasCtx, this._fftData.maxNoiseIdx, PLOTTED_BLACKBOX_RATE, 'Max motor noise', WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(255,0,0,0.50)", 3);
+        this._drawInterestFrequency(canvasCtx, this._fftData.maxNoiseIdx, PLOTTED_BLACKBOX_RATE, 'Max noise', WIDTH, HEIGHT, (15 * offset) + MARGIN, "rgba(255,0,0,0.33)", 3);
         offset++;
     }
 
@@ -634,6 +634,11 @@ GraphSpectrumPlot._drawGradientBackground = function(canvasCtx, WIDTH, HEIGHT) {
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT + ((this._isFullScreen) ? MARGIN : 0));
 };
 
+GraphSpectrumPlot._drawRpmFrequency = function(canvasCtx, frequency, sampleRate, label, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {
+    const interestLabel = `${frequency.toFixed(1)}Hz${label}`;
+    return this._drawVerticalMarkerLine(canvasCtx, frequency, sampleRate / 2, interestLabel, WIDTH, HEIGHT, OFFSET, stroke, lineWidth);
+};
+
 GraphSpectrumPlot._drawInterestFrequency = function(canvasCtx, frequency, sampleRate, label, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {
     const interestLabel = `${label} ${frequency.toFixed(1)}Hz`;
     return this._drawVerticalMarkerLine(canvasCtx, frequency, sampleRate / 2, interestLabel, WIDTH, HEIGHT, OFFSET, stroke, lineWidth);
@@ -749,16 +754,16 @@ GraphSpectrumPlot._drawMousePosition = function(canvasCtx, mouseX, mouseY, WIDTH
 
         const mouseFrequency = ((mouseX - marginLeft) / WIDTH) * ((this._fftData.blackBoxRate / this._zoomX) / 2);
         if (mouseFrequency >= 0 && mouseFrequency <= sampleRate) {
-            this._drawInterestFrequency(canvasCtx, mouseFrequency, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+            this._drawRpmFrequency(canvasCtx, mouseFrequency, sampleRate, ` (${Math.round(mouseFrequency * 60)}rpm)`, WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
         }
         if (mouseFrequency >= 0 && mouseFrequency * 2 <= sampleRate) {
-            this._drawInterestFrequency(canvasCtx, mouseFrequency * 2, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+            this._drawRpmFrequency(canvasCtx, mouseFrequency * 2, sampleRate, '', WIDTH, HEIGHT, OFFSET + 15, "rgba(0,255,0,0.66)", 1);
         }
         if (mouseFrequency >= 0 && mouseFrequency * 3 <= sampleRate) {
-            this._drawInterestFrequency(canvasCtx, mouseFrequency * 3, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+            this._drawRpmFrequency(canvasCtx, mouseFrequency * 3, sampleRate, '', WIDTH, HEIGHT, OFFSET + 15, "rgba(0,255,0,0.66)", 1);
         }
         if (mouseFrequency >= 0 && mouseFrequency * 4 <= sampleRate) {
-            this._drawInterestFrequency(canvasCtx, mouseFrequency * 4, sampleRate, '', WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
+            this._drawRpmFrequency(canvasCtx, mouseFrequency * 4, sampleRate, '', WIDTH, HEIGHT, OFFSET + 15, "rgba(0,255,0,0.66)", 1);
         }
 
         // Y axis
