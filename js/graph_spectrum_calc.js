@@ -373,7 +373,7 @@ GraphSpectrumCalc._normalizeFft = function(fftOutput, fftLength) {
 
     // Make all the values absolute, and calculate some useful values (max noise, etc.)
     var maxFrequency = (this._blackBoxRate / 2.0);
-    var noiseLowEndIdx = 100 / maxFrequency * fftLength;
+    var noiseLowEndIdx = 25 / maxFrequency * fftLength;
     var maxNoiseIdx = 0;
     var maxNoise = 0;
 
