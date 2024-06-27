@@ -265,10 +265,20 @@ GraphConfig.load = function(config) {
                     outputRange: 1.0,
                 };
             } else if (fieldName.match(/^servo\[/)) {
+                const mm = getMinMaxForFields(fieldName);
+                let center = (mm.max + mm.min) / 2;
+                let range = Math.max((mm.max - mm.min) / 2, 1.0);
+                if(center > 1000 && center <= 2000) { // standard servo 800-1500-2200 us
+                    center = 1500;
+                    range = 700;
+                } else if(center > 500 && center <= 1000) { // narrow servo 410-760-1110 us
+                    center = 760;
+                    range = 350;
+                }
                 return {
-                    offset: 0,
+                    offset: -center,
                     power: 1.0,
-                    inputRange: 2200,
+                    inputRange: range,
                     outputRange: 1.0
                 };
             } else if (fieldName.match(/^accADC\[/)) {
