@@ -228,7 +228,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
                 idents.servoFields[servoIndex] = fieldIndex;
             } else {
                 switch (fieldName) {
-                    case "vbatLatest":
+                    case "Vbat":
                         idents.vbatField = fieldIndex;
                         idents.numCells = flightLog.getNumCellsEstimate();
                     break;

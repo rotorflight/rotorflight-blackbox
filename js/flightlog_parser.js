@@ -266,7 +266,6 @@ var FlightLogParser = function(logData) {
             baro_hardware:null,                     // Barometer Hardware type
             mag_hardware:null,                      // Magnetometer Hardware type
             gyro_cal_on_first_arm:null,             // Gyro Calibrate on first arm
-            vbat_pid_compensation:null,             // VBAT PID compensation
             rate_limits:[null, null, null],         // RC Rate limits
             rc_smoothing:null,                      // RC Control Smoothing
             rc_interpolation:null,                  // RC Control Interpolation type
@@ -310,7 +309,6 @@ var FlightLogParser = function(logData) {
             dyn_notch_max_hz: null,                 // Dyn Notch max limit in Hz for the filter
             rates_type: null,
             fields_mask: null,
-            vbat_sag_compensation: null,
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
             motor_poles: 1,
@@ -406,7 +404,6 @@ var FlightLogParser = function(logData) {
             tpa_rate                  : "dynThrPID",
             use_unsynced_pwm          : "unsynced_fast_pwm",
             vbat_scale                : "vbatscale",
-            vbat_pid_gain             : "vbat_pid_compensation",
             yaw_accel_limit           : "yawRateAccelLimit",
             yaw_lowpass_hz            : "yaw_lpf_hz",
             feedforward_transition    : "ff_transition",
@@ -642,7 +639,6 @@ var FlightLogParser = function(logData) {
             case "baro_hardware":
             case "mag_hardware":
             case "gyro_cal_on_first_arm":
-            case "vbat_pid_compensation":
             case "rc_smoothing":
             case "rc_smoothing_type":
             case "rc_smoothing_debug_axis":
@@ -711,7 +707,6 @@ var FlightLogParser = function(logData) {
             case "dyn_notch_min_hz":
             case "dyn_notch_max_hz":
             case "rates_type":
-            case "vbat_sag_compensation":
             case "fields_mask":
             case "motor_pwm_protocol":
             case "gyro_to_use":
