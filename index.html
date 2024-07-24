@@ -963,7 +963,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <thead>
                                                 <tr>
                                                     <th colspan="5">PID Sliders</th>
@@ -1017,7 +1017,7 @@
                                              </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <thead>
                                                 <tr>
                                                     <th colspan="5">TPA and Airmode</th>
@@ -1041,7 +1041,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <thead>
                                                 <tr>
                                                     <th scope="row" colspan="6">Feedforward</th>
@@ -1079,7 +1079,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <thead>
                                                 <tr>
                                                     <th scope="row" colspan="6">AntiGravity</th>
@@ -1233,7 +1233,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr>
                                                     <td name="superExpoFactor" class="bf-only">
@@ -1254,7 +1254,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <body>
                                                 <tr>
                                                     <th colspan="3">Rate Limits</th>
@@ -1302,7 +1302,7 @@
                                         <div class="spacer_box_title">MISCELLANEOUS</div>
                                     </div>
                                     <div class="spacer_box">
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr>
                                                     <td name='pidAtMinThrottle'>
@@ -1398,7 +1398,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <thead>
                                                 <tr>
                                                     <th scope="row" colspan="6">Deprecated</th>
@@ -1431,7 +1431,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <thead class="BFPIDController">
                                                 <tr>
                                                     <th colspan="2">P-Term</th>
@@ -1517,6 +1517,24 @@
                                         <table class="parameter cf">
                                             <tbody>
                                                 <tr>
+                                                    <td name='gyro_to_use'>
+                                                        <label>Selected gyro</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                   <td name='gyro_hardware_lpf'>
+                                                        <label>Hardware gyro LPF</label>
+                                                        <select>
+                                                            <!-- list generated here -->
+                                                        </select>
+                                                    </td>
+                                                    <td name='filter_process_denom'>
+                                                        <label>Filter Process</label>
+                                                        <input type="text" step="1" min="0" max="8" />
+                                                    </td>
+                                               </tr>
+                                                <tr>
                                                     <td name="loopTime">
                                                         <label>Looptime</label>
                                                         <input type="text" step="25" min="0" max="3000" />
@@ -1530,8 +1548,6 @@
                                                         <input type="text" step="1" min="0" max="8" />
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                            <tbody>
                                                 <tr>
                                                     <td name='acc_hardware'>
                                                         <label>Accelerometer</label>
@@ -1553,31 +1569,9 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td name='gyro_to_use'>
-                                                        <label>Selected gyro</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                   <td name='gyro_hardware_lpf'>
-                                                        <label>Hardware gyro LPF</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                                    <td name='gyro_32khz_hardware_lpf'>
-                                                        <label>Gyro 32KHz Hardware LPF</label>
-                                                        <select>
-                                                            <!-- list generated here -->
-                                                        </select>
-                                                    </td>
-                                               </tr>
-                                            </tbody>
                                         </table>
 
-                                        <table class="bf-only" cellpadding="0" cellspacing="0">
+                                        <table class="bf-only hiddenElement" cellpadding="0" cellspacing="0">
                                             <tbody class="static-features noline">
                                                 <tr>
                                                     <td name="gyro_cal_on_first_arm">
@@ -1602,7 +1596,7 @@
 
                                 <div class="gui_box grey disabled_fields">
                                     <div class="gui_box_titlebar">
-                                        <div class="spacer_box_title">DISABLED FIELDS</div>
+                                        <div class="spacer_box_title">LOGGING OPTIONS</div>
                                     </div>
                                     <div class="spacer_box">
 
@@ -1679,7 +1673,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody class="static-features noline">
                                                 <tr>
                                                 <thead>
@@ -1847,7 +1841,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody class="static-features noline">
                                                 <tr>
                                                 <thead>
@@ -1869,7 +1863,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr>
                                                 <thead>
@@ -1889,7 +1883,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr class='dshot_bidir_required'>
                                                 <thead>
@@ -1998,7 +1992,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 </tr>
                                                     <tr>
@@ -2021,7 +2015,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="noline" cellpadding="0" cellspacing="0">
+                                        <table class="noline hiddenElement" cellpadding="0" cellspacing="0">
                                             <tbody class="static-features misc noline">
                                                 <tr>
                                                     <td name="rc_smoothing">
@@ -2102,7 +2096,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr>
                                                 <thead>
@@ -2189,7 +2183,7 @@
                                     </div>
                                 </div>
 
-                                <div class="gui_box grey throttle">
+                                <div class="gui_box grey throttle hiddenElement">
                                     <div class="gui_box_titlebar">
                                         <div class="spacer_box_title">THROTTLE</div>
                                     </div>
@@ -2225,7 +2219,7 @@
                                             </tbody>
                                         </table>
  
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr>
                                                 <thead>
@@ -2257,7 +2251,7 @@
 
                                 <div class="gui_box grey other">
                                     <div class="gui_box_titlebar">
-                                        <div class="spacer_box_title">OTHER FEATURES</div>
+                                        <div class="spacer_box_title">FEATURES</div>
                                     </div>
                                     <div class="spacer_box">
 

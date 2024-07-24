@@ -257,67 +257,22 @@ function HeaderDialog(dialog, onSave) {
 
         // generate features
         var features = [
-            {bit: 0, group: 'rxMode', mode: 'group', name: 'RX_PPM', description: 'PPM Receiver Selected'},
-            {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL', description: 'In-flight level calibration'},
-            {bit: 3, group: 'rxMode', mode: 'group', name: 'RX_SERIAL', description: 'Serial Receiver Selected'},
-            {bit: 4, group: 'other', name: 'MOTOR_STOP', description: 'Motor Stop on low throttle'},
-            {bit: 5, group: 'other', name: 'SERVO_TILT', description: 'Servo gimbal'},
-            {bit: 6, group: 'other', name: 'SOFTSERIAL', description: 'Enable CPU based serial port'},
-            {bit: 7, group: 'other', name: 'GPS', description: 'GPS device connected'},
-            {bit: 9, group: 'other', name: 'SONAR', description: 'Sonar'},
-            {bit: 10, group: 'other', name: 'TELEMETRY', description: 'Telemetry Output'},
-            {bit: 12, group: 'other', name: '3D', description: '3D mode (for use with reversible ESCs)'},
-            {bit: 13, group: 'rxMode', mode: 'group', name: 'RX_PARALLEL_PWM', description: 'PWM receiver selected'},
-            {bit: 14, group: 'rxMode', mode: 'group', name: 'RX_MSP', description: 'Controller over MSP'},
-            {bit: 15, group: 'other', name: 'RSSI_ADC', description: 'ADC RSSI Monitoring'},
-            {bit: 16, group: 'other', name: 'LED_STRIP', description: 'Addressible RGB LED strip support'},
-                        {bit: 17, group: 'other', name: 'DISPLAY', description: 'OLED Screen Display'},
-            {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', description: 'Forward aux channels to servo outputs'},
-            {bit: 21, group: 'other', name: 'TRANSPONDER', description: 'Race Transponder'},
+                {bit:  3, group: 'rxMode', mode: 'group', name: 'RX_SERIAL', description: 'Serial Receiver Selected'},
+                {bit:  0, group: 'rxMode', mode: 'group', name: 'RX_PPM', description: 'PPM Receiver Selected'},
+                {bit: 14, group: 'rxMode', mode: 'group', name: 'RX_MSP', description: 'Controller over MSP'},
+                {bit: 13, group: 'rxMode', mode: 'group', name: 'RX_PARALLEL_PWM', description: 'PWM receiver selected'},
+
+                {bit:  6, group: 'other', name: 'SOFTSERIAL', description: 'CPU based serial port'},
+                {bit:  7, group: 'other', name: 'GPS', description: 'GPS device connected'},
+                {bit: 10, group: 'other', name: 'TELEMETRY', description: 'Telemetry Output'},
+                {bit: 16, group: 'other', name: 'LED_STRIP', description: 'RGB LED strip support'},
+                {bit: 18, group: 'other', name: 'OSD', description: 'On Screen Display'},
+                {bit: 18, group: 'other', name: 'CMS', description: 'Configuration Menu System'},
+                {bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use ESC telemetry as sensor'},
+                {bit: 28, group: 'other', name: 'FREQ_SENSOR', description: 'Frequency Sensor'},
+                {bit: 29, group: 'other', name: 'DYN_NOTCH', description: 'Dynamic gyro notch filtering'},
+                {bit: 30, group: 'other', name: 'RPM_FILTER', description: 'RPM Filtering'},
         ];
-
-
-                // Add specific features for betaflight v2.8 onwards....
-                if (semver.lte(sysConfig.firmwareVersion, "3.2.0")) {
-                        features.push(
-                                {bit: 1, group: 'battery', name: 'VBAT', description: 'Battery Monitoring'},
-                                {bit: 11, group: 'battery', name: 'CURRENT_METER', description: 'Battery current monitoring'},
-                                {bit: 8, group: 'other', name: 'FAILSAFE', description: 'Failsafe mode enabled'},
-                                {bit: 19, group: 'other', name: 'BLACKBOX', description: 'Blackbox flight data recorder'},
-                        );
-                }
-
-                if (semver.gte(sysConfig.firmwareVersion, "2.8.0")) {
-                        features.push(
-                                {bit: 22, group: 'other', name: 'AIRMODE', description: 'Airmode always enabled, set off to use modes'}
-                        );
-                }
-
-                if (semver.gte(sysConfig.firmwareVersion, "2.8.0") && !semver.gte(sysConfig.firmwareVersion, "3.0.0")) {
-                        features.push(
-                                {bit: 23, group: 'other', name: 'SUPEREXPO_RATES', description: 'Super Expo Mode'}
-                        );
-                }
-
-        if (semver.gte(sysConfig.firmwareVersion, "2.8.0") && !semver.gte(sysConfig.firmwareVersion, "3.0.0")) {
-            features.push(
-                {bit: 18, group: 'other', name: 'ONESHOT125', description: 'Oneshot 125 Enabled'}
-            );
-        }
-
-                if (semver.gte(sysConfig.firmwareVersion, "3.0.0")) {
-                        features.push(
-                                {bit: 18, group: 'other', name: 'OSD', description: 'On Screen Display'}
-                        );
-                }
-
-                if (semver.gte(sysConfig.firmwareVersion, "3.1.0")) {
-                        features.push(
-                                {bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use KISS ESC 24A telemetry as sensor'},
-                                {bit: 28, group: 'other', name: 'ANTI_GRAVITY', description: 'Temporary boost I-Term on high throttle changes'},
-                                {bit: 29, group: 'other', name: 'DYNAMIC_FILTER', description: 'Dynamic gyro notch filtering'}
-                        )
-                }
 
         var radioGroups = [];
 
@@ -399,22 +354,25 @@ function HeaderDialog(dialog, onSave) {
             {name: 'RC Command', description: 'Three axis RC Commands'},
             {name: 'Setpoint', description: 'Three axis Setpoints'},
             {name: 'Mixer', description: 'Three axis Mixer inputs'},
-            {name: 'PIDs', description: 'Three axis PID terms'},
+            {name: 'PID', description: 'Three axis PID terms'},
             {name: 'Attitude', description: 'Three axis attitude'},
-            {name: 'Gyro-raw', description: 'Raw Gyro data'},
-            {name: 'Gyroscope', description: 'Gyro data'},
-            {name: 'Accelerometer', description: 'Raw accelerometer data'},
+            {name: 'Raw Gyro', description: 'Raw Gyro data'},
+            {name: 'Gyro', description: 'Gyro data'},
+            {name: 'Accelerometer', description: 'Accelerometer data'},
             {name: 'Magnetometer', description: 'Three axis Compass'},
-            {name: 'Altitude', description: 'Altitude and Variometer'},
+            {name: 'Altimeter', description: 'Altitude and Variometer'},
             {name: 'Battery', description: 'Battery voltage and current'},
             {name: 'RSSI', description: 'Receiver Signal Quality'},
             {name: 'GPS', description: 'All GPS-related values'},
             {name: 'RPM', description: 'Rotor Speeds'},
-            {name: 'Motor', description: 'Motor throttle values'},
-            {name: 'Servo', description: 'Servo positions'},
+            {name: 'Motors', description: 'Motor throttle values'},
+            {name: 'Servos', description: 'Servo positions'},
+            {name: 'VBEC', description: 'BEC Voltage'},
+            {name: 'VBUS', description: '+5V Voltage'},
+            {name: 'Temperatures', description: 'Temperatures'},
         ];
 
-        const fieldsList_e = $('.fields_list');
+        const fieldsList_e = $('tbody.fields_list');
 
         for (let i = 0; i < fields.length; i++) {
             const row_e = $(`<tr><td><label class="option"><input class="field ${i}
@@ -604,8 +562,8 @@ function HeaderDialog(dialog, onSave) {
         } else {
             renderSelect('gyro_hardware_lpf'       ,sysConfig.gyro_lpf, GYRO_LPF);
         }
-
-        renderSelect('gyro_32khz_hardware_lpf'  ,sysConfig.gyro_32khz_hardware_lpf, GYRO_32KHZ_HARDWARE_LPF);
+        console.log(sysConfig)
+        setParameter('filter_process_denom', sysConfig.filter_process_denom, 0);
         setParameter('acc_lpf_hz'                                ,sysConfig.acc_lpf_hz,2);
         setParameter('acc_cut_hz'                                ,sysConfig.acc_cut_hz,2);
             setParameter('airmode_activate_throttle',sysConfig.airmode_activate_throttle, 0);
@@ -849,7 +807,7 @@ function HeaderDialog(dialog, onSave) {
         setCheckbox('rc_smoothing'                                ,sysConfig.rc_smoothing);
 
         /* Selected Fields */
-        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0')) {
+        if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0') || activeSysConfig.firmwareType === FIRMWARE_TYPE_ROTORFLIGHT) {
             builtSelectedFieldsList(sysConfig);
             $(".disabled_fields").css("display","table-header-group");
         } else {
