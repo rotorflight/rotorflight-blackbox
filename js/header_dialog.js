@@ -267,7 +267,7 @@ function HeaderDialog(dialog, onSave) {
                 {bit: 10, group: 'other', name: 'TELEMETRY', description: 'Telemetry Output'},
                 {bit: 16, group: 'other', name: 'LED_STRIP', description: 'RGB LED strip support'},
                 {bit: 18, group: 'other', name: 'OSD', description: 'On Screen Display'},
-                {bit: 18, group: 'other', name: 'CMS', description: 'Configuration Menu System'},
+                {bit: 19, group: 'other', name: 'CMS', description: 'Configuration Menu System'},
                 {bit: 27, group: 'other', name: 'ESC_SENSOR', description: 'Use ESC telemetry as sensor'},
                 {bit: 28, group: 'other', name: 'FREQ_SENSOR', description: 'Frequency Sensor'},
                 {bit: 29, group: 'other', name: 'DYN_NOTCH', description: 'Dynamic gyro notch filtering'},
@@ -562,7 +562,7 @@ function HeaderDialog(dialog, onSave) {
         } else {
             renderSelect('gyro_hardware_lpf'       ,sysConfig.gyro_lpf, GYRO_LPF);
         }
-        console.log(sysConfig)
+
         setParameter('filter_process_denom', sysConfig.filter_process_denom, 0);
         setParameter('acc_lpf_hz'                                ,sysConfig.acc_lpf_hz,2);
         setParameter('acc_cut_hz'                                ,sysConfig.acc_cut_hz,2);
