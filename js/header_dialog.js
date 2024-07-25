@@ -134,6 +134,49 @@ function HeaderDialog(dialog, onSave) {
         {name:'throttle_boost_cutoff'         , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.3.0', max:'999.9.9'},
     ];
 
+    function ratesScaling(rates_type)
+    {
+        let rcRateFactor = 1
+        let rcRateDec = 0
+        let rcExpoFactor = 1
+        let rcExpoDec = 2
+        let ratesFactor = 1
+        let ratesDec = 0
+        switch(rates_type)
+        {
+            case 0: // NONE
+                rcExpoDec = 0
+                break
+            case 1: // BETAFLIGHT
+                rcRateFactor = 1
+                rcRateDec = 2
+                ratesFactor = 1
+                ratesDec = 2
+                break
+            case 2: // RACEFLIGHT
+                rcRateFactor = 10
+                rcExpoDec = 0
+                break
+            case 3: // KISS
+                rcRateFactor = 1
+                rcRateDec = 2
+                ratesFactor = 1
+                ratesDec = 2
+                break
+            case 5: // QUICK
+                ratesFactor = 10
+                rcRateDec = 2
+                break
+            case 4: // ACTUAL
+                rcRateFactor = 10
+                ratesFactor = 10
+                break
+            default:
+                break
+        }
+        return {rcRateFactor, rcRateDec, rcExpoFactor, rcExpoDec, ratesFactor, ratesDec}
+    }
+
         function isParameterValid(name) {
 
                 for(var i=0; i<parameterVersion.length; i++) {
@@ -549,12 +592,17 @@ function HeaderDialog(dialog, onSave) {
         populatePID('levelPID'                                        , sysConfig.levelPID);
 
         // Fill in data from for the rates object
-        setParameter('rcRollRate'               ,sysConfig.rc_rates[0],2);
-        setParameter('rcRollExpo'               ,sysConfig.rc_expo[0],2);
-        setParameter('rcPitchRate'              ,sysConfig.rc_rates[1],2);
-        setParameter('rcPitchExpo'              ,sysConfig.rc_expo[1],2);
-        setParameter('rcYawRate'                ,sysConfig.rc_rates[2],2);
-        setParameter('rcYawExpo'                ,sysConfig.rc_expo[2],2);
+        const {rcRateFactor, rcRateDec, rcExpoFactor, rcExpoDec, ratesFactor, ratesDec} = ratesScaling(sysConfig.rates_type)
+        setParameter('rcRollRate'               , sysConfig.rc_rates[0] * rcRateFactor, rcRateDec);
+        setParameter('rcPitchRate'              , sysConfig.rc_rates[1] * rcRateFactor, rcRateDec);
+        setParameter('rcYawRate'                , sysConfig.rc_rates[2] * rcRateFactor, rcRateDec);
+        setParameter('rcRollExpo'               , sysConfig.rc_expo[0] * rcExpoFactor, rcExpoDec);
+        setParameter('rcPitchExpo'              , sysConfig.rc_expo[1] * rcExpoFactor, rcExpoDec);
+        setParameter('rcYawExpo'                , sysConfig.rc_expo[2] * rcExpoFactor, rcExpoDec);
+        setParameter('rates[0]'                 , sysConfig.rates[0] * ratesFactor, ratesDec);
+        setParameter('rates[1]'                 , sysConfig.rates[1] * ratesFactor, ratesDec);
+        setParameter('rates[2]'                 , sysConfig.rates[2] * ratesFactor, ratesDec);
+
         setParameter('vbatscale'                                ,sysConfig.vbatscale,0);
         setParameter('vbatref'                                        ,sysConfig.vbatref,2);
         setParameter('vbatmincellvoltage'                ,sysConfig.vbatmincellvoltage,2);
@@ -568,25 +616,15 @@ function HeaderDialog(dialog, onSave) {
         setParameter('thrExpo'                                        ,sysConfig.thrExpo,2);
         setParameter('dynThrPID'                                ,sysConfig.dynThrPID,2);
         setParameter('tpa-breakpoint'                        ,sysConfig.tpa_breakpoint,0);
-                setParameter('superExpoFactor'                        ,sysConfig.superExpoFactor,2);
-                setParameter('superExpoFactorYaw'                ,sysConfig.superExpoFactorYaw,2);
-
-                if (sysConfig.firmwareType == FIRMWARE_TYPE_INAV) {
-                        setParameter('rates[0]'                                ,sysConfig.rates[0] * 10,0);
-                        setParameter('rates[1]'                                ,sysConfig.rates[1] * 10,0);
-                        setParameter('rates[2]'                                ,sysConfig.rates[2] * 10,0);
-                } else {
-                        setParameter('rates[0]'                                ,sysConfig.rates[0],2);
-                setParameter('rates[1]'                                ,sysConfig.rates[1],2);
-                setParameter('rates[2]'                                ,sysConfig.rates[2],2);
-                }
+        setParameter('superExpoFactor'                        ,sysConfig.superExpoFactor,2);
+        setParameter('superExpoFactorYaw'                ,sysConfig.superExpoFactorYaw,2);
 
         setParameter('loopTime'                                        ,sysConfig.looptime,0);
         setParameter('gyro_sync_denom'                        ,sysConfig.gyro_sync_denom,0);
         setParameter('pid_process_denom'                ,sysConfig.pid_process_denom,0);
         setParameter('yaw_p_limit'                                ,sysConfig.yaw_p_limit,0);
         setParameter('dterm_average_count'                ,sysConfig.dterm_average_count,0);
-            renderSelect('dynamic_pterm'                        ,sysConfig.dynamic_pterm, OFF_ON);
+        renderSelect('dynamic_pterm'                        ,sysConfig.dynamic_pterm, OFF_ON);
         setParameter('rollPitchItermResetRate'        ,sysConfig.rollPitchItermResetRate,0);
         setParameter('yawItermResetRate'                ,sysConfig.yawItermResetRate,0);
         setParameter('rollPitchItermIgnoreRate'        ,sysConfig.rollPitchItermIgnoreRate,0);
@@ -687,7 +725,7 @@ function HeaderDialog(dialog, onSave) {
             setParameter('rcSmoothingActiveCutoffsFf'   ,"0", 0);
             setParameter('rcSmoothingActiveCutoffsSp'   ,"0", 0);
             setParameter('rcSmoothingActiveCutoffsThr'  ,"0", 0);
-       }
+        }
 
         // D_MIN
         if (activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) {
@@ -741,13 +779,14 @@ function HeaderDialog(dialog, onSave) {
         setParameter('feedforwardBoost'         ,sysConfig.ff_boost,0);
 
         setParameter('abs_control_gain'         ,sysConfig.abs_control_gain, 0);
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '3.1.0')) {
-            setParameterFloat('yawRateAccelLimit', sysConfig.yawRateAccelLimit, 2);
-            setParameterFloat('rateAccelLimit'   , sysConfig.rateAccelLimit, 2);
-        } else {
-            setParameter('yawRateAccelLimit'    , sysConfig.yawRateAccelLimit, 1);
-            setParameter('rateAccelLimit'       , sysConfig.rateAccelLimit, 1);
-        }
+
+        setParameter('rcRollResponseTime'       , sysConfig.response_time[0], 0);
+        setParameter('rcPitchResponseTime'      , sysConfig.response_time[1], 0);
+        setParameter('rcYawResponseTime'        , sysConfig.response_time[2], 0);
+        setParameter('rcRollAccelLimit'         , sysConfig.accel_limit[0] * 10, 0);
+        setParameter('rcPitchAccelLimit'        , sysConfig.accel_limit[1] * 10, 0);
+        setParameter('rcYawAccelLimit'          , sysConfig.accel_limit[2] * 10, 0);
+
         renderSelect('gyro_soft_type'                        ,sysConfig.gyro_soft_type, FILTER_TYPE);
         renderSelect('gyro_soft2_type'          ,sysConfig.gyro_soft2_type, FILTER_TYPE);
         renderSelect('debug_mode'                                ,sysConfig.debug_mode, DEBUG_MODE);

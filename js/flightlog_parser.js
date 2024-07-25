@@ -282,8 +282,8 @@ var FlightLogParser = function(logData) {
             itermThrottleGain:null,                 // Betaflight PID
             ptermSetpointWeight:null,               // Betaflight PID
             dtermSetpointWeight:null,               // Betaflight PID
-            yawRateAccelLimit:null,                 // Betaflight PID
-            rateAccelLimit:null,                    // Betaflight PID
+            accel_limit: [null, null, null],        // RC Max Accel
+            response_time: [null, null, null],      // RC Reponse Time
             gyro_soft_type:null,                    // Gyro soft filter type (PT1, BIQUAD, PT2, PT3)
             gyro_soft2_type:null,                   // Gyro soft filter 2 type (PT1, BIQUAD, PT2, PT3)
             debug_mode:null,                        // Selected Debug Mode
@@ -357,9 +357,6 @@ var FlightLogParser = function(logData) {
         // on the right are older field names that must exist in the list above
 
         translationValues = {
-            acc_limit_yaw             : "yawRateAccelLimit",
-            accel_limit               : "rateAccelLimit",
-            acc_limit                 : "rateAccelLimit",
             anti_gravity_thresh       : "anti_gravity_threshold",
             currentSensor             : "currentMeter",
             d_notch_cut               : "dterm_notch_cutoff",
@@ -404,7 +401,6 @@ var FlightLogParser = function(logData) {
             tpa_rate                  : "dynThrPID",
             use_unsynced_pwm          : "unsynced_fast_pwm",
             vbat_scale                : "vbatscale",
-            yaw_accel_limit           : "yawRateAccelLimit",
             yaw_lowpass_hz            : "yaw_lpf_hz",
             feedforward_transition    : "ff_transition",
             feedforward_weight        : "ff_weight",
@@ -831,6 +827,8 @@ var FlightLogParser = function(logData) {
             case "motorOutput":
             case "collectiveRange":
             case "rate_limits":
+            case "accel_limit":
+            case "response_time":
             case "rc_smoothing_cutoffs":
             case "rc_smoothing_active_cutoffs":
             case "rc_smoothing_active_cutoffs_ff_sp_thr":
