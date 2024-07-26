@@ -296,7 +296,6 @@ select {
 }
 
 .header-dialog table tr td {
-    text-align: center;
     padding-left: 1px;
 }
 
@@ -535,6 +534,7 @@ html:not(.isBF28) .bf-only {
 }
 
 .header-dialog .features label,
+.header-dialog .disabled_fields label,
 .header-dialog .static-features label{
     /* width: 70px; */
     /* padding-left: 3px; */
@@ -547,8 +547,9 @@ html:not(.isBF28) .bf-only {
     width:90%;
 }
 
-.header-dialog .features span,
-.header-dialog .static-features span {
+.header-dialog .features td span,
+.header-dialog .disabled_fields td span,
+.header-dialog .static-features td span {
     padding-right: 3px;
     height: 18px;
     line-height: 18px;

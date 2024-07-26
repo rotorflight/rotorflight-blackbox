@@ -299,6 +299,7 @@ var FlightLogParser = function(logData) {
             d_min : [null, null, null],             // D_Min [P, I, D]
             d_min_gain : null,                      // D_Min gain
             d_min_advance : null,                   // D_Min advance
+            filter_process_denom : null,            // Filter denom
             iterm_relax: null,                      // ITerm Relax mode
             iterm_relax_type: null,                 // ITerm Relax type
             iterm_relax_cutoff: null,               // ITerm Relax cutoff
@@ -837,7 +838,8 @@ var FlightLogParser = function(logData) {
             case "gyro_lowpass_dyn_hz":
             case "dterm_lpf_dyn_hz":
             case "d_min":
-                that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
+            case "filter_process_denom":
+                    that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
             break;
             case "magPID":
                 that.sysConfig.magPID = parseCommaSeparatedString(fieldValue,3); //[parseInt(fieldValue, 10), null, null];
