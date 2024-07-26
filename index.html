@@ -1811,8 +1811,65 @@
 
                                 <div class="gui_box grey filters">
                                     <div class="gui_box_titlebar">
-                                        <div class="spacer_box_title">D-TERM SOFTWARE FILTERS</div>
+                                        <div class="spacer_box_title">PID FILTERS</div>
                                     </div>
+
+                                    <table id="pid_bandwidth" class="pid_tuning">
+                                         <tr class = "pid_labels">
+                                            <th name="Blank">
+                                                <label>&nbsp</label>
+                                            </th>
+                                            <th name="Bandwidth">
+                                                <label>Bandwidth</label>
+                                            </th>
+                                            <th name="D-term">
+                                                <label>D-term</label>
+                                            </th>
+                                            <th name="B-term">
+                                                <label>B-term</label>
+                                            </th>
+                                        </tr>
+                                        <tr class="rollBW">
+                                            <!-- 0 -->
+                                            <td>Roll</td>
+                                            <td>
+                                                <input type="text" name="m" step="1" min="0" max="255" />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="d" step="1" min="0" max="255" />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="b" step="1" min="0" max="255" />
+                                            </td>
+                                        </tr>
+                                        <tr class="pitchBW">
+                                            <!-- 1 -->
+                                            <td>Pitch</td>
+                                            <td>
+                                                <input type="text" name="m" step="1" min="0" max="255" />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="d" step="1" min="0" max="255" />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="b" step="1" min="0" max="255" />
+                                            </td>
+                                        </tr>
+                                        <tr class="yawBW">
+                                            <!-- 2 -->
+                                            <td>Yaw</td>
+                                            <td>
+                                                <input type="text" name="m" step="1" min="0" max="255" />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="d" step="1" min="0" max="255" />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="b" step="1" min="0" max="255" />
+                                            </td>
+                                        </tr>
+                                    </table>
+
                                     <div class="spacer_box">
 
                                         <table class="parameter cf">

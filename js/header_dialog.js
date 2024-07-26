@@ -547,7 +547,10 @@ function HeaderDialog(dialog, onSave) {
             $('#pid_gps_header').hide();
         }
 
-        populatePID('levelPID'                                        , sysConfig.levelPID);
+        populatePID('levelPID'                  , sysConfig.levelPID);
+        populatePID('rollBW'                    , sysConfig.rollBW);
+        populatePID('pitchBW'                   , sysConfig.pitchBW);
+        populatePID('yawBW'                     , sysConfig.yawBW);
 
         // Fill in data from for the rates object
         const {rcRateFactor, rcRateDec, rcExpoFactor, rcExpoDec, ratesFactor, ratesDec} = ratesScaling(sysConfig.rates_type)
