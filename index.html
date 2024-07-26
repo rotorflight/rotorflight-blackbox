@@ -972,7 +972,8 @@
                                             <tbody>
                                                 <tr>
                                                     <td name="simplified_pids_mode" class="bf-only">
-                                                        <label>Status</label>                                                        <select>
+                                                        <label>Status</label>
+                                                        <select>
                                                             <!-- list generated here -->
                                                         </select>
                                                     </td>
@@ -1768,14 +1769,14 @@
                                                         <input type="text" step="1" min="0" max="999.00" />
                                                     </td>
                                                     <td name="dynNotchMaxHz">
-                                                        <label>>Max (Hz)</label>
+                                                        <label>Max (Hz)</label>
                                                         <input type="text" step="1" min="0" max="999.00" />
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
 
-                                        <table class="parameter cf">
+                                        <table class="parameter cf hiddenElement">
                                             <tbody>
                                                 <tr class='dshot_bidir_required'>
                                                 <thead>
@@ -1806,6 +1807,28 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+
+                                        <div class="gui_box grey rpm_filters">
+                                            <div class="spacer_box">
+                                                <table class="parameter cf">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="row" colspan="5">RPM filters</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Source</td>
+                                                            <td>Type</td>
+                                                            <td>Harmonic</td>
+                                                            <td>Q</td>
+                                                            <td>Min RPM</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
