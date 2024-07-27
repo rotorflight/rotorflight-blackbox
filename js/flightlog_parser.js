@@ -255,6 +255,9 @@ var FlightLogParser = function(logData) {
             gyro_rpm_notch_harmonics:null,          // Number of Harmonics in the gyro rpm filter
             gyro_rpm_notch_q:null,                  // Value of Q in the gyro rpm filter
             gyro_rpm_notch_min:null,                // Min Hz for the gyro rpm filter
+            gyro_rpm_filter_bank_rpm_source:[],     // RPM filter sources
+            gyro_rpm_filter_bank_rpm_limit:[],      // RPM filter limits
+            gyro_rpm_filter_bank_notch_q:[],        // RPM filter notch Q factor
             rpm_notch_lpf:null,                     // Cutoff for smoothing rpm filter data
             dterm_rpm_notch_harmonics:null,         // Number of Harmonics in the dterm rpm filter
             dterm_rpm_notch_q:null,                 // Value of Q in the dterm rpm filter
@@ -837,6 +840,9 @@ var FlightLogParser = function(logData) {
             case "dterm_lpf_dyn_hz":
             case "d_min":
             case "filter_process_denom":
+            case "gyro_rpm_filter_bank_rpm_source":
+            case "gyro_rpm_filter_bank_rpm_limit":
+            case "gyro_rpm_filter_bank_notch_q":
                     that.sysConfig[fieldName] = parseCommaSeparatedString(fieldValue);
             break;
             case "magPID":

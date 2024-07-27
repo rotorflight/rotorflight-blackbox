@@ -459,6 +459,58 @@ function HeaderDialog(dialog, onSave) {
                 }
         }
 
+    function harmonicLabel(num) {
+        switch(num) {
+            case 0: return 'None'
+            case 1: return 'Fundamental'
+            case 2: return '2nd'
+            case 3: return '3rd'
+            default:
+                return num + 'th'
+        }
+    }
+
+    function renderRpmFilters(sources, qs, limits) {
+        const items = (sources || []).reduce(function(acc, src, i) {
+            if(src == 0) return acc
+            if(!acc[src]) {
+                acc[src] = {type: "Single"}
+            } else {
+                acc[src].type = "Double"
+            }
+
+            if(src >= 1 && src <= 8) {
+                acc[src].source = "Motor " + src
+                acc[src].harmonic = harmonicLabel(1)
+            } else if(src == 10) {
+                acc[src].source = "Main Motor"
+                acc[src].harmonic = harmonicLabel(1)
+            } else if(src >= 11 && src <= 18) {
+                acc[src].source = "Main Rotor"
+                acc[src].harmonic = harmonicLabel(src % 10)
+            } else if(src == 20) {
+                acc[src].source = "Tail Motor"
+                acc[src].harmonic = harmonicLabel(1)
+            } else if(src >= 21 && src <= 28) {
+                acc[src].source = "Tail Rotor"
+                acc[src].harmonic = harmonicLabel(src % 10)
+            } else {
+                acc[src].source = "Unknown"
+                acc[src].harmonic = harmonicLabel(0)
+            }
+            acc[src].q = (qs[i] * 0.1).toFixed(1)
+            acc[src].limit = limits[i]
+            return acc
+        }, {})
+
+        var $table = $('.rpm_filters table tbody').empty()
+        let elem = ""
+        for (const [src, item] of Object.entries(items)) {
+            elem += `<tr><td>${item.source}</td><td>${item.type}</td><td>${item.harmonic}</td><td>${item.q}</td><td>${item.limit}</td></tr>`
+        }
+        $table.append(elem);
+    }
+
     function renderSysConfig(sysConfig) {
 
       activeSysConfig = sysConfig; // Store the current system configuration
@@ -560,6 +612,8 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rates[0]'                 , sysConfig.rates[0] * ratesFactor, ratesDec);
         setParameter('rates[1]'                 , sysConfig.rates[1] * ratesFactor, ratesDec);
         setParameter('rates[2]'                 , sysConfig.rates[2] * ratesFactor, ratesDec);
+
+        renderRpmFilters(sysConfig.gyro_rpm_filter_bank_rpm_source, sysConfig.gyro_rpm_filter_bank_notch_q, sysConfig.gyro_rpm_filter_bank_rpm_limit)
 
         setParameter('vbatscale'                                ,sysConfig.vbatscale,0);
         setParameter('vbatref'                                        ,sysConfig.vbatref,2);
@@ -798,7 +852,8 @@ function HeaderDialog(dialog, onSave) {
 
 
         // Dynamic filters of Betaflight 4.0
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT  && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
+        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT ||
+           activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
                 (sysConfig.gyro_lowpass_dyn_hz[0] != null) && (sysConfig.gyro_lowpass_dyn_hz[0] > 0) &&
                 (sysConfig.gyro_lowpass_dyn_hz[1] > sysConfig.gyro_lowpass_dyn_hz[0])) {
             renderSelect('gyro_soft_dyn_type', sysConfig.gyro_soft_type, FILTER_TYPE);
