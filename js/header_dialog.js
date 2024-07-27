@@ -464,7 +464,7 @@ function HeaderDialog(dialog, onSave) {
             case 0: return 'None'
             case 1: return 'Fundamental'
             case 2: return '2nd'
-            case 3: return '3th'
+            case 3: return '3rd'
             default:
                 return num + 'th'
         }
