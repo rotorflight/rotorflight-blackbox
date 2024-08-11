@@ -41,6 +41,7 @@
     "gulp-yarn": "^3.0.0",
     "gulp-zip": "^5.0.0",
     "inflection": "1.12.0",
+    "node-gyp": "^10.2.0",
     "nw-builder": "~3.7.4",
     "os": "^0.1.1",
     "rpm-builder": "^1.0.0",
@@ -49,12 +50,13 @@
     "yarn": "^1.22.0"
   },
   "optionalDependencies": {
-    "appdmg": "^0.6.2"
+    "appdmg": "^0.6.4"
   },
   "resolutions": {
-    "**/**/lodash.template": "^4.5.0"
+    "**/**/lodash.template": "^4.5.0",
+    "**/**/nan": "^2.20.0"
   },
   "engines": {
-    "node": "16.x"
+    "node": "22.x"
   }
 }
