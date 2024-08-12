@@ -410,6 +410,10 @@ html:not(.isBF28) .bf-only {
 }
 */
 
+.header-dialog .rpm_filters tbody tr {
+    background-color: #f5f5f5;
+}
+
 .header-dialog .top-buttons {
     float: right;
 }
