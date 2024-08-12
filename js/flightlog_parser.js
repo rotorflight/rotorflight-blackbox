@@ -828,6 +828,9 @@ var FlightLogParser = function(logData) {
             case "navrPID":
             case "levelPID":
             case "velPID":
+            case "rollBW":
+            case "pitchBW":
+            case "yawBW":
             case "motorOutput":
             case "collectiveRange":
             case "rate_limits":
