@@ -305,6 +305,7 @@ var FlightLogParser = function(logData) {
             filter_process_denom : null,            // Filter denom
             iterm_relax_type: null,                 // ITerm Relax type
             iterm_relax_cutoff: [null, null, null], // ITerm Relax cutoff
+            error_limit: [null, null, null],        // Error Limit
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
             dyn_notch_q: null,                      // Dyn Notch width of each dynamic filter
@@ -840,6 +841,7 @@ var FlightLogParser = function(logData) {
             case "dterm_lpf_dyn_hz":
             case "d_min":
             case "iterm_relax_cutoff":
+            case "error_limit":
             case "filter_process_denom":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":

@@ -690,7 +690,7 @@ function HeaderDialog(dialog, onSave) {
         } else {
             setParameter('dynNotchCount'           ,sysConfig.dyn_notch_width_percent, 0);
         }
-        setParameter('dynNotchQ'                   ,sysConfig.dyn_notch_q            , 0);
+        setParameter('dynNotchQ'                   ,sysConfig.dyn_notch_q            , 1);
         setParameter('dynNotchMinHz'               ,sysConfig.dyn_notch_min_hz       , 0);
         setParameter('dynNotchMaxHz'               ,sysConfig.dyn_notch_max_hz       , 0);
 
@@ -768,6 +768,9 @@ function HeaderDialog(dialog, onSave) {
         setParameter('iterm_relax_r'   , sysConfig.iterm_relax_cutoff[0], 0);
         setParameter('iterm_relax_p'   , sysConfig.iterm_relax_cutoff[1], 0);
         setParameter('iterm_relax_y'   , sysConfig.iterm_relax_cutoff[2], 0);
+        setParameter('error_limit_r'   , sysConfig.error_limit[0], 0);
+        setParameter('error_limit_p'   , sysConfig.error_limit[1], 0);
+        setParameter('error_limit_y'   , sysConfig.error_limit[2], 0);
 
             renderSelect('unsynced_fast_pwm'                ,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
             renderSelect('fast_pwm_protocol'                ,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
