@@ -81,7 +81,6 @@ function HeaderDialog(dialog, onSave) {
         {name:'dterm_rpm_notch_q'            , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'4.2.999'},
         {name:'dterm_rpm_notch_min'          , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'4.2.999'},
         {name:'dshot_bidir'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
-        {name:'iterm_relax'                  , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
         {name:'iterm_relax_type'             , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
         {name:'iterm_relax_cutoff'           , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'999.9.9'},
         {name:'dyn_notch_range'              , type:FIRMWARE_TYPE_BETAFLIGHT,  min:'4.1.0', max:'4.1.7'},
@@ -765,9 +764,10 @@ function HeaderDialog(dialog, onSave) {
             $("#rate_limits").hide();
         }
 
-        renderSelect('iterm_relax'       , sysConfig.iterm_relax       , ITERM_RELAX);
-        renderSelect('iterm_relax_type'  , sysConfig.iterm_relax_type  , ITERM_RELAX_TYPE);
-        setParameter('iterm_relax_cutoff', sysConfig.iterm_relax_cutoff, 0);
+        renderSelect('iterm_relax_type', sysConfig.iterm_relax_type, ITERM_RELAX_TYPE);
+        setParameter('iterm_relax_r'   , sysConfig.iterm_relax_cutoff[0], 0);
+        setParameter('iterm_relax_p'   , sysConfig.iterm_relax_cutoff[1], 0);
+        setParameter('iterm_relax_y'   , sysConfig.iterm_relax_cutoff[2], 0);
 
             renderSelect('unsynced_fast_pwm'                ,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
             renderSelect('fast_pwm_protocol'                ,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
