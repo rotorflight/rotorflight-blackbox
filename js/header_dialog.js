@@ -786,6 +786,14 @@ function HeaderDialog(dialog, onSave) {
         setParameter('yaw_tta_gain'              , sysConfig.yaw_tta[0], 0);
         setParameter('yaw_tta_limit'             , sysConfig.yaw_tta[1], 0);
 
+        setParameter('cyclic_coupling_gain'       , sysConfig.cyclic_coupling[0], 0);
+        setParameter('cyclic_coupling_ratio'      , sysConfig.cyclic_coupling[1], 0);
+        setParameter('cyclic_coupling_cutoff'     , sysConfig.cyclic_coupling[2], 0);
+
+        setParameter('error_decay_time'           , sysConfig.error_decay[0], 0);
+        setParameter('error_decay_rate_max'       , sysConfig.error_decay[1], 0);
+        setParameter('error_decay_ground'         , sysConfig.error_decay_ground, 1);
+
         renderSelect('unsynced_fast_pwm'                ,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
         renderSelect('fast_pwm_protocol'                ,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
         setParameter('motor_pwm_rate'                    ,sysConfig.motor_pwm_rate,0);
@@ -917,8 +925,10 @@ function HeaderDialog(dialog, onSave) {
             setParameter('motor_poles'                            ,sysConfig.motor_poles, 0);
 
                 /* Booleans */
-        setCheckbox('gyro_cal_on_first_arm'                ,sysConfig.gyro_cal_on_first_arm);
-        setCheckbox('rc_smoothing'                                ,sysConfig.rc_smoothing);
+        setCheckbox('gyro_cal_on_first_arm'                , sysConfig.gyro_cal_on_first_arm);
+        setCheckbox('rc_smoothing'                         , sysConfig.rc_smoothing);
+        setCheckbox('piro_compensation'                    , sysConfig.piro_compensation);
+        setCheckbox('pitch_compensation'                   , sysConfig.pitch_compensation);
 
         /* Selected Fields */
         if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0') || activeSysConfig.firmwareType === FIRMWARE_TYPE_ROTORFLIGHT) {

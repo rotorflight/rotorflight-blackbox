@@ -201,7 +201,7 @@ select {
 
 /* Box holding numeric inputs */
 .header-dialog .cf input {
-    width: calc(100% - 10px);
+    width: calc(100% - 4px);
     border: 1px solid silver;
     border-radius: 3px;
     margin-left: 2px;

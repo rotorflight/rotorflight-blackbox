@@ -269,6 +269,8 @@ var FlightLogParser = function(logData) {
             baro_hardware:null,                     // Barometer Hardware type
             mag_hardware:null,                      // Magnetometer Hardware type
             gyro_cal_on_first_arm:null,             // Gyro Calibrate on first arm
+            piro_compensation:null,                 // Pirouette Compensation
+            pitch_compensation:null,                // Collective to Pitch Compensation
             rate_limits:[null, null, null],         // RC Rate limits
             rc_smoothing:null,                      // RC Control Smoothing
             rc_interpolation:null,                  // RC Control Interpolation type
@@ -306,6 +308,9 @@ var FlightLogParser = function(logData) {
             iterm_relax_type: null,                 // ITerm Relax type
             iterm_relax_cutoff: [null, null, null], // ITerm Relax cutoff
             error_limit: [null, null, null],        // Error Limit
+            error_decay: [null, null],              // Error Decay
+            error_decay_ground: null,               // Ground Error Decay
+            cyclic_coupling: [null, null, null],          // Cyclic Cross-Coupling
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
             dyn_notch_count: null,                  // Number of dynamic notches 4.3
@@ -645,6 +650,8 @@ var FlightLogParser = function(logData) {
             case "baro_hardware":
             case "mag_hardware":
             case "gyro_cal_on_first_arm":
+            case "piro_compensation":
+            case "pitch_compensation":
             case "rc_smoothing":
             case "rc_smoothing_type":
             case "rc_smoothing_debug_axis":
@@ -854,6 +861,9 @@ var FlightLogParser = function(logData) {
             case "yaw_tta":
             case "hsi_gain":
             case "hsi_limit":
+            case "cyclic_coupling":
+            case "error_decay":
+            case "error_decay_ground":
             case "filter_process_denom":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":
