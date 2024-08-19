@@ -308,6 +308,7 @@ var FlightLogParser = function(logData) {
             error_limit: [null, null, null],        // Error Limit
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
+            dyn_notch_count: null,                  // Number of dynamic notches 4.3
             dyn_notch_q: null,                      // Dyn Notch width of each dynamic filter
             dyn_notch_min_hz: null,                 // Dyn Notch min limit in Hz for the filter
             dyn_notch_max_hz: null,                 // Dyn Notch max limit in Hz for the filter
@@ -316,6 +317,10 @@ var FlightLogParser = function(logData) {
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
             motor_poles: 1,
+            yaw_gain: [null, null],
+            yaw_precomp: [null, null, null],
+            yaw_precomp_impulse: [null, null],
+            yaw_tta: [null, null],
             ff_transition: null,
             ff_averaging: null,
             ff_smooth_factor: null,
@@ -329,7 +334,6 @@ var FlightLogParser = function(logData) {
             rc_smoothing_throttle_hz:null,          // RC Smoothing manual cutoff for throttle
             rc_smoothing_auto_factor_throttle:null, // RC Smoothing cutoff for throttle
             rc_smoothing_active_cutoffs_ff_sp_thr:[null,null,null],// RC Smoothing active cutoffs feedforward, setpoint, throttle
-            dyn_notch_count: null,                  // Number of dynamic notches 4.3
             rpm_filter_fade_range_hz: null,         // Fade range for RPM notch filters in Hz
             dyn_idle_p_gain: null,
             dyn_idle_i_gain: null,
@@ -842,6 +846,10 @@ var FlightLogParser = function(logData) {
             case "d_min":
             case "iterm_relax_cutoff":
             case "error_limit":
+            case "yaw_gain":
+            case "yaw_precomp":
+            case "yaw_precomp_impulse":
+            case "yaw_tta":
             case "filter_process_denom":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":

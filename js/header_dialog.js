@@ -772,8 +772,18 @@ function HeaderDialog(dialog, onSave) {
         setParameter('error_limit_p'   , sysConfig.error_limit[1], 0);
         setParameter('error_limit_y'   , sysConfig.error_limit[2], 0);
 
-            renderSelect('unsynced_fast_pwm'                ,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
-            renderSelect('fast_pwm_protocol'                ,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
+        setParameter('yaw_gain_cw'               , sysConfig.yaw_gain[0], 0);
+        setParameter('yaw_gain_ccw'              , sysConfig.yaw_gain[1], 0);
+        setParameter('yaw_precomp_cutoff'        , sysConfig.yaw_precomp[0], 0);
+        setParameter('yaw_precomp_cyclic'        , sysConfig.yaw_precomp[1], 0);
+        setParameter('yaw_precomp_collective'    , sysConfig.yaw_precomp[2], 0);
+        setParameter('yaw_precomp_impulse_gain'  , sysConfig.yaw_precomp_impulse[0], 0);
+        setParameter('yaw_precomp_impulse_decay' , sysConfig.yaw_precomp_impulse[1], 0);
+        setParameter('yaw_tta_gain'              , sysConfig.yaw_tta[0], 0);
+        setParameter('yaw_tta_limit'             , sysConfig.yaw_tta[1], 0);
+
+        renderSelect('unsynced_fast_pwm'                ,sysConfig.unsynced_fast_pwm, MOTOR_SYNC);
+        renderSelect('fast_pwm_protocol'                ,sysConfig.fast_pwm_protocol, FAST_PROTOCOL);
         setParameter('motor_pwm_rate'                    ,sysConfig.motor_pwm_rate,0);
         renderSelect('dshot_bidir'              ,sysConfig.dshot_bidir, OFF_ON);
 
