@@ -321,6 +321,8 @@ var FlightLogParser = function(logData) {
             yaw_precomp: [null, null, null],
             yaw_precomp_impulse: [null, null],
             yaw_tta: [null, null],
+            hsi_gain: [null, null],
+            hsi_limit: [null, null],
             ff_transition: null,
             ff_averaging: null,
             ff_smooth_factor: null,
@@ -850,6 +852,8 @@ var FlightLogParser = function(logData) {
             case "yaw_precomp":
             case "yaw_precomp_impulse":
             case "yaw_tta":
+            case "hsi_gain":
+            case "hsi_limit":
             case "filter_process_denom":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":

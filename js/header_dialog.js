@@ -771,6 +771,10 @@ function HeaderDialog(dialog, onSave) {
         setParameter('error_limit_r'   , sysConfig.error_limit[0], 0);
         setParameter('error_limit_p'   , sysConfig.error_limit[1], 0);
         setParameter('error_limit_y'   , sysConfig.error_limit[2], 0);
+        setParameter('hsi_gain_r'      , sysConfig.error_limit[0], 0);
+        setParameter('hsi_gain_p'      , sysConfig.error_limit[1], 0);
+        setParameter('hsi_limit_r'     , sysConfig.error_limit[0], 0);
+        setParameter('hsi_limit_p'     , sysConfig.error_limit[1], 0);
 
         setParameter('yaw_gain_cw'               , sysConfig.yaw_gain[0], 0);
         setParameter('yaw_gain_ccw'              , sysConfig.yaw_gain[1], 0);

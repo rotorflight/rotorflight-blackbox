@@ -705,9 +705,6 @@
                                                 <th name="Boost">
                                                     <label>Boost</label>
                                                 </th>
-                                                <th name="Offset">
-                                                    <label>Offset</label>
-                                                </th>
                                             </tr>
                                             <tr class="rollPID">
                                                 <!-- 0 -->
@@ -726,9 +723,6 @@
                                                 </td>
                                                 <td>
                                                     <input type="text" name="b" step="1" min="0" max="255" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="o" step="1" min="0" max="255" />
                                                 </td>
                                             </tr>
                                             <tr class="pitchPID">
@@ -749,9 +743,6 @@
                                                 <td>
                                                     <input type="text" name="b" step="1" min="0" max="255" />
                                                 </td>
-                                                <td>
-                                                    <input type="text" name="o" step="1" min="0" max="255" />
-                                                </td>
                                             </tr>
                                             <tr class="yawPID">
                                                 <!-- 2 -->
@@ -771,7 +762,6 @@
                                                 <td>
                                                     <input type="text" name="b" step="1" min="0" max="255" />
                                                 </td>
-                                                <td>&nbsp;</td>
                                             </tr>
                                         </table>
 
@@ -1119,21 +1109,31 @@
                                             <tbody>
                                                 <tr>
                                                     <td name="iterm_relax_type" class="bf-only">
-                                                        <label>Relax Type</label>
                                                         <select>
                                                             <!-- list generated here -->
                                                         </select>
                                                     </td>
                                                     <td name="iterm_relax_r" class="bf-only">
                                                         <label>Roll</label>
-                                                        <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="iterm_relax_p" class="bf-only">
                                                         <label>Pitch</label>
-                                                        <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="iterm_relax_y" class="bf-only">
                                                         <label>Yaw</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bf-only">
+                                                        <label>Iterm Relax</label>
+                                                    </td>
+                                                    <td name="iterm_relax_r" class="bf-only">
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td name="iterm_relax_p" class="bf-only">
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td name="iterm_relax_y" class="bf-only">
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                 </tr>
@@ -1150,6 +1150,30 @@
                                                     <td name="error_limit_y" class="bf-only">
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bf-only">
+                                                        <label>HSI Gain</label>
+                                                    </td>
+                                                    <td name="hsi_gain_r" class="bf-only">
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td name="hsi_gain_p" class="bf-only">
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bf-only">
+                                                        <label>HSI Limit</label>
+                                                    </td>
+                                                    <td name="hsi_limit_r" class="bf-only">
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td name="hsi_limit_p" class="bf-only">
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td>&nbsp;</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -1180,29 +1204,29 @@
                                                 </tr>
                                                 <tr>
                                                     <td name="yaw_precomp_cyclic">
-                                                        <label>Cyclic gain</label>
+                                                        <label>Cyclic Gain</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="yaw_precomp_collective">
-                                                        <label>Collective gain</label>
+                                                        <label>Collective Gain</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="yaw_precomp_impulse_decay">
-                                                        <label>Collective Impulse decay [s]</label>
+                                                        <label>Collective Impulse Decay [s]</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td name="yaw_precomp_impulse_gain">
-                                                        <label>Collective Impulse gain</label>
+                                                        <label>Collective Impulse Gain</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="yaw_tta_gain">
-                                                        <label>TTA gain</label>
+                                                        <label>TTA Gain</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="yaw_tta_limit">
-                                                        <label>TTA limit [%]</label>
+                                                        <label>TTA Limit [%]</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                 </tr>
