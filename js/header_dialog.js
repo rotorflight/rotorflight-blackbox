@@ -771,13 +771,13 @@ function HeaderDialog(dialog, onSave) {
         setParameter('error_limit_r'   , sysConfig.error_limit[0], 0);
         setParameter('error_limit_p'   , sysConfig.error_limit[1], 0);
         setParameter('error_limit_y'   , sysConfig.error_limit[2], 0);
-        setParameter('hsi_gain_r'      , sysConfig.error_limit[0], 0);
-        setParameter('hsi_gain_p'      , sysConfig.error_limit[1], 0);
-        setParameter('hsi_limit_r'     , sysConfig.error_limit[0], 0);
-        setParameter('hsi_limit_p'     , sysConfig.error_limit[1], 0);
+        setParameter('hsi_gain_r'      , sysConfig.hsi_gain[0], 0);
+        setParameter('hsi_gain_p'      , sysConfig.hsi_gain[1], 0);
+        setParameter('hsi_limit_r'     , sysConfig.hsi_limit[0], 0);
+        setParameter('hsi_limit_p'     , sysConfig.hsi_limit[1], 0);
 
-        setParameter('yaw_gain_cw'               , sysConfig.yaw_gain[0], 0);
-        setParameter('yaw_gain_ccw'              , sysConfig.yaw_gain[1], 0);
+        setParameter('yaw_stop_gain_cw'          , sysConfig.yaw_stop_gain[0], 0);
+        setParameter('yaw_stop_gain_ccw'         , sysConfig.yaw_stop_gain[1], 0);
         setParameter('yaw_precomp_cutoff'        , sysConfig.yaw_precomp[0], 0);
         setParameter('yaw_precomp_cyclic'        , sysConfig.yaw_precomp[1], 0);
         setParameter('yaw_precomp_collective'    , sysConfig.yaw_precomp[2], 0);
@@ -786,11 +786,12 @@ function HeaderDialog(dialog, onSave) {
         setParameter('yaw_tta_gain'              , sysConfig.yaw_tta[0], 0);
         setParameter('yaw_tta_limit'             , sysConfig.yaw_tta[1], 0);
 
+        setParameter('pitch_compensation'         , sysConfig.pitch_compensation, 0);
         setParameter('cyclic_coupling_gain'       , sysConfig.cyclic_coupling[0], 0);
         setParameter('cyclic_coupling_ratio'      , sysConfig.cyclic_coupling[1], 0);
-        setParameter('cyclic_coupling_cutoff'     , sysConfig.cyclic_coupling[2], 0);
+        setParameter('cyclic_coupling_cutoff'     , sysConfig.cyclic_coupling[2], 1);
 
-        setParameter('error_decay_time'           , sysConfig.error_decay[0], 0);
+        setParameter('error_decay_time'           , sysConfig.error_decay[0], 1);
         setParameter('error_decay_rate_max'       , sysConfig.error_decay[1], 0);
         setParameter('error_decay_ground'         , sysConfig.error_decay_ground, 1);
 
@@ -880,8 +881,8 @@ function HeaderDialog(dialog, onSave) {
 
 
         // Dynamic filters of Betaflight 4.0
-        if(activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT ||
-           activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.0.0') &&
+        if((activeSysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT ||
+           activeSysConfig.firmwareType == FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.0.0')) &&
                 (sysConfig.gyro_lowpass_dyn_hz[0] != null) && (sysConfig.gyro_lowpass_dyn_hz[0] > 0) &&
                 (sysConfig.gyro_lowpass_dyn_hz[1] > sysConfig.gyro_lowpass_dyn_hz[0])) {
             renderSelect('gyro_soft_dyn_type', sysConfig.gyro_soft_type, FILTER_TYPE);
@@ -928,7 +929,6 @@ function HeaderDialog(dialog, onSave) {
         setCheckbox('gyro_cal_on_first_arm'                , sysConfig.gyro_cal_on_first_arm);
         setCheckbox('rc_smoothing'                         , sysConfig.rc_smoothing);
         setCheckbox('piro_compensation'                    , sysConfig.piro_compensation);
-        setCheckbox('pitch_compensation'                   , sysConfig.pitch_compensation);
 
         /* Selected Fields */
         if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0') || activeSysConfig.firmwareType === FIRMWARE_TYPE_ROTORFLIGHT) {

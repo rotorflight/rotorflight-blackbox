@@ -1222,7 +1222,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td name="error_decay_time" class="bf-only">
-                                                        <label>Error Decay time[s]</label>
+                                                        <label>Error Decay Time [s]</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="error_decay_rate_max" class="bf-only">
@@ -1230,27 +1230,16 @@
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                     <td name="error_decay_ground" class="bf-only">
-                                                        <label>Ground Error Decay time[s]</label>
+                                                        <label>Ground Error Decay Time [s]</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class="bf-only" cellpadding="0" cellspacing="0">
-                                            <tbody class="static-features noline">
                                                 <tr>
-                                                    <td name="pitch_compensation">
-                                                        <label class="option">
-                                                            <input class="ios-switch" type="checkbox" />
-                                                            <div>
-                                                                <div></div>
-                                                            </div>
-                                                        </label>
-                                                    </td>
-                                                    <td>
+                                                    <td name="pitch_compensation" class="bf-only">
                                                         <label>Collective to Pitch Compensation</label>
+                                                        <input type="text" step="1" min="0" max="999" />
                                                     </td>
+                                                    <td colspan="2">&nbsp;</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -1267,11 +1256,11 @@
                                         <table class="parameter cf">
                                             <tbody>
                                                 <tr>
-                                                    <td name="yaw_gain_cw">
+                                                    <td name="yaw_stop_gain_cw">
                                                         <label>CW Stop Gain</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
-                                                    <td name="yaw_gain_ccw">
+                                                    <td name="yaw_stop_gain_ccw">
                                                         <label>CCW Stop Gain</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
@@ -2199,10 +2188,10 @@
                                                         <label>Acc (Hz)</label>
                                                         <input type="text" step="0.01" min="0" max="999.00" />
                                                     </td>
-                                                    <td name="yaw_lpf_hz" class="bf-only">
+                                                    <!--<td name="yaw_lpf_hz" class="bf-only">
                                                         <label>Yaw (Hz)</label>
                                                         <input type="text" step="0.01" min="0" max="999.00" />
-                                                    </td>
+                                                    </td>-->
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -2336,10 +2325,10 @@
                                                             <!-- list generated here -->
                                                         </select>
                                                     </td>
-                                                    <td name="motor_output_limit">
+                                                    <!--<td name="motor_output_limit">
                                                         <label>Output Limit</label>
                                                         <input type="text" step="1" min="0" max="32000" />
-                                                    </td>
+                                                    </td>-->
                                                     <td name='unsynced_fast_pwm'>
                                                         <label>Motors</label>
                                                         <select>
@@ -2353,10 +2342,10 @@
                                         <table class="parameter cf">
                                             <tbody>
                                                 <tr>
-                                                    <td name="digitalIdleOffset">
+                                                    <!--<td name="digitalIdleOffset">
                                                         <label>D-Shot Offset %</label>
                                                         <input type="text" step="0.01" min="0" max="1" />
-                                                    </td>
+                                                    </td>-->
                                                     <td name="motorOutputLow">
                                                         <label>D-Shot Motor Low</label>
                                                         <input type="text" step="10" min="0" max="2047" />

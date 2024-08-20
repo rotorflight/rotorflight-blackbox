@@ -322,7 +322,7 @@ var FlightLogParser = function(logData) {
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
             motor_poles: 1,
-            yaw_gain: [null, null],
+            yaw_stop_gain: [null, null],
             yaw_precomp: [null, null, null],
             yaw_precomp_impulse: [null, null],
             yaw_tta: [null, null],
@@ -855,7 +855,7 @@ var FlightLogParser = function(logData) {
             case "d_min":
             case "iterm_relax_cutoff":
             case "error_limit":
-            case "yaw_gain":
+            case "yaw_stop_gain":
             case "yaw_precomp":
             case "yaw_precomp_impulse":
             case "yaw_tta":
