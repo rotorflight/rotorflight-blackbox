@@ -258,10 +258,21 @@ GraphConfig.load = function(config) {
 
         try {
             if (fieldName.match(/^motor\[/)) {
+                // motors are defined as signed and it is possible to get negative values
+                // in this case keep zero in graph center
+                const mm = getMinMaxForFields(fieldName);
+                if(mm.min < 0) {
+                    return {
+                        offset: 0,
+                        power: 1.0,
+                        inputRange: 1000,
+                        outputRange: 1.0,
+                    }
+                }
                 return {
-                    offset: 0,
+                    offset: -500,
                     power: 1.0,
-                    inputRange: 1000,
+                    inputRange: 500,
                     outputRange: 1.0,
                 };
             } else if (fieldName.match(/^servo\[/)) {
