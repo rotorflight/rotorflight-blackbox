@@ -269,6 +269,8 @@ var FlightLogParser = function(logData) {
             baro_hardware:null,                     // Barometer Hardware type
             mag_hardware:null,                      // Magnetometer Hardware type
             gyro_cal_on_first_arm:null,             // Gyro Calibrate on first arm
+            piro_compensation:null,                 // Pirouette Compensation
+            pitch_compensation:null,                // Collective to Pitch Compensation
             rate_limits:[null, null, null],         // RC Rate limits
             rc_smoothing:null,                      // RC Control Smoothing
             rc_interpolation:null,                  // RC Control Interpolation type
@@ -303,11 +305,15 @@ var FlightLogParser = function(logData) {
             d_min_gain : null,                      // D_Min gain
             d_min_advance : null,                   // D_Min advance
             filter_process_denom : null,            // Filter denom
-            iterm_relax: null,                      // ITerm Relax mode
             iterm_relax_type: null,                 // ITerm Relax type
-            iterm_relax_cutoff: null,               // ITerm Relax cutoff
+            iterm_relax_cutoff: [null, null, null], // ITerm Relax cutoff
+            error_limit: [null, null, null],        // Error Limit
+            error_decay: [null, null],              // Error Decay
+            error_decay_ground: null,               // Ground Error Decay
+            cyclic_coupling: [null, null, null],          // Cyclic Cross-Coupling
             dyn_notch_range: null,                  // Dyn Notch Range (LOW, MED, HIGH or AUTO)
             dyn_notch_width_percent: null,          // Dyn Notch width percent distance between the two notches
+            dyn_notch_count: null,                  // Number of dynamic notches 4.3
             dyn_notch_q: null,                      // Dyn Notch width of each dynamic filter
             dyn_notch_min_hz: null,                 // Dyn Notch min limit in Hz for the filter
             dyn_notch_max_hz: null,                 // Dyn Notch max limit in Hz for the filter
@@ -316,6 +322,12 @@ var FlightLogParser = function(logData) {
             gyro_to_use: null,
             dynamic_idle_min_rpm: null,
             motor_poles: 1,
+            yaw_stop_gain: [null, null],
+            yaw_precomp: [null, null, null],
+            yaw_precomp_impulse: [null, null],
+            yaw_tta: [null, null],
+            hsi_gain: [null, null],
+            hsi_limit: [null, null],
             ff_transition: null,
             ff_averaging: null,
             ff_smooth_factor: null,
@@ -329,7 +341,6 @@ var FlightLogParser = function(logData) {
             rc_smoothing_throttle_hz:null,          // RC Smoothing manual cutoff for throttle
             rc_smoothing_auto_factor_throttle:null, // RC Smoothing cutoff for throttle
             rc_smoothing_active_cutoffs_ff_sp_thr:[null,null,null],// RC Smoothing active cutoffs feedforward, setpoint, throttle
-            dyn_notch_count: null,                  // Number of dynamic notches 4.3
             rpm_filter_fade_range_hz: null,         // Fade range for RPM notch filters in Hz
             dyn_idle_p_gain: null,
             dyn_idle_i_gain: null,
@@ -639,6 +650,8 @@ var FlightLogParser = function(logData) {
             case "baro_hardware":
             case "mag_hardware":
             case "gyro_cal_on_first_arm":
+            case "piro_compensation":
+            case "pitch_compensation":
             case "rc_smoothing":
             case "rc_smoothing_type":
             case "rc_smoothing_debug_axis":
@@ -697,9 +710,7 @@ var FlightLogParser = function(logData) {
             case "dterm_rpm_notch_harmonics":
             case "dterm_rpm_notch_q":
             case "dterm_rpm_notch_min":
-            case "iterm_relax":
             case "iterm_relax_type":
-            case "iterm_relax_cutoff":
             case "dyn_notch_range":
             case "dyn_notch_width_percent":
             case "dyn_notch_q":
@@ -842,6 +853,17 @@ var FlightLogParser = function(logData) {
             case "gyro_lowpass_dyn_hz":
             case "dterm_lpf_dyn_hz":
             case "d_min":
+            case "iterm_relax_cutoff":
+            case "error_limit":
+            case "yaw_stop_gain":
+            case "yaw_precomp":
+            case "yaw_precomp_impulse":
+            case "yaw_tta":
+            case "hsi_gain":
+            case "hsi_limit":
+            case "cyclic_coupling":
+            case "error_decay":
+            case "error_decay_ground":
             case "filter_process_denom":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":

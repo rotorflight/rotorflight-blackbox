@@ -80,7 +80,7 @@ select {
 .gui_box {
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #ccc;
+    background-color: #d8d8d8;
     float: left;
     width: calc(100% - 2px);
     margin-bottom: 10px;
@@ -201,7 +201,7 @@ select {
 
 /* Box holding numeric inputs */
 .header-dialog .cf input {
-    width: calc(100% - 10px);
+    width: calc(100% - 4px);
     border: 1px solid silver;
     border-radius: 3px;
     margin-left: 2px;
@@ -238,7 +238,6 @@ select {
 }
 
 .header-dialog table {
-    float: center;
     margin: 0;
     border-collapse: collapse;
     width: calc(100% - 1px);
