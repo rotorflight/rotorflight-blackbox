@@ -679,8 +679,17 @@ GraphConfig.load = function(config) {
         if (flightLog.isFieldEnabled().VBEC || flightLog.isFieldEnabled().VBUS) {
             EXAMPLE_GRAPHS.push({label: "Voltages",fields: ["Vbec", "Vbus"]});
         }
-        if (flightLog.isFieldEnabled().TEMP) {
-            EXAMPLE_GRAPHS.push({label: "Temperatures",fields: ["Tmcu", "Tesc"]});
+        if (flightLog.isFieldEnabled().TEMP || flightLog.isFieldEnabled().ESC || flightLog.isFieldEnabled().ESC2 || flightLog.isFieldEnabled().BEC) {
+            EXAMPLE_GRAPHS.push({label: "Temperatures",fields: ["Tmcu", "Tesc", "Tesc2", "Tbec"]});
+        }
+        if (flightLog.isFieldEnabled().ESC) {
+            EXAMPLE_GRAPHS.push({label: "ESC Telemetry", fields: ["EscV", "EscI", "EscCap", "EscRPM", "EscThr", "EscPWM"]});
+        }
+        if (flightLog.isFieldEnabled().ESC2) {
+            EXAMPLE_GRAPHS.push({label: "ESC2 Telemetry", fields: ["Esc2V", "Esc2I", "Esc2Cap", "Esc2RPM"]});
+        }
+        if (flightLog.isFieldEnabled().BEC) {
+            EXAMPLE_GRAPHS.push({label: "BEC Telemetry", fields: ["BecV", "BecI"]});
         }
         if (flightLog.isFieldEnabled().RSSI) {
             EXAMPLE_GRAPHS.push({label: "RSSI",fields: ["rssi"]});

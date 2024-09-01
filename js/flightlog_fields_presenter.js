@@ -830,7 +830,7 @@ function FlightLogFieldPresenter() {
 
             case 'EscRPM':
             case 'Esc2RPM':
-                return (value).toFixed(0) + " rpm";
+                return (value).toFixed(0) + " (e)rpm";
 
             case 'EscThr':
             case 'EscPwm':
