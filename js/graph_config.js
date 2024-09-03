@@ -660,9 +660,9 @@ GraphConfig.load = function(config) {
             EXAMPLE_GRAPHS.push({label: "Controls",fields: ["mixer[all]"]});
         }
         if (flightLog.isFieldEnabled().PID) {
-            EXAMPLE_GRAPHS.push({label: "PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]"]},
-                                {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]"]},
-                                {label: "PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]"]});
+            EXAMPLE_GRAPHS.push({label: "PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]", "axisO[0]"]},
+                                {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]", "axisO[1]"]},
+                                {label: "PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]", "axisO[2]"]});
         }
         if (flightLog.isFieldEnabled().RPM) {
             EXAMPLE_GRAPHS.push({label: "Rotor Speeds",fields: ["headspeed", "tailspeed"]});

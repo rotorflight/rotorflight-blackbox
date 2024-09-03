@@ -26,6 +26,16 @@ function FlightLogFieldPresenter() {
         'axisF[1]': 'PID Feedforward [pitch]',
         'axisF[2]': 'PID Feedforward [yaw]',
 
+        'axisB[all]': 'PID Boost',
+        'axisB[0]': 'PID Boost [roll]',
+        'axisB[1]': 'PID Boost [pitch]',
+        'axisB[2]': 'PID Boost [yaw]',
+
+        'axisO[all]': 'PID Offset',
+        'axisO[0]': 'PID Offset [roll]',
+        'axisO[1]': 'PID Offset [pitch]',
+        'axisO[2]': 'PID Offset [yaw]',
+
         //Virtual field
         'axisSum[all]': 'PID Sum',
         'axisSum[0]' : 'PID Sum [roll]',
