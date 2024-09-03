@@ -99,14 +99,14 @@ function FlightLogFieldPresenter() {
         'EscV': 'ESC Voltage',
         'EscI': 'ESC Current',
         'EscCap': 'ESC Consumption',
-        'EscRPM': 'ESC RPM',
+        'EscRPM': 'ESC eRPM',
         'EscThr': 'ESC Throttle',
         'EscPwm': 'ESC PWM',
 
         'Esc2V': 'ESC2 Voltage',
         'Esc2I': 'ESC2 Current',
         'Esc2Cap': 'ESC2 Consumption',
-        'Esc2RPM': 'ESC2 RPM',
+        'Esc2RPM': 'ESC2 eRPM',
 
         'BecV': 'BEC Voltage',
         'BecI': 'BEC Current',
@@ -830,7 +830,7 @@ function FlightLogFieldPresenter() {
 
             case 'EscRPM':
             case 'Esc2RPM':
-                return (value).toFixed(0) + " (e)rpm";
+                return (value).toFixed(0) + " eRpm";
 
             case 'EscThr':
             case 'EscPwm':
