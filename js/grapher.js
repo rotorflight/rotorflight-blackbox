@@ -954,7 +954,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftCanv
         if (options.craftType == '3D') {
             if (craftCanvas) {
                 try {
-                    craft3D = new Craft3D(flightLog, craftCanvas, idents.motorColors);
+                    craft3D = new Craft3D(craftCanvas);
                 } catch (e) {
                     //WebGL not supported, fall back to 2D rendering
                     options.craftType = '2D';

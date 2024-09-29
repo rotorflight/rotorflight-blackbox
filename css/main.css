@@ -499,6 +499,11 @@ html.has-log .log-graph-config {
     display:none;
 }
 
+#craftCanvas {
+    background-color: #89898973;
+    border-radius: 12px;
+}
+
 html.has-craft #craftCanvas,
 html.has-analyser #analyserCanvas,
 html.has-sticks #stickCanvas {
