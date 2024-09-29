@@ -660,9 +660,9 @@ GraphConfig.load = function(config) {
             EXAMPLE_GRAPHS.push({label: "Controls",fields: ["mixer[all]"]});
         }
         if (flightLog.isFieldEnabled().PID) {
-            EXAMPLE_GRAPHS.push({label: "PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]"]},
-                                {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]"]},
-                                {label: "PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]"]});
+            EXAMPLE_GRAPHS.push({label: "PID roll",fields: ["axisP[0]", "axisI[0]", "axisD[0]", "axisF[0]", "axisSum[0]", "gyroADC[0]", "setpoint[0]", "axisO[0]"]},
+                                {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]", "axisO[1]"]},
+                                {label: "PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]", "axisO[2]"]});
         }
         if (flightLog.isFieldEnabled().RPM) {
             EXAMPLE_GRAPHS.push({label: "Rotor Speeds",fields: ["headspeed", "tailspeed"]});
@@ -679,8 +679,17 @@ GraphConfig.load = function(config) {
         if (flightLog.isFieldEnabled().VBEC || flightLog.isFieldEnabled().VBUS) {
             EXAMPLE_GRAPHS.push({label: "Voltages",fields: ["Vbec", "Vbus"]});
         }
-        if (flightLog.isFieldEnabled().TEMP) {
-            EXAMPLE_GRAPHS.push({label: "Temperatures",fields: ["Tmcu", "Tesc"]});
+        if (flightLog.isFieldEnabled().TEMP || flightLog.isFieldEnabled().ESC || flightLog.isFieldEnabled().ESC2 || flightLog.isFieldEnabled().BEC) {
+            EXAMPLE_GRAPHS.push({label: "Temperatures",fields: ["Tmcu", "Tesc", "Tesc2", "Tbec"]});
+        }
+        if (flightLog.isFieldEnabled().ESC) {
+            EXAMPLE_GRAPHS.push({label: "ESC Telemetry", fields: ["EscV", "EscI", "EscCap", "EscRPM", "EscThr", "EscPWM"]});
+        }
+        if (flightLog.isFieldEnabled().ESC2) {
+            EXAMPLE_GRAPHS.push({label: "ESC2 Telemetry", fields: ["Esc2V", "Esc2I", "Esc2Cap", "Esc2RPM"]});
+        }
+        if (flightLog.isFieldEnabled().BEC) {
+            EXAMPLE_GRAPHS.push({label: "BEC Telemetry", fields: ["BecV", "BecI"]});
         }
         if (flightLog.isFieldEnabled().RSSI) {
             EXAMPLE_GRAPHS.push({label: "RSSI",fields: ["rssi"]});

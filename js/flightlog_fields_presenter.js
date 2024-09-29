@@ -26,6 +26,16 @@ function FlightLogFieldPresenter() {
         'axisF[1]': 'PID Feedforward [pitch]',
         'axisF[2]': 'PID Feedforward [yaw]',
 
+        'axisB[all]': 'PID Boost',
+        'axisB[0]': 'PID Boost [roll]',
+        'axisB[1]': 'PID Boost [pitch]',
+        'axisB[2]': 'PID Boost [yaw]',
+
+        'axisO[all]': 'PID Offset',
+        'axisO[0]': 'PID Offset [roll]',
+        'axisO[1]': 'PID Offset [pitch]',
+        'axisO[2]': 'PID Offset [yaw]',
+
         //Virtual field
         'axisSum[all]': 'PID Sum',
         'axisSum[0]' : 'PID Sum [roll]',
@@ -90,14 +100,31 @@ function FlightLogFieldPresenter() {
 
         'rssi': 'RSSI',
 
-        'Vbat': 'Battery voltage',
-        'Ibat': 'Battery current',
+        'Vbat': 'Battery Voltage',
+        'Ibat': 'Battery Current',
 
         'Vbec': 'BEC Voltage',
         'Vbus': '5V Voltage',
 
         'Tmcu': 'MCU Temperature',
         'Tesc': 'ESC Temperature',
+        'Tesc2': 'ESC2 Temperature',
+        'Tbec': 'BEC Temperature',
+
+        'EscV': 'ESC Voltage',
+        'EscI': 'ESC Current',
+        'EscCap': 'ESC Consumption',
+        'EscRPM': 'ESC eRPM',
+        'EscThr': 'ESC Throttle',
+        'EscPwm': 'ESC PWM',
+
+        'Esc2V': 'ESC2 Voltage',
+        'Esc2I': 'ESC2 Current',
+        'Esc2Cap': 'ESC2 Consumption',
+        'Esc2RPM': 'ESC2 eRPM',
+
+        'BecV': 'BEC Voltage',
+        'BecI': 'BEC Current',
 
         'motor[all]': 'Motors',
         'motor[0]': 'Motor [1]',
@@ -806,14 +833,32 @@ function FlightLogFieldPresenter() {
                 return (value / 100).toFixed(2) + "V (" + (value / 100 / flightLog.getNumCellsEstimate()).toFixed(2) + " V/cell)";
             case 'Vbec':
             case 'Vbus':
+            case 'EscV':
+            case 'Esc2V':
                 return (value / 100).toFixed(2) + "V";
 
             case 'Ibat':
+            case 'EscI':
+            case 'Esc2I':
                 return (value / 100).toFixed(2) + "A";
 
             case 'Tmcu':
             case 'Tesc':
+            case 'Tesc2':
+            case 'Tbec':
                 return (value).toFixed(0) + "°C";
+
+            case 'EscCap':
+            case 'Esc2Cap':
+                return (value).toFixed(0) + " mAh";
+
+            case 'EscRPM':
+            case 'Esc2RPM':
+                return (value).toFixed(0) + " eRpm";
+
+            case 'EscThr':
+            case 'EscPwm':
+                return (value / 10).toFixed(1) + "%";
 
             case 'altitude':
                 return (value / 100).toFixed(2) + "m";

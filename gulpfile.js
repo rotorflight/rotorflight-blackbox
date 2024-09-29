@@ -268,7 +268,11 @@ function dist() {
         './js/vendor/semver.js',
         './js/vendor/three.js',
         './js/vendor/three.min.js',
+        './js/vendor/GLTFLoader.js',
         './js/screenshot.js',
+
+        './resources/models/fallback.gltf',
+        './resources/models/fallback.bin',
 
         // everything else
         './package.json', // For NW.js
