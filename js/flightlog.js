@@ -1123,5 +1123,8 @@ FlightLog.prototype.isFieldEnabled = function() {
             VBEC          : (fields & (1 << 16))!==0,
             VBUS          : (fields & (1 << 17))!==0,
             TEMP          : (fields & (1 << 18))!==0,
+            ESC           : (fields & (1 << 19))!==0,
+            BEC           : (fields & (1 << 20))!==0,
+            ESC2          : (fields & (1 << 21))!==0,
         };
 };
