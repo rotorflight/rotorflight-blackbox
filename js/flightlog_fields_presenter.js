@@ -42,6 +42,11 @@ function FlightLogFieldPresenter() {
         'axisSum[1]' : 'PID Sum [pitch]',
         'axisSum[2]' : 'PID Sum [yaw]',
 
+        'axisPD[all]': 'PID PD Sum',
+        'axisPD[0]' : 'PID PD Sum [roll]',
+        'axisPD[1]' : 'PID PD Sum [pitch]',
+        'axisPD[2]' : 'PID PD Sum [yaw]',
+
         //Virtual field
         'axisError[all]': 'PID Error',
         'axisError[0]' : 'PID Error [roll]',
@@ -787,9 +792,18 @@ function FlightLogFieldPresenter() {
             case 'axisF[0]':
             case 'axisF[1]':
             case 'axisF[2]':
+            case 'axisB[0]':
+            case 'axisB[1]':
+            case 'axisB[2]':
+            case 'axisO[0]':
+            case 'axisO[1]':
+            case 'axisO[2]':
             case 'axisSum[0]':
             case 'axisSum[1]':
             case 'axisSum[2]':
+            case 'axisPD[0]':
+            case 'axisPD[1]':
+            case 'axisPD[2]':
                 return flightLog.getPIDPercentage(value).toFixed(1) + "%";
 
             case 'axisError[0]':

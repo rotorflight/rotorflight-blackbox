@@ -223,6 +223,7 @@ function FlightLog(logData) {
         // Add names for our ADDITIONAL_COMPUTED_FIELDS
         if (that.isFieldEnabled().PID) {
             fieldNames.push("axisSum[0]", "axisSum[1]", "axisSum[2]");
+            fieldNames.push("axisPD[0]", "axisPD[1]", "axisPD[2]");
         }
         if (that.isFieldEnabled().GYRO && that.isFieldEnabled().SETPOINT) {
             fieldNames.push("axisError[0]", "axisError[1]", "axisError[2]");
@@ -513,9 +514,10 @@ function FlightLog(logData) {
         let rcCommand = [fieldNameToIndex["rcCommand[0]"], fieldNameToIndex["rcCommand[1]"], fieldNameToIndex["rcCommand[2]"], fieldNameToIndex["rcCommand[3]"], fieldNameToIndex["rcCommand[4]"]];
         let setpoint = [fieldNameToIndex["setpoint[0]"], fieldNameToIndex["setpoint[1]"], fieldNameToIndex["setpoint[2]"], fieldNameToIndex["setpoint[3]"]];
 
-        let axisPID = [[fieldNameToIndex["axisP[0]"], fieldNameToIndex["axisI[0]"], fieldNameToIndex["axisD[0]"], fieldNameToIndex["axisF[0]"]],
-                         [fieldNameToIndex["axisP[1]"], fieldNameToIndex["axisI[1]"], fieldNameToIndex["axisD[1]"], fieldNameToIndex["axisF[1]"]],
-                         [fieldNameToIndex["axisP[2]"], fieldNameToIndex["axisI[2]"], fieldNameToIndex["axisD[2]"], fieldNameToIndex["axisF[2]"]]];
+        let axisPID = [[fieldNameToIndex["axisP[0]"], fieldNameToIndex["axisI[0]"], fieldNameToIndex["axisD[0]"], fieldNameToIndex["axisF[0]"], fieldNameToIndex["axisB[0]"], fieldNameToIndex["axisO[0]"]],
+                       [fieldNameToIndex["axisP[1]"], fieldNameToIndex["axisI[1]"], fieldNameToIndex["axisD[1]"], fieldNameToIndex["axisF[1]"], fieldNameToIndex["axisB[1]"], fieldNameToIndex["axisO[1]"]],
+                       [fieldNameToIndex["axisP[2]"], fieldNameToIndex["axisI[2]"], fieldNameToIndex["axisD[2]"], fieldNameToIndex["axisF[2]"], fieldNameToIndex["axisB[2]"], fieldNameToIndex["axisO[2]"]],
+        ];
 
         let motor = [fieldNameToIndex["motor[0]"], fieldNameToIndex["motor[1]"], fieldNameToIndex["motor[2]"], fieldNameToIndex["motor[3]"]];
 
@@ -579,14 +581,16 @@ function FlightLog(logData) {
                         destFrame = destChunk.frames[i],
                         fieldIndex = destFrame.length - ADDITIONAL_COMPUTED_FIELD_COUNT;
 
-                    // Add the Feedforward PID sum (P+I+D+F)
+                    // Calculate PID Sum (P+I+D+F+B+O)
                     if (axisPID) {
                         for (var axis = 0; axis < 3; axis++) {
                             let pidSum =
                                 (axisPID[axis][0] !== undefined ? srcFrame[axisPID[axis][0]] : 0) +
                                 (axisPID[axis][1] !== undefined ? srcFrame[axisPID[axis][1]] : 0) +
                                 (axisPID[axis][2] !== undefined ? srcFrame[axisPID[axis][2]] : 0) +
-                                (axisPID[axis][3] !== undefined ? srcFrame[axisPID[axis][3]] : 0);
+                                (axisPID[axis][3] !== undefined ? srcFrame[axisPID[axis][3]] : 0) +
+                                (axisPID[axis][4] !== undefined ? srcFrame[axisPID[axis][4]] : 0) +
+                                (axisPID[axis][5] !== undefined ? srcFrame[axisPID[axis][5]] : 0);
 
                             // Limit the PID sum by the limits defined in the header
                             let pidLimit = axis < AXIS.YAW ? sysConfig.pidSumLimit : sysConfig.pidSumLimitYaw;
@@ -597,10 +601,19 @@ function FlightLog(logData) {
                             // Assign value
                             destFrame[fieldIndex++] = pidSum;
                         }
+
+                        // Calculate PD Sum
+                        for (var axis = 0; axis < 3; axis++) {
+                            let pidPD =
+                                (axisPID[axis][0] !== undefined ? srcFrame[axisPID[axis][0]] : 0) +
+                                (axisPID[axis][2] !== undefined ? srcFrame[axisPID[axis][2]] : 0);
+
+                            destFrame[fieldIndex++] = pidPD;
+                        }
                     }
 
                     // Calculate the PID Error
-                    if (axisPID && gyroADC) {
+                    if (setpoint && gyroADC) {
                         for (var axis = 0; axis < 3; axis++) {
                             let gyroADCdeg = (gyroADC[axis] !== undefined) ? srcFrame[gyroADC[axis]] : 0;
                             destFrame[fieldIndex++] = srcFrame[setpoint[axis]] - gyroADCdeg;
