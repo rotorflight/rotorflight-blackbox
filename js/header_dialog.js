@@ -392,7 +392,7 @@ function HeaderDialog(dialog, onSave) {
         const value = sysConfig.fields_mask;
 
         // generate features
-        const fields = [
+        let fields = [
             {name: 'RC Command', description: 'Three axis RC Commands'},
             {name: 'Setpoint', description: 'Three axis Setpoints'},
             {name: 'Mixer', description: 'Three axis Mixer inputs'},
@@ -414,7 +414,15 @@ function HeaderDialog(dialog, onSave) {
             {name: 'Temperatures', description: 'Temperatures'},
         ];
 
-        const fieldsList_e = $('tbody.fields_list');
+        if(sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.4.0')) {
+            fields = [...fields, ...[
+                {name: 'ESC', description: 'ESC Telemetry'},
+                {name: 'BEC', description: 'BEC Telemetry'},
+                {name: 'ESC2', description: 'ESC2 Telemetry'},
+            ]]
+        }
+
+        const fieldsList_e = $('tbody.fields_list').empty()
 
         for (let i = 0; i < fields.length; i++) {
             const row_e = $(`<tr><td><label class="option"><input class="field ${i}
@@ -429,9 +437,7 @@ function HeaderDialog(dialog, onSave) {
             field_e.prop('checked', (value & 1<<i));
             field_e.data('bit', i);
 
-            fieldsList_e.each(function () {
-                $(this).append(row_e);
-            });
+            fieldsList_e.append(row_e)
         }
     }
 
