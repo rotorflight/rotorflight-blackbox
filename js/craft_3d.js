@@ -56,10 +56,15 @@ class Craft3D {
   }
 
   render(frame, frameFieldIndexes) {
-    const x = (-frame[frameFieldIndexes["attitude[1]"]] / 1800) * Math.PI;
-    const y = (-frame[frameFieldIndexes["attitude[2]"]] / 1800) * Math.PI;
-    const z = (-frame[frameFieldIndexes["attitude[0]"]] / 1800) * Math.PI;
-    this.rotateTo(x, y, z);
+    if (!frameFieldIndexes["attitude[0]"] || !frameFieldIndexes["attitude[1]"] || !frameFieldIndexes["attitude[2]"]) {
+      this.rotateTo(0, 0, 0);
+    } else {
+      const x = (-frame[frameFieldIndexes["attitude[1]"]] / 1800) * Math.PI;
+      const y = (-frame[frameFieldIndexes["attitude[2]"]] / 1800) * Math.PI;
+      const z = (-frame[frameFieldIndexes["attitude[0]"]] / 1800) * Math.PI;
+      this.rotateTo(x, y, z);
+    }
+
     this._render();
   }
 
