@@ -489,7 +489,7 @@ html.has-log .log-graph-config {
     background-color: black;
 }
 
-#craftCanvas,
+#craftWrapper,
 #analyserCanvas,
 #stickCanvas {
     position:absolute;
@@ -499,12 +499,25 @@ html.has-log .log-graph-config {
     display:none;
 }
 
-#craftCanvas {
+#craftWrapper {
     background-color: #89898973;
     border-radius: 12px;
 }
 
-html.has-craft #craftCanvas,
+#craftWrapper p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    color: #bbb;
+    user-select: none;
+    display: none;
+}
+
+html.has-craft #craftWrapper,
 html.has-analyser #analyserCanvas,
 html.has-sticks #stickCanvas {
 	display:block;

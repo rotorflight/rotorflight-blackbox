@@ -16,5 +16,8 @@
     },
     "close": {
         "message": "Close"
+    },
+    "craftAttitudeUnavailable": {
+        "message": "Attitude Unavailable"
     }
 }

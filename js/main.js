@@ -100,7 +100,7 @@ function BlackboxLogViewer() {
         canvas = $("#graphCanvas")[0],
         analyserCanvas = $("#analyserCanvas")[0],
         stickCanvas = $("#stickCanvas")[0],
-        craftCanvas = $("#craftCanvas")[0],
+        craftWrapper = $("#craftWrapper")[0],
         statusBar = $('#status-bar'),
         html = $('html'),
 
@@ -601,7 +601,7 @@ function BlackboxLogViewer() {
                 userSettings.analyserSampleRate = 1000000 / (flightLog.getSysConfig().looptime * (validate(flightLog.getSysConfig().pid_process_denom,1)) * flightLog.getSysConfig().frameIntervalPDenom / flightLog.getSysConfig().frameIntervalPNum);
                 }
 
-        graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftCanvas, analyserCanvas, userSettings);
+        graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, userSettings);
 
         setVideoInTime(false);
         setVideoOutTime(false);

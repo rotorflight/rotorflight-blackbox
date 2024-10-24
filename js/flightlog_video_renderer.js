@@ -31,6 +31,7 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
 
         canvas = document.createElement('canvas'),
         stickCanvas = document.createElement('canvas'),
+        craftWrapper = document.createElement('div'),
         craftCanvas = document.createElement('canvas'),
         analyserCanvas = document.createElement('canvas'),
         stickCanvasLeft, stickCanvasTop, hasStick,
@@ -48,6 +49,8 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         hidden, visibilityChange,
 
         graph;
+
+    craftWrapper.appendChild(craftCanvas);
 
     // From https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
     if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
@@ -293,13 +296,13 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
 
     var options = $.extend({}, userSettings || {}, {eraseBackground : !logParameters.flightVideo, drawEvents : false, fillBackground : !logParameters.flightVideo});
 
-    graph = new FlightLogGrapher(flightLog, logParameters.graphConfig, canvas, stickCanvas, craftCanvas, analyserCanvas, options);
+    graph = new FlightLogGrapher(flightLog, logParameters.graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, options);
 
     stickCanvasLeft = parseInt($(stickCanvas).css('left'), 10);
     stickCanvasTop = parseInt($(stickCanvas).css('top'), 10);
 
-    craftCanvasLeft = parseInt($(craftCanvas).css('left'), 10);
-    craftCanvasTop = parseInt($(craftCanvas).css('top'), 10);
+    craftCanvasLeft = parseInt($(craftWrapper).css('left'), 10);
+    craftCanvasTop = parseInt($(craftWrapper).css('top'), 10);
 
     analyserCanvasLeft = parseInt($(analyserCanvas).css('left'), 10);
     analyserCanvasTop = parseInt($(analyserCanvas).css('top'), 10);
