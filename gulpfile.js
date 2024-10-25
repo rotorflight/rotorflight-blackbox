@@ -270,8 +270,9 @@ function dist() {
         './js/vendor/GLTFLoader.js',
         './js/screenshot.js',
 
-        './resources/models/fallback.gltf',
-        './resources/models/fallback.bin',
+        './resources/models/bell_cw.gltf',
+        './resources/models/bell_cw.png',
+        './resources/models/bell_cw.bin',
 
         // everything else
         './package.json', // For NW.js
