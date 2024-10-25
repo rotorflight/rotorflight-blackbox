@@ -223,7 +223,6 @@ function dist() {
         './js/cache.js',
         './js/complex.js',
         './js/configuration.js',
-        './js/craft_2d.js',
         './js/craft_3d.js',
         './js/datastream.js',
         './js/decoders.js',

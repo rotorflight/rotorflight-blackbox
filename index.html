@@ -445,7 +445,10 @@
             <div class="log-graph">
                 <video></video>
                 <canvas width="200" height="100" id="graphCanvas"></canvas>
-                <canvas width="0" height="0" id="craftCanvas"></canvas>
+                <div id="craftWrapper">
+                  <canvas width="0" height="0" id="craftCanvas"></canvas>
+                  <p i18n="craftAttitudeUnavailable"></p>
+                </div>
                 <div id="analyser" class="analyser">
                     <canvas width="0" height="0" id="analyserCanvas"></canvas>
 
@@ -3406,7 +3409,6 @@
     <script src="js/datastream.js"></script>
     <script src="js/decoders.js"></script>
     <script src="js/imu.js"></script>
-    <script src="js/craft_2d.js"></script>
     <script src="js/craft_3d.js"></script>
     <script src="js/flightlog_fielddefs.js"></script>
     <script src="js/flightlog_fields_presenter.js"></script>

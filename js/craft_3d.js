@@ -38,29 +38,21 @@ class Craft3D {
     loader.load("/resources/models/fallback.gltf", (gltf) => {
       this.model = gltf.scene;
       this.modelWrapper.add(this.model);
+      this.render();
     });
   }
 
   rotateTo(x, y, z) {
-    if (this.model) {
-      this.model.rotation.x = x;
-      this.modelWrapper.rotation.y = y;
-      this.model.rotation.z = z;
-    }
+    if (!this.model) return;
+
+    this.model.rotation.x = x;
+    this.modelWrapper.rotation.y = y;
+    this.model.rotation.z = z;
+    this.render();
   }
 
-  _render() {
-    if (this.model) {
-      this.renderer.render(this.scene, this.camera);
-    }
-  }
-
-  render(frame, frameFieldIndexes) {
-    const x = (-frame[frameFieldIndexes["attitude[1]"]] / 1800) * Math.PI;
-    const y = (-frame[frameFieldIndexes["attitude[2]"]] / 1800) * Math.PI;
-    const z = (-frame[frameFieldIndexes["attitude[0]"]] / 1800) * Math.PI;
-    this.rotateTo(x, y, z);
-    this._render();
+  render() {
+    this.renderer.render(this.scene, this.camera);
   }
 
   resize(width, height) {
@@ -70,7 +62,7 @@ class Craft3D {
       this.renderer.setSize(width, height);
       this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
-      this._render();
+      this.render();
     }
   }
 }
