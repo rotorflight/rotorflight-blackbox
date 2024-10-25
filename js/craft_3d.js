@@ -23,11 +23,11 @@ class Craft3D {
     this.camera.position.z = 200;
     this.scene.add(this.camera);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
     this.scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-    directionalLight.position.set(0, 1, 0);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    directionalLight.position.set(0, 600, 800);
     this.scene.add(directionalLight);
 
     // modelWrapper adds an extra axis of rotation to avoid gimbal lock with the euler angles
@@ -35,7 +35,7 @@ class Craft3D {
     this.scene.add(this.modelWrapper);
 
     const loader = new THREE.GLTFLoader();
-    loader.load("/resources/models/fallback.gltf", (gltf) => {
+    loader.load("/resources/models/bell_cw.gltf", (gltf) => {
       this.model = gltf.scene;
       this.modelWrapper.add(this.model);
       this.render();
