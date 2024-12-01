@@ -632,12 +632,12 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                         }, sequenceNum++);
                 };
 
-                var markerFrequency = ((windowCenterTime-markerEvent.time).toFixed(0)!=0)?((1000000/(windowCenterTime-markerEvent.time)).toFixed(0) + "Hz") : '';
+                var markerFrequency = ((windowCenterTime-markerEvent.time).toFixed(0)!=0) ? ' (' + ((1000000/(windowCenterTime-markerEvent.time)).toFixed(1) + "Hz)") : '';
                 drawEvent(
                     {
                     event:FlightLogEvent.CUSTOM_BLANK, // Blank doesnt show a vertical line
                     time:windowCenterTime,
-                    label: formatTime((windowCenterTime-markerEvent.time)/1000, true) + 'ms ' + markerFrequency,
+                    label: formatTime((windowCenterTime-markerEvent.time)/1000, true) + markerFrequency,
                     align:(markerEvent.time<windowCenterTime)?'right':'left',
                     }, sequenceNum++);
             };
