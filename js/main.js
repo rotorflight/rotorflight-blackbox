@@ -236,7 +236,7 @@ function BlackboxLogViewer() {
             // update time field on status bar
             $(".graph-time").val(formatTime((currentBlackboxTime-flightLog.getMinTime())/1000, true));
             if(hasMarker) {
-                $(".marker-offset", statusBar).text('Marker Offset ' + formatTime((currentBlackboxTime-markerTime)/1000, true) + 'ms ' + (1000000/(currentBlackboxTime-markerTime)).toFixed(0) + "Hz");
+                $(".marker-offset", statusBar).text('Marker Offset ' + formatTime((currentBlackboxTime-markerTime)/1000, true) + ' (' + (1000000/(currentBlackboxTime-markerTime)).toFixed(0) + "Hz)");
             }
 
             // Update the Legend Values
@@ -1792,7 +1792,7 @@ function BlackboxLogViewer() {
                         } else { // Add a marker to graph window
                             markerTime = currentBlackboxTime;
                             setMarker(!hasMarker);
-                            $(".marker-offset", statusBar).text('Marker Offset ' + formatTime(0) + 'ms').css('visibility', (hasMarker)?'visible':'hidden');
+                            $(".marker-offset", statusBar).text('Marker Offset ' + formatTime(0)).css('visibility', (hasMarker)?'visible':'hidden');
                             invalidateGraph();
                         }
                         e.preventDefault();
