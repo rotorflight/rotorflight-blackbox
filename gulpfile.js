@@ -515,7 +515,6 @@ function release_deb(arch, appDirectory, done) {
              prerm: [`rm /usr/share/mime/packages/${pkg.name}.xml`, 'update-mime-database /usr/share/mime',
                      'rm /usr/share/icons/hicolor/128x128/mimetypes/application-x-blackboxlog.png', 'gtk-update-icon-cache /usr/share/icons/hicolor -f',
                      `xdg-desktop-menu uninstall ${pkg.name}.desktop`],
-             depends: 'libgconf-2-4',
              changelog: [],
              _target: `${LINUX_INSTALL_DIR}/${pkg.name}`,
              _out: RELEASE_DIR,
@@ -542,7 +541,6 @@ function release_rpm(arch, appDirectory, done) {
              vendor: pkg.author,
              summary: pkg.description,
              license: 'GNU General Public License v3.0',
-             requires: 'libgconf-2-4',
              prefix: '/opt',
              files:
                  [ { cwd: path.join(appDirectory, pkg.name, arch),
