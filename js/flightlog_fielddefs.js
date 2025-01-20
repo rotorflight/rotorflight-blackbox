@@ -350,6 +350,11 @@ var
         "CUSTOM",
         "FPORT",
         "SRXL2",
+        "GHST",
+        "SBUS2",
+        "FPORT2",
+        "FBUS",
+        "XB-A"
     ]),
 
     ANTI_GRAVITY_MODE = makeReadOnly([
