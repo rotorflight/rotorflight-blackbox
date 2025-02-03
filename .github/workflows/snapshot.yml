@@ -1,0 +1,207 @@
+name: Snapshot
+
+on:
+  push:
+    tags:
+      - 'snapshot/*'
+
+jobs:
+
+  linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: Set build variables
+      run: |
+        echo "GIT_VER=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+        cat ${GITHUB_ENV}
+
+    - name: Update version number
+      run: make version SEMVER=${{ env.GIT_VER }}
+
+    - name: Initialise build environment
+      run: yarn install
+
+    - name: Build release for linux64
+      run: yarn gulp release --linux64
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: rotorflight-blackbox-linux-snapshot-${{ env.GIT_VER }}
+        path: release/rotorflight-blackbox*
+
+
+  macos:
+
+    runs-on: macos-13
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: Set build variables
+      run: |
+        echo "GIT_VER=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+        cat ${GITHUB_ENV}
+
+    - name: Update version number
+      run: make version SEMVER=${{ env.GIT_VER }}
+
+    - name: Initialise build environment
+      run: yarn install
+
+    - name: Build release for MacOS
+      run: yarn gulp release --osx64
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: rotorflight-blackbox-macos-snapshot-${{ env.GIT_VER }}
+        path: release/rotorflight-blackbox*
+
+
+  win64:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: Set build variables
+      run: |
+        $GIT_VER = $env:GITHUB_REF -replace '.*/',''
+        echo "GIT_VER=$GIT_VER" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    - name: Update version number
+      run: make version SEMVER=${{ env.GIT_VER }}
+
+    - name: Initialise build environment
+      run: yarn install
+
+    - name: Build release for windows
+      run: yarn gulp release --win64
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: rotorflight-blackbox-win64-snapshot-${{ env.GIT_VER }}
+        path: release/rotorflight-blackbox*
+
+
+  win32:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: Set build variables
+      run: |
+        $GIT_VER = $env:GITHUB_REF -replace '.*/',''
+        echo "GIT_VER=$GIT_VER" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+    - name: Update version number
+      run: make version SEMVER=${{ env.GIT_VER }}
+
+    - name: Initialise build environment
+      run: yarn install
+
+    - name: Build release for windows
+      run: yarn gulp release --win32
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: rotorflight-blackbox-win32-snapshot-${{ env.GIT_VER }}
+        path: release/rotorflight-blackbox*
+
+
+  snapshot:
+
+    runs-on: ubuntu-latest
+
+    needs: [linux, macos, win64, win32]
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set build variables
+      run: |
+        echo "GIT_VER=${GITHUB_REF##*/}" >> ${GITHUB_ENV}
+        echo "GIT_TAG=${GITHUB_REF##refs/tags/}" >> ${GITHUB_ENV}
+        cat ${GITHUB_ENV}
+
+    - name: Download Linux Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: rotorflight-blackbox-linux-snapshot-${{ env.GIT_VER }}
+
+    - name: Download MacOS Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: rotorflight-blackbox-macos-snapshot-${{ env.GIT_VER }}
+
+    - name: Download Win64 Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: rotorflight-blackbox-win64-snapshot-${{ env.GIT_VER }}
+
+    - name: Download Win32 Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: rotorflight-blackbox-win32-snapshot-${{ env.GIT_VER }}
+
+    - name: Create Snapshot
+      run: |
+        .github/scripts/extract-release-notes.py "${{ env.GIT_VER }}" Releases.md > Notes.md
+        gh release create ${{ env.GIT_TAG }} --prerelease --notes-file Notes.md --title "Rotorflight Blackbox Snapshot ${{ env.GIT_VER }}" rotorflight-blackbox*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
