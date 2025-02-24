@@ -1,3 +1,15 @@
+# 2.1.1
+
+This is a maintenance release containing minor bug fixes.
+
+## Changes from 2.1.0
+
+- Fix the scaling of the mixer yaw field
+- Add missing receiver protocols
+- (Linux only) remove libgconf-2-4 dependency
+
+***
+
 # 2.1.0
 
 This is the _the Official Release_ of the Rotorflight 2.1.0 Blackbox Explorer.
