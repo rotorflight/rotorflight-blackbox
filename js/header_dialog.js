@@ -475,6 +475,88 @@ function HeaderDialog(dialog, onSave) {
         }
     }
 
+    function getGyroRpmNotchPresetText(value) {
+        return ['Custom', 'Low', 'Medium', 'High'][value] ?? value;
+    }
+
+    function renderRPMNotches(gyro_rpm_notch_preset,
+        gyro_rpm_notch_min_hz,
+        gyro_rpm_notch_source_pitch,
+        gyro_rpm_notch_q_pitch,
+        gyro_rpm_notch_source_roll,
+        gyro_rpm_notch_q_roll,
+        gyro_rpm_notch_source_yaw,
+        gyro_rpm_notch_q_yaw) {
+
+        var $tableNc = $('.rpm_notch_config table tbody').empty()
+        let elemNc = `<tr><td>Gyro Rpm Notch Preset</td><td>${getGyroRpmNotchPresetText(gyro_rpm_notch_preset)}</td></tr>`;
+        elemNc += `<tr><td>Gyro Rpm Notch Min Hz</td><td>${gyro_rpm_notch_min_hz}</td></tr>`;
+        $tableNc.append(elemNc);
+
+        //Create pitch data
+        const pitchItems = createNotchData(gyro_rpm_notch_source_pitch,gyro_rpm_notch_q_pitch)
+        //Create roll data
+        const rollItems = createNotchData(gyro_rpm_notch_source_roll,gyro_rpm_notch_q_roll)
+        //Create yaw data
+        const yawItems = createNotchData(gyro_rpm_notch_source_yaw,gyro_rpm_notch_q_yaw)
+
+
+        var $table = $('.rpm_notches table tbody').empty()
+        let elem = ""
+        for (const [src, item] of Object.entries(pitchItems)) {
+            elem += `<tr><td>Pitch</td><td>${item.source}</td><td>${item.type}</td><td>${item.harmonic}</td><td>${item.q}</td></tr>`
+        }
+        for (const [src, item] of Object.entries(rollItems)) {
+            elem += `<tr><td>Roll</td><td>${item.source}</td><td>${item.type}</td><td>${item.harmonic}</td><td>${item.q}</td></tr>`
+        }
+        for (const [src, item] of Object.entries(yawItems)) {
+            elem += `<tr><td>Yaw</td><td>${item.source}</td><td>${item.type}</td><td>${item.harmonic}</td><td>${item.q}</td></tr>`
+        }
+
+
+        $table.append(elem);
+    }
+
+   function createNotchData(source,q) {
+
+    const items = (source || []).reduce(function(acc, src, i) {
+        if(src == 0) return acc
+        if(!acc[src]) {
+            acc[src] = {type: "Single", hCount: 1}
+        } else if (acc[src].hCount == 1) {
+            acc[src].type = "Double";
+            acc[src].hCount = 2;
+        } else{
+            acc[src].type = "Triple";
+        }
+
+        if(src >= 1 && src <= 8) {
+            acc[src].source = "Motor " + src
+            acc[src].harmonic = harmonicLabel(1)
+        } else if(src == 10) {
+            acc[src].source = "Main Motor"
+            acc[src].harmonic = harmonicLabel(1)
+        } else if(src >= 11 && src <= 18) {
+            acc[src].source = "Main Rotor"
+            acc[src].harmonic = harmonicLabel(src % 10)
+        } else if(src == 20) {
+            acc[src].source = "Tail Motor"
+            acc[src].harmonic = harmonicLabel(1)
+        } else if(src >= 21 && src <= 28) {
+            acc[src].source = "Tail Rotor"
+            acc[src].harmonic = harmonicLabel(src % 10)
+        } else {
+            acc[src].source = "Unknown"
+            acc[src].harmonic = harmonicLabel(0)
+        }
+        acc[src].q = (q[i] * 0.1).toFixed(1)
+        return acc
+    }, {})
+
+    return items
+
+   }
+
     function renderRpmFilters(sources, qs, limits) {
         const items = (sources || []).reduce(function(acc, src, i) {
             if(src == 0) return acc
@@ -516,6 +598,32 @@ function HeaderDialog(dialog, onSave) {
         $table.append(elem);
     }
 
+    function applyLocalTimezoneOffset(date) {
+        return new Date(date.getTime() + date.getTimezoneOffset() * 60_000);
+    }
+
+    function formatLogStartTimestamp(value) {
+        try {
+            const d = applyLocalTimezoneOffset(new Date(value));
+            if (Number(d) < 0) {
+                return "Unknown";
+            }
+
+            return new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+            })
+                .format(d)
+                .replace(",", "");
+        } catch {
+            return "Invalid";
+        }
+    }
+
     function renderSysConfig(sysConfig) {
 
       activeSysConfig = sysConfig; // Store the current system configuration
@@ -526,6 +634,7 @@ function HeaderDialog(dialog, onSave) {
       $('h5.modal-title-board-info').text((sysConfig['Board information'] != null) ? ` Board : ${sysConfig['Board information']}` : '');
       $('h5.modal-title-date').text((sysConfig['Firmware date'] != null) ? ` Date : ${sysConfig['Firmware date']}` : '');
       $('h5.modal-title-craft').text((sysConfig['Craft name'] != null) ? ` Name : ${sysConfig['Craft name']}` : '');
+      $('h5.modal-title-date-time').text(` Log Start : ${formatLogStartTimestamp(sysConfig['Log start datetime'])}`);
 
                 switch(sysConfig.firmwareType) {
                         case FIRMWARE_TYPE_ROTORFLIGHT:
@@ -620,6 +729,15 @@ function HeaderDialog(dialog, onSave) {
         setParameter('rates[0]'                 , sysConfig.rates[0] * ratesFactor, ratesDec);
         setParameter('rates[1]'                 , sysConfig.rates[1] * ratesFactor, ratesDec);
         setParameter('rates[2]'                 , sysConfig.rates[2] * ratesFactor, ratesDec);
+
+        renderRPMNotches(sysConfig.gyro_rpm_notch_preset,
+            sysConfig.gyro_rpm_notch_min_hz,
+            sysConfig.gyro_rpm_notch_source_pitch,
+            sysConfig.gyro_rpm_notch_q_pitch,
+            sysConfig.gyro_rpm_notch_source_roll,
+            sysConfig.gyro_rpm_notch_q_roll,
+            sysConfig.gyro_rpm_notch_source_yaw,
+            sysConfig.gyro_rpm_notch_q_yaw );
 
         renderRpmFilters(sysConfig.gyro_rpm_filter_bank_rpm_source, sysConfig.gyro_rpm_filter_bank_notch_q, sysConfig.gyro_rpm_filter_bank_rpm_limit)
 
@@ -789,6 +907,8 @@ function HeaderDialog(dialog, onSave) {
         setParameter('yaw_precomp_collective'    , sysConfig.yaw_precomp[2], 0);
         setParameter('yaw_precomp_impulse_gain'  , sysConfig.yaw_precomp_impulse[0], 0);
         setParameter('yaw_precomp_impulse_decay' , sysConfig.yaw_precomp_impulse[1], 0);
+        setParameter('yaw_inertia_precomp_gain'  , sysConfig.yaw_inertia_precomp[0], 0);
+        setParameter('yaw_inertia_precomp_cutoff' , sysConfig.yaw_inertia_precomp[1], 1);
         setParameter('yaw_tta_gain'              , sysConfig.yaw_tta[0], 0);
         setParameter('yaw_tta_limit'             , sysConfig.yaw_tta[1], 0);
 
@@ -962,6 +1082,8 @@ function HeaderDialog(dialog, onSave) {
                          $(".bf-only").hide();
                  }
 
+        // Hide non supported  fields
+        hideUnsupportedFeatures(activeSysConfig);
     }
 
     function convertUIToSysConfig() {
@@ -1055,4 +1177,22 @@ function HeaderDialog(dialog, onSave) {
     $(".header-dialog-save").click(function(e) {
         onSave(convertUIToSysConfig());
     });
+}
+
+/* Use Jquery $Selector.hide() to remove items not supported by spedfic firmware versions */
+function hideUnsupportedFeatures(activeSysConfig){
+
+    if (activeSysConfig.yaw_precomp_impulse[0] == null) {
+        $('td[name="yaw_precomp_impulse_decay"]').hide();
+        $('td[name="yaw_precomp_impulse_gain"]').hide();
+    }
+
+    if (activeSysConfig.yaw_inertia_precomp[0] == null) {
+        $('td[name="yaw_inertia_precomp_cutoff"]').hide();
+        $('td[name="yaw_inertia_precomp_gain"]').hide();
+    }
+
+    $('.rpm_filters').toggle(activeSysConfig.gyro_rpm_filter_bank_rpm_source.length != 0)
+    $('.rpm_notches').toggle(activeSysConfig.gyro_rpm_notch_source_pitch.length != 0)
+    $('.rpm_notch_config').toggle(activeSysConfig.gyro_rpm_notch_preset != null)
 }

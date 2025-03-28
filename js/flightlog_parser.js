@@ -340,6 +340,7 @@ var FlightLogParser = function(logData) {
             yaw_stop_gain: [null, null],
             yaw_precomp: [null, null, null],
             yaw_precomp_impulse: [null, null],
+            yaw_inertia_precomp: [null, null],
             yaw_tta: [null, null],
             hsi_gain: [null, null],
             hsi_limit: [null, null],
@@ -379,6 +380,17 @@ var FlightLogParser = function(logData) {
             throttle_limit_percent: null,
             throttle_boost: null,                    // throttle boost
             throttle_boost_cutoff: null,
+            gyro_rpm_notch_preset:null,
+            gyro_rpm_notch_min_hz: null,
+            gyro_rpm_notch_source_pitch:[],
+            gyro_rpm_notch_center_pitch:[],
+            gyro_rpm_notch_q_pitch:[],
+            gyro_rpm_notch_source_roll:[],
+            gyro_rpm_notch_center_roll:[],
+            gyro_rpm_notch_q_roll:[],
+            gyro_rpm_notch_source_yaw:[],
+            gyro_rpm_notch_center_yaw:[],
+            gyro_rpm_notch_q_yaw:[],
             unknownHeaders : []                     // Unknown Extra Headers
         },
 
@@ -873,6 +885,7 @@ var FlightLogParser = function(logData) {
             case "yaw_stop_gain":
             case "yaw_precomp":
             case "yaw_precomp_impulse":
+            case "yaw_inertia_precomp":
             case "yaw_tta":
             case "hsi_gain":
             case "hsi_limit":
@@ -880,6 +893,17 @@ var FlightLogParser = function(logData) {
             case "error_decay":
             case "error_decay_ground":
             case "filter_process_denom":
+            case "gyro_rpm_notch_preset":
+            case "gyro_rpm_notch_min_hz":
+            case "gyro_rpm_notch_source_pitch":
+            case "gyro_rpm_notch_center_pitch":
+            case "gyro_rpm_notch_q_pitch":
+            case "gyro_rpm_notch_source_roll":
+            case "gyro_rpm_notch_center_roll":
+            case "gyro_rpm_notch_q_roll":
+            case "gyro_rpm_notch_source_yaw":
+            case "gyro_rpm_notch_center_yaw":
+            case "gyro_rpm_notch_q_yaw":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":
             case "gyro_rpm_filter_bank_notch_q":
