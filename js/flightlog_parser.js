@@ -168,7 +168,22 @@ var FlightLogParser = function(logData) {
 
             // Accelerometer trims
             { name: 'Accelerometer Pitch Trim'        },
-            { name: 'Accelerometer Roll Trim'         }
+            { name: 'Accelerometer Roll Trim'         },
+
+             // Inertia precomp 
+             { name: 'Inertia Precomp gain'            },
+             { name: 'Inertia Precomp Cutoff'          },
+ 
+              // Boost Gain 
+              { name: 'Pitch SP boost gain'            },
+              { name: 'Roll SP boost gain'             },
+              { name: 'Yaw SP boost gain'              },
+              { name: 'Coll SP boost gain'             },
+ 
+              //Dynamic Yaw
+              { name: 'Dyn Yaw Ceiling gain'           },
+              { name: 'Dyn Yaw Deadband gain'          },
+              { name: 'Dyn Yaw Deadband filter'        }
         ];
 
     //Private variables:
