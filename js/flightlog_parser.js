@@ -172,18 +172,18 @@ var FlightLogParser = function(logData) {
 
             // Inertia precomp 
             { name: 'Inertia Precomp Gain'                           },
-            { name: 'Inertia Precomp Cutoff',        scale: 0.01,    },
+            { name: 'Inertia Precomp Cutoff',        scale: 0.1,     },
  
             // SetPoint Boost Gain 
-            { name: 'Pitch SP Boost Gain'                            },
-            { name: 'Roll SP Boost Gain'                             },
-            { name: 'Yaw SP Boost Gain'                              },
-            { name: 'Coll SP Boost Gain'                             },
+            { name: 'Pitch Setpoint Boost Gain'                      },
+            { name: 'Roll Setpoint Boost Gain'                       },
+            { name: 'Yaw Setpoint Boost Gain'                        },
+            { name: 'Coll Setpoint Boost Gain'                       },
  
             //Dynamic Yaw
             { name: 'Dynamic Yaw Ceiling Gain'                       },
             { name: 'Dynamic Yaw Deadband Gain'                      },
-            { name: 'Dynamic Yaw Deadband Filter',   scale: 0.01,    }
+            { name: 'Dynamic Yaw Deadband Filter',   scale: 0.1,     }
         ];
 
     //Private variables:
