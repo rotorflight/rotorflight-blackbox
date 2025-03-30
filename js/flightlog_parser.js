@@ -78,112 +78,112 @@ var FlightLogParser = function(logData) {
         NEWLINE  = '\n'.charCodeAt(0),
 
         INFLIGHT_ADJUSTMENT_FUNCTIONS = [
-            { name: 'None',                           },
+            { name: 'None',                                          },
 
             // Profile change
-            { name: 'Rate Profile',                   },
-            { name: 'PID Profile',                    },
-            { name: 'LED Profile',                    },
-            { name: 'OSD Profile',                    },
+            { name: 'Rate Profile',                                  },
+            { name: 'PID Profile',                                   },
+            { name: 'LED Profile',                                   },
+            { name: 'OSD Profile',                                   },
 
             // Rates
-            { name: 'Pitch Rate',                     },
-            { name: 'Roll Rate',                      },
-            { name: 'Yaw Rate',                       },
-            { name: 'Pitch RC Rate',                  },
-            { name: 'Roll RC Rate',                   },
-            { name: 'Yaw RC Rate',                    },
-            { name: 'Pitch RC Expo',  scale: 0.01,    },
-            { name: 'Roll RC Expo',   scale: 0.01,    },
-            { name: 'Yaw RC Expo',    scale: 0.01,    },
+            { name: 'Pitch Rate',                                    },
+            { name: 'Roll Rate',                                     },
+            { name: 'Yaw Rate',                                      },
+            { name: 'Pitch RC Rate',                                 },
+            { name: 'Roll RC Rate',                                  },
+            { name: 'Yaw RC Rate',                                   },
+            { name: 'Pitch RC Expo',                 scale: 0.01,    },
+            { name: 'Roll RC Expo',                  scale: 0.01,    },
+            { name: 'Yaw RC Expo',                   scale: 0.01,    },
 
             // PID
-            { name: 'Pitch P-gain',                   },
-            { name: 'Pitch I-gain',                   },
-            { name: 'Pitch D-gain',                   },
-            { name: 'Pitch F-gain',                   },
-            { name: 'Roll P-gain',                    },
-            { name: 'Roll I-gain',                    },
-            { name: 'Roll D-gain',                    },
-            { name: 'Roll F-gain',                    },
-            { name: 'Yaw P-gain',                     },
-            { name: 'Yaw I-gain',                     },
-            { name: 'Yaw D-gain',                     },
-            { name: 'Yaw F-gain',                     },
+            { name: 'Pitch P-gain',                                  },
+            { name: 'Pitch I-gain',                                  },
+            { name: 'Pitch D-gain',                                  },
+            { name: 'Pitch F-gain',                                  },
+            { name: 'Roll P-gain',                                   },
+            { name: 'Roll I-gain',                                   },
+            { name: 'Roll D-gain',                                   },
+            { name: 'Roll F-gain',                                   },
+            { name: 'Yaw P-gain',                                    },
+            { name: 'Yaw I-gain',                                    },
+            { name: 'Yaw D-gain',                                    },
+            { name: 'Yaw F-gain',                                    },
 
-            { name: 'Yaw CW Stop Gain',               },
-            { name: 'Yaw CCW Stop Gain',              },
-            { name: 'Yaw Cyclic FF',                  },
-            { name: 'Yaw Collective FF',              },
-            { name: 'Yaw Collective Dyn',             },
-            { name: 'Yaw Collective Decay',           },
-            { name: 'Pitch Collective FF',            },
+            { name: 'Yaw CW Stop Gain',                              },
+            { name: 'Yaw CCW Stop Gain',                             },
+            { name: 'Yaw Cyclic FF',                                 },
+            { name: 'Yaw Collective FF',                             },
+            { name: 'Yaw Collective Dyn',                            },
+            { name: 'Yaw Collective Decay',                          },
+            { name: 'Pitch Collective FF',                           },
 
             // Gyro cutoffs
-            { name: 'Pitch Gyro Cutoff',              },
-            { name: 'Roll Gyro Cutoff',               },
-            { name: 'Yaw Gyro Cutoff',                },
+            { name: 'Pitch Gyro Cutoff',                             },
+            { name: 'Roll Gyro Cutoff',                              },
+            { name: 'Yaw Gyro Cutoff',                               },
 
             // Dterm cutoffs
-            { name: 'Pitch D-term Cutoff',            },
-            { name: 'Roll D-term Cutoff',             },
-            { name: 'Yaw D-term Cutoff',              },
+            { name: 'Pitch D-term Cutoff',                           },
+            { name: 'Roll D-term Cutoff',                            },
+            { name: 'Yaw D-term Cutoff',                             },
 
             // Rescue
-            { name: 'Rescue Climb Collective',        },
-            { name: 'Rescue Hover Collective',        },
-            { name: 'Rescue Hover Altitude',          },
-            { name: 'Rescue Alt P-gain',              },
-            { name: 'Rescue Alt I-gain',              },
-            { name: 'Rescue Alt D-gain',              },
+            { name: 'Rescue Climb Collective',                       },
+            { name: 'Rescue Hover Collective',                       },
+            { name: 'Rescue Hover Altitude',                         },
+            { name: 'Rescue Alt P-gain',                             },
+            { name: 'Rescue Alt I-gain',                             },
+            { name: 'Rescue Alt D-gain',                             },
 
             // Leveling
-            { name: 'Angle Level Gain',               },
-            { name: 'Horizon Level Gain',             },
-            { name: 'Acro Trainer Gain',              },
+            { name: 'Angle Level Gain',                              },
+            { name: 'Horizon Level Gain',                            },
+            { name: 'Acro Trainer Gain',                             },
 
             // Governor
-            { name: 'Governor Gain',                  },
-            { name: 'Governor P-gain',                },
-            { name: 'Governor I-gain',                },
-            { name: 'Governor D-gain',                },
-            { name: 'Governor F-gain',                },
-            { name: 'Governor TTA-gain',              },
-            { name: 'Governor Cyclic FF',             },
-            { name: 'Governor Collective FF',         },
+            { name: 'Governor Gain',                                 },
+            { name: 'Governor P-gain',                               },
+            { name: 'Governor I-gain',                               },
+            { name: 'Governor D-gain',                               },
+            { name: 'Governor F-gain',                               },
+            { name: 'Governor TTA-gain',                             },
+            { name: 'Governor Cyclic FF',                            },
+            { name: 'Governor Collective FF',                        },
 
             // Boost gains
-            { name: 'Pitch B-gain',                   },
-            { name: 'Roll B-gain',                    },
-            { name: 'Yaw B-gain',                     },
+            { name: 'Pitch B-gain',                                  },
+            { name: 'Roll B-gain',                                   },
+            { name: 'Yaw B-gain',                                    },
 
             // Offset gains
-            { name: 'Pitch O-gain'                    },
-            { name: 'Roll O-gain'                     },
+            { name: 'Pitch O-gain'                                   },
+            { name: 'Roll O-gain'                                    },
 
             // Cross coupling
-            { name: 'Cross Coupling Gain'             },
-            { name: 'Cross Coupling Ratio'            },
-            { name: 'Cross Coupling Cutoff'           },
+            { name: 'Cross Coupling Gain'                            },
+            { name: 'Cross Coupling Ratio'                           },
+            { name: 'Cross Coupling Cutoff'                          },
 
             // Accelerometer trims
-            { name: 'Accelerometer Pitch Trim'        },
-            { name: 'Accelerometer Roll Trim'         },
+            { name: 'Accelerometer Pitch Trim'                       },
+            { name: 'Accelerometer Roll Trim'                        },
 
-             // Inertia precomp 
-             { name: 'Inertia Precomp gain'            },
-             { name: 'Inertia Precomp Cutoff'          },
+            // Inertia precomp 
+            { name: 'Inertia Precomp Gain'                           },
+            { name: 'Inertia Precomp Cutoff',        scale: 0.01,    },
  
-              // Boost Gain 
-              { name: 'Pitch SP boost gain'            },
-              { name: 'Roll SP boost gain'             },
-              { name: 'Yaw SP boost gain'              },
-              { name: 'Coll SP boost gain'             },
+            // SetPoint Boost Gain 
+            { name: 'Pitch SP Boost Gain'                            },
+            { name: 'Roll SP Boost Gain'                             },
+            { name: 'Yaw SP Boost Gain'                              },
+            { name: 'Coll SP Boost Gain'                             },
  
-              //Dynamic Yaw
-              { name: 'Dyn Yaw Ceiling gain'           },
-              { name: 'Dyn Yaw Deadband gain'          },
-              { name: 'Dyn Yaw Deadband filter'        }
+            //Dynamic Yaw
+            { name: 'Dynamic Yaw Ceiling Gain'                       },
+            { name: 'Dynamic Yaw Deadband Gain'                      },
+            { name: 'Dynamic Yaw Deadband Filter',   scale: 0.01,    }
         ];
 
     //Private variables:
