@@ -870,7 +870,7 @@ var FlightLogParser = function(logData) {
             case "yaw_stop_gain":
             case "yaw_precomp":
             case "yaw_precomp_impulse":
-            case "yaw_inertia_precomp":    
+            case "yaw_inertia_precomp":
             case "yaw_tta":
             case "hsi_gain":
             case "hsi_limit":
@@ -888,7 +888,7 @@ var FlightLogParser = function(logData) {
             case "gyro_rpm_notch_q_roll":
             case "gyro_rpm_notch_source_yaw":
             case "gyro_rpm_notch_center_yaw":
-            case "gyro_rpm_notch_q_yaw":      
+            case "gyro_rpm_notch_q_yaw":
             case "gyro_rpm_filter_bank_rpm_source":
             case "gyro_rpm_filter_bank_rpm_limit":
             case "gyro_rpm_filter_bank_notch_q":
