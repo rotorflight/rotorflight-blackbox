@@ -619,6 +619,32 @@ function HeaderDialog(dialog, onSave) {
         $table.append(elem);
     }
 
+    function isValidISODate(isoString) {
+        const timestamp = Date.parse(isoString);
+        if (isNaN(timestamp)) {
+            return false;
+        }else{
+            //Check for 0000-01-01T00:00:00.000+00:00 based timestamp
+            if (timestamp < 0) return false; 
+        }
+        return true;
+    }
+
+    function padValue(value,length,pad){
+        return value.toString().padStart(length,pad);
+    }
+    
+    //Format as MM-DD-YYYY 
+    function formatIsoLogDate(logDateTime){
+        try{
+            const theDate = new Date(logDateTime);
+            return `${ padValue(theDate.getMonth()+1,2,'0')}-${ padValue(theDate.getDate(),2,'0')}-${theDate.getFullYear()}`
+        }catch(error){
+            console.error(`Issue converting date ${theDate}, returning input iso string ${logDateTime}`);
+            return logDateTime;
+        }
+    }
+
     function renderSysConfig(sysConfig) {
 
       activeSysConfig = sysConfig; // Store the current system configuration
@@ -629,7 +655,7 @@ function HeaderDialog(dialog, onSave) {
       $('h5.modal-title-board-info').text((sysConfig['Board information'] != null) ? ` Board : ${sysConfig['Board information']}` : '');
       $('h5.modal-title-date').text((sysConfig['Firmware date'] != null) ? ` Date : ${sysConfig['Firmware date']}` : '');
       $('h5.modal-title-craft').text((sysConfig['Craft name'] != null) ? ` Name : ${sysConfig['Craft name']}` : '');
-      $('h5.modal-title-date-time').text((sysConfig['Log start datetime'] != null) ? ` Log Start Date and Time : ${sysConfig['Log start datetime']}` : '');
+      $('h5.modal-title-date-time').toggle(isValidISODate(sysConfig['Log start datetime'])).text(` Log Start : ${formatIsoLogDate(sysConfig['Log start datetime'])}`);
 
                 switch(sysConfig.firmwareType) {
                         case FIRMWARE_TYPE_ROTORFLIGHT:
