@@ -546,9 +546,12 @@ function HeaderDialog(dialog, onSave) {
     const items = (source || []).reduce(function(acc, src, i) {
         if(src == 0) return acc
         if(!acc[src]) {
-            acc[src] = {type: "Single"}
-        } else {
-            acc[src].type = "Double"
+            acc[src] = {type: "Single", hCount: 1}
+        } else if (acc[src].hCount == 1) {
+            acc[src].type = "Double";
+            acc[src].hCount = 2;
+        } else{
+            acc[src].type = "Triple";
         }
 
         if(src >= 1 && src <= 8) {
