@@ -480,7 +480,7 @@ function HeaderDialog(dialog, onSave) {
         Preset 0: Custom settings
         Preset 1: Low vibes
         Preset 2: Average vibes
-        Preset 3: Strong vibes 
+        Preset 3: Strong vibes
         */
         switch (gyro_rpm_notch_preset){
             case 0:
@@ -515,11 +515,11 @@ function HeaderDialog(dialog, onSave) {
         var $tableNc = $('.rpm_notch_config table tbody').empty()
         let elemNc = `<tr><td>Gyro Rpm Notch Preset</td><td>${getGyroRpmNotchPresetText(gyro_rpm_notch_preset)}</td></tr>`;
         elemNc += `<tr><td>Gyro Rpm Notch Min Hz</td><td>${gyro_rpm_notch_min_hz}</td></tr>`;
-        $tableNc.append(elemNc);    
+        $tableNc.append(elemNc);
 
-        //Create pitch data    
+        //Create pitch data
         const pitchItems = createNotchData(gyro_rpm_notch_source_pitch,gyro_rpm_notch_q_pitch)
-        //Create roll data    
+        //Create roll data
         const rollItems = createNotchData(gyro_rpm_notch_source_roll,gyro_rpm_notch_q_roll)
         //Create yaw data
         const yawItems = createNotchData(gyro_rpm_notch_source_yaw,gyro_rpm_notch_q_yaw)
@@ -628,7 +628,7 @@ function HeaderDialog(dialog, onSave) {
             return false;
         }else{
             //Check for 0000-01-01T00:00:00.000+00:00 based timestamp
-            if (timestamp < 0) return false; 
+            if (timestamp < 0) return false;
         }
         return true;
     }
@@ -636,8 +636,8 @@ function HeaderDialog(dialog, onSave) {
     function padValue(value,length,pad){
         return value.toString().padStart(length,pad);
     }
-    
-    //Format as MM-DD-YYYY 
+
+    //Format as MM-DD-YYYY
     function formatIsoLogDate(logDateTime){
         try{
             const theDate = new Date(logDateTime);
@@ -932,7 +932,7 @@ function HeaderDialog(dialog, onSave) {
         setParameter('yaw_precomp_impulse_gain'  , sysConfig.yaw_precomp_impulse[0], 0);
         setParameter('yaw_precomp_impulse_decay' , sysConfig.yaw_precomp_impulse[1], 0);
         setParameter('yaw_inertia_precomp_gain'  , sysConfig.yaw_inertia_precomp[0], 0);
-        setParameter('yaw_inertia_precomp_decay' , sysConfig.yaw_inertia_precomp[1], 0);
+        setParameter('yaw_inertia_precomp_cutoff' , sysConfig.yaw_inertia_precomp[1], 0);
         setParameter('yaw_tta_gain'              , sysConfig.yaw_tta[0], 0);
         setParameter('yaw_tta_limit'             , sysConfig.yaw_tta[1], 0);
 
@@ -1105,9 +1105,9 @@ function HeaderDialog(dialog, onSave) {
                          $(".no-inav").hide();
                          $(".bf-only").hide();
                  }
-        
+
         // Hide non supported  fields
-        hideUnsupportedFeatures(activeSysConfig);         
+        hideUnsupportedFeatures(activeSysConfig);
     }
 
     function convertUIToSysConfig() {
@@ -1208,12 +1208,12 @@ function hideUnsupportedFeatures(activeSysConfig){
 
     if (activeSysConfig.yaw_precomp_impulse[0] == null) {
         $('td[name="yaw_precomp_impulse_decay"]').hide();
-        $('td[name="yaw_precomp_impulse_gain"]').hide();  
+        $('td[name="yaw_precomp_impulse_gain"]').hide();
     }
 
     if (activeSysConfig.yaw_inertia_precomp[0] == null) {
-        $('td[name="yaw_inertia_precomp_decay"]').hide();  
-        $('td[name="yaw_inertia_precomp_gain"]').hide(); 
+        $('td[name="yaw_inertia_precomp_cutoff"]').hide();
+        $('td[name="yaw_inertia_precomp_gain"]').hide();
     }
 
     $('.rpm_filters').toggle(activeSysConfig.gyro_rpm_filter_bank_rpm_source.length != 0)
