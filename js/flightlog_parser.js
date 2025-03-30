@@ -170,16 +170,16 @@ var FlightLogParser = function(logData) {
             { name: 'Accelerometer Pitch Trim'                       },
             { name: 'Accelerometer Roll Trim'                        },
 
-            // Inertia precomp 
+            // Inertia precomp
             { name: 'Inertia Precomp Gain'                           },
             { name: 'Inertia Precomp Cutoff',        scale: 0.1,     },
- 
-            // SetPoint Boost Gain 
+
+            // SetPoint Boost Gain
             { name: 'Pitch Setpoint Boost Gain'                      },
             { name: 'Roll Setpoint Boost Gain'                       },
             { name: 'Yaw Setpoint Boost Gain'                        },
             { name: 'Coll Setpoint Boost Gain'                       },
- 
+
             //Dynamic Yaw
             { name: 'Dynamic Yaw Ceiling Gain'                       },
             { name: 'Dynamic Yaw Deadband Gain'                      },
