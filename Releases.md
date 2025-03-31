@@ -1,3 +1,173 @@
+# 2.1.1
+
+This is a maintenance release containing minor bug fixes.
+
+## Changes from 2.1.0
+
+- Fix the scaling of the mixer yaw field
+- Add missing receiver protocols
+- (Linux only) remove libgconf-2-4 dependency
+
+***
+
+# 2.1.0
+
+This is the _the Official Release_ of the Rotorflight 2.1.0 Blackbox Explorer.
+
+**NOTE** The firmware for RF 2.1 uses version number 4.4.x.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.0)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.0)
+- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.0)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.0)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.0)
+
+## Notes
+
+- Rotorflight setup instructions can be found on the RF website [www.rotorflight.org](https://www.rotorflight.org/).
+
+- RF 2.1 *is* backward compatible with RF 2.0. You *can* load your configuration _dump_ from RF 2.0 into 2.1.
+
+- If updating from RF1, please setup your helicopter from scratch. Follow the instructions on the website!
+
+- As always, please double check your configuration on the bench before flying!
+
+## Support
+
+The main source of Rotorflight information and instructions is now the [website](https://www.rotorflight.org/).
+
+Rotorflight has a strong presence on the Discord platform - you can join us [here](https://discord.gg/FyfMF4RwSA/).
+Discord is the primary location for support, questions and discussions. The developers are all active there,
+and so are the manufacturers of RF Flight Controllers. Many pro pilots are also there.
+This is a great place to ask for advice or discuss any complicated problems or even new ideas.
+
+There is also a [Rotorflight Facebook Group](https://www.facebook.com/groups/876445460825093) for hanging out with other Rotorflight pilots.
+
+## Changes from 2.0.0
+
+- Improved marker timespan and frequency notation
+- Add a warning text to attitude display
+- Handle new BB fields
+- Add 3D Bell heli model
+- Add HSI O-term
+- Add B-term names
+- Add PID P+D
+- Fix PID Sum
+- Display collective in seekbar
+- Display harmonic markers in FFT
+- Many improvements in Header View
+- Update adjustment function names
+- Stretch motor graph
+- Fix servo scaling
+
+
+***
+
+# 2.1.0-RC2
+
+This is the second _Release Candidate_ of the Rotorflight 2.1 Blackbox Explorer.
+
+**NOTE** The final 2.1.0 Blackbox will be released _after_ a few release candidates. Please don't use RCs once the final release is out.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.0-RC2)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.0-RC2)
+- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.0-RC2)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.0-RC2)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.0-RC2)
+
+## Notes
+
+- Rotorflight setup instructions can be found on the RF website [www.rotorflight.org](https://www.rotorflight.org/).
+
+- RF 2.1 *is* backward compatible with RF 2.0. You *can* load your configuration dump from RF 2.0 into 2.1.
+
+- If updating from RF1, please setup your helicopter from scratch. Follow the instructions on the website!
+
+- As always, please double check your configuration on the bench before flying!
+
+## Changes from 2.0.0
+
+- Improved marker timespan and frequency notation
+- Add a warning text to attitude display
+- Handle new BB fields
+- Add 3D Bell heli model
+- Add HSI O-term
+- Add B-term names
+- Add PID P+D
+- Fix PID Sum
+- Display collective in seekbar
+- Display harmonic markers
+- Many improvements in Header View
+- Update adjustment function names
+- Stretch motor graph
+- Fix servo scaling
+
+## Changes from 2.1.0-RC1
+
+- Improved marker timespan and frequency notation
+- Fix texture bleed on Bell 3D model
+
+
+***
+
+# 2.1.0-RC1
+
+This is the first _Release Candidate_ of the Rotorflight 2.1 Blackbox Explorer.
+
+**NOTE** The final 2.1.0 Blackbox will be released _after_ a few release candidates. Please don't use RCs once the final release is out.
+
+## Downloads
+
+The download locations are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.0-RC1)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.0-RC1)
+- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.0-RC1)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.0-RC1)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.0-RC1)
+
+## Notes
+
+- Rotorflight setup instructions can be found on the RF website [www.rotorflight.org](https://www.rotorflight.org/).
+
+- RF 2.1 *is* backward compatible with RF 2.0. You *can* load your configuration dump from RF 2.0 into 2.1.
+
+- If updating from RF1, please setup your helicopter from scratch. Follow the instructions on the website!
+
+- As always, please double check your configuration on the bench before flying!
+
+## Changes from 2.0.0
+
+- Add a warning text to attitude display
+- Handle new BB fields
+- Add 3D Bell heli model
+- Add HSI O-term
+- Add B-term names
+- Add PID P+D
+- Fix PID Sum
+- Display collective in seekbar
+- Display harmonic markers
+- Many improvements in Header View
+- Update adjustment function names
+- Stretch motor graph
+- Fix servo scaling
+
+## Changes from 2.1.0-20240929
+
+- Add a warning text to the attitude display
+- Add a new 3D Bell model
+
+
+***
+
 # 2.1.0-20240929
 
 This is a _development snapshot_ of the Rotorflight-2.1 Blackbox Explorer.
