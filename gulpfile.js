@@ -269,6 +269,7 @@ function dist() {
         './js/vendor/three.min.js',
         './js/vendor/GLTFLoader.js',
         './js/screenshot.js',
+        './js/def_workspaces.js',
 
         './resources/models/bell_cw.gltf',
         './resources/models/bell_cw.png',

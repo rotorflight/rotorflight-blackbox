@@ -52,12 +52,13 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
         e.preventDefault();
     }
 
+    const totalNumberOfWorkspaces = 21;
+
     function update() {
         menuElem.empty();
-        // Sort for non-programmers with 1-9 and then 0 last.
-        for (let index = 1; index < 11; index++) {
-            let id = index % 10
-            let element = workspaces[id % 10];
+        for (let index = 1; index < totalNumberOfWorkspaces; index++) {
+            let id = index;
+            let element = workspaces[id];
 
             var item = $('<li></li>');
             var link = $('<a href="#"></a>')
@@ -109,6 +110,35 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
             menuElem.append(item);
         }
 
+         // Add prebuilt/default workspaces to workspaces array
+        DEFAULT_WORKSPACES.forEach((defWorkspace, index) => {
+            workspaces[totalNumberOfWorkspaces+index] = {
+            ...defWorkspace
+            }
+        });
+
+        // Add prebuild workspaces with no save button as these are read only
+        for (let index = totalNumberOfWorkspaces; index < totalNumberOfWorkspaces+DEFAULT_WORKSPACES.length ; index++) {
+            //Add to menu item
+            let element = DEFAULT_WORKSPACES[index-totalNumberOfWorkspaces];
+            var item = $('<li class="workspace-preset"></li>');
+            var link = $('<a href="#"></a>')
+            var number = $('<span class="workspace-selector-index">').text(index);
+            var title = $('<span class="workspace-selector-title">');
+            title.text(element.title);
+            link.click((e) => {
+                if (element) {
+                    buttonElem.dropdown("toggle");
+                    onSelectionChange(workspaces, index);
+                    e.preventDefault();
+                }
+            });
+            item.append(link);
+            link.append(number);
+            link.append(title);
+            menuElem.append(item);
+        }
+
         if (workspaces[activeId]) {
             numberSpan.text(activeId);
             titleSpan.text(workspaces[activeId].title);
@@ -117,6 +147,7 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
             titleSpan.text("");
         }
     }
+
 
     this.setWorkspaces = function (newWorkspaces) {
         workspaces = newWorkspaces;

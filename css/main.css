@@ -1671,3 +1671,8 @@ dialog h3 {
     padding-right: 9px;
     line-height: 28px;
 }
+
+.workspace-preset {
+    font-style: italic;
+    opacity: .4;
+  }
