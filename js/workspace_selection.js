@@ -121,10 +121,10 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
         for (let index = totalNumberOfWorkspaces; index < totalNumberOfWorkspaces+DEFAULT_WORKSPACES.length ; index++) {
             //Add to menu item
             let element = DEFAULT_WORKSPACES[index-totalNumberOfWorkspaces];
-            var item = $('<li class="workspace-preset"></li>');
+            var item = $('<li></li>');
             var link = $('<a href="#"></a>')
             var number = $('<span class="workspace-selector-index">').text(index);
-            var title = $('<span class="workspace-selector-title">');
+            var title = $('<span class="workspace-selector-title-preset">');
             title.text(element.title);
             link.click((e) => {
                 if (element) {
