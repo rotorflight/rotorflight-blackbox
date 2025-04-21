@@ -1,3 +1,16 @@
+# 2.2.0-RC3
+
+This is the third _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The RC3 is essentially the same as RC1.
+
+## Changes from 2.2.0-RC1
+
+- NONE
+
+
+***
+
 # 2.2.0-RC1
 
 This is the first _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
