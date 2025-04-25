@@ -102,7 +102,7 @@ begin
     begin
         if not Exec('>', UninstPath, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
         begin
-            Result := False;
+            //Result := False; // Return False to abort the installation
             MsgBox('Error uninstalling old Blackbox ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
         end;
     end;
