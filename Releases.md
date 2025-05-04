@@ -1,3 +1,19 @@
+# 2.2.0-RC4
+
+This is the fourth _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The firmware for RF 2.2 uses version number 4.5.x.
+
+## Changes from 2.2.0-RC3
+
+- Fix Windows installation failing in some environments
+
+## Changes from 2.1.x
+
+- Add log headers and events for [Rotorflight Firmware 4.5.0](https://github.com/rotorflight/rotorflight-firmware/releases/tag/release/4.5.0-RC4)
+
+***
+
 # 2.2.0-RC3
 
 This is the third _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
