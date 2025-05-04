@@ -183,7 +183,9 @@ var FlightLogParser = function(logData) {
             //Dynamic Yaw
             { name: 'Dynamic Yaw Ceiling Gain'                       },
             { name: 'Dynamic Yaw Deadband Gain'                      },
-            { name: 'Dynamic Yaw Deadband Filter',   scale: 0.1,     }
+            { name: 'Dynamic Yaw Deadband Filter',   scale: 0.1,     },
+
+            { name: 'Yaw Precomp Cutoff'                             },
         ];
 
     //Private variables:
