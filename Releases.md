@@ -1,3 +1,15 @@
+# 2.2.0-RC5
+
+This is the fifth _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The RC5 is essentially the same as RC4.
+
+## Changes from 2.2.0-RC4
+
+- NONE
+
+***
+
 # 2.2.0-RC4
 
 This is the fourth _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
@@ -23,7 +35,6 @@ This is the third _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
 ## Changes from 2.2.0-RC1
 
 - NONE
-
 
 ***
 
