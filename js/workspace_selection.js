@@ -110,7 +110,10 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
             menuElem.append(item);
         }
 
-        workspaces.push(...DEFAULT_WORKSPACES);
+        // Push to array positions specifically, as workspaces will continue to grow everytime update is called
+        DEFAULT_WORKSPACES.forEach(function(workspace, index) {
+            workspaces[totalNumberOfWorkspaces+index] = workspace;
+        });
 
         // Add prebuild workspaces with no save button as these are read only
         for (let index = totalNumberOfWorkspaces; index < totalNumberOfWorkspaces+DEFAULT_WORKSPACES.length ; index++) {
