@@ -152,6 +152,14 @@ function FlightLogFieldPresenter() {
         'failsafePhase': 'Failsafe Phase',
         'rxSignalReceived': 'RX Signal Received',
         'rxFlightChannelsValid': 'RX Flight Ch. Valid',
+
+        'govP': 'Gov P',
+        'govI': 'Gov I',
+        'govD': 'Gov D',
+        'govF': 'Gov F',
+        'govSum': 'Gov PID sum',
+        'govRequest':'HS Requested',
+        'govTarget':'HS Target',
     };
 
     const DEBUG_FRIENDLY_FIELD_NAMES_INITIAL = {
