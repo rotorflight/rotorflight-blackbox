@@ -1,3 +1,105 @@
+# 2.2.0
+
+This is the _Official Release_ of the Rotorflight 2.2.0 Blackbox Explorer.
+
+## Downloads
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0)
+- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0)
+
+## Instructions
+
+Rotorflight setup instructions can be found at [www.rotorflight.org](https://www.rotorflight.org/).
+
+## Changes from 2.1.1
+
+- Support for [Rotorflight Firmware 4.5.0](https://github.com/rotorflight/rotorflight-firmware/releases/tag/release/4.5.0)
+
+***
+
+# 2.2.0-RC5
+
+This is the fifth _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The RC5 is essentially the same as RC4.
+
+## Changes from 2.2.0-RC4
+
+- NONE
+
+***
+
+# 2.2.0-RC4
+
+This is the fourth _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The firmware for RF 2.2 uses version number 4.5.x.
+
+## Changes from 2.2.0-RC3
+
+- Fix Windows installation failing in some environments
+
+## Changes from 2.1.x
+
+- Add log headers and events for [Rotorflight Firmware 4.5.0](https://github.com/rotorflight/rotorflight-firmware/releases/tag/release/4.5.0-RC4)
+
+***
+
+# 2.2.0-RC3
+
+This is the third _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The RC3 is essentially the same as RC1.
+
+## Changes from 2.2.0-RC1
+
+- NONE
+
+***
+
+# 2.2.0-RC1
+
+This is the first _Release Candidate_ of the Rotorflight 2.2 Blackbox Explorer.
+
+**NOTE** The firmware for RF 2.2 uses version number 4.5.x.
+
+## Downloads
+
+The official download locations for Rotorflight 2.2.0-RC1 are:
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0-RC1)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0-RC1)
+- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0-RC1)
+- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0-RC1)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0-RC1)
+
+## Notes
+
+- Rotorflight setup instructions can be found on the RF website [www.rotorflight.org](https://www.rotorflight.org/).
+- RF 2.2 *is* backward compatible with RF 2.0 and 2.1. You *can* load your configuration _dump_ from RF 2.0 or 2.1 into 2.2.
+- If updating from RF1, please setup your helicopter from scratch. Follow the instructions on the website!
+- As always, please double check your configuration on the bench before flying!
+
+## Support
+
+The main source of Rotorflight information and instructions is now the [website](https://www.rotorflight.org/).
+
+Rotorflight has a strong presence on the Discord platform - you can join us [here](https://discord.gg/FyfMF4RwSA/).
+Discord is the primary location for support, questions and discussions. The developers are all active there,
+and so are the manufacturers of RF Flight Controllers. Many pro pilots are also there.
+This is a great place to ask for advice or discuss any complicated problems or even new ideas.
+
+There is also a [Rotorflight Facebook Group](https://www.facebook.com/groups/876445460825093) for hanging out with other Rotorflight pilots.
+
+## Changes from 2.1.x
+
+- Add log headers and events for [Rotorflight Firmware 4.5.0](https://github.com/rotorflight/rotorflight-firmware/releases/tag/release/4.5.0-RC1)
+
+***
+
 # 2.1.1
 
 This is a maintenance release containing minor bug fixes.
