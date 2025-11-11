@@ -633,6 +633,14 @@ function FlightLogFieldPresenter() {
             'debug[6]':'Is Hands On',
             'debug[7]':'Is Airborne',
         },
+        'GOV_MOTOR' : {
+            'debug[all]':'Gov Motor',
+            'debug[0]':'RPM Constant',
+            'debug[1]':'Motor RPM Constant',
+            'debug[2]':'Throttle Estimation',
+            'debug[3]':'Minimum Throttle',
+            'debug[5]':'Voltage Compensation Gain',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;

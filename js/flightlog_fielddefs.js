@@ -624,6 +624,7 @@ var
         "ERROR_DECAY",
         "HS_OFFSET",
         "HS_BLEED",
+        "GOV_MOTOR",
         "USER1",
         "USER2",
         "USER3",
