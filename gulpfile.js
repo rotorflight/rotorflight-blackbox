@@ -31,6 +31,7 @@ var nwBuilderOptions = {
     macIcns: './images/rf_icon.icns',
     macPlist: { 'CFBundleDisplayName': 'Rotorflight Blackbox'},
     winIco: './images/rf_icon.ico',
+    downloadUrl: 'https://dl.node-webkit.org/',
 };
 
 //-----------------
@@ -276,6 +277,7 @@ function dist() {
 
         // everything else
         './package.json', // For NW.js
+        './yarn.lock',
         './*.html',
         './images/**/*',
         './_locales/**/*',
