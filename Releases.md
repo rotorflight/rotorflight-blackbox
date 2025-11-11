@@ -1,3 +1,29 @@
+# 2.3.0-20251111
+
+This is a *development snapshot* of the Rotorflight 2.3 Blackbox.
+
+## Notes
+
+This version is intended to be used for beta-testing only. It may contain
+incomplete features or stability issues and is not recommended for end-user
+use.
+
+For more information, please join the Rotorflight Discord chat.
+
+## Downloads
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/snapshot/2.3.0-20251111)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/snapshot/2.3.0-20251111)
+- [LUA Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/snapshot/2.3.0-20251111)
+- [LUA Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/snapshot/2.3.0-20251111)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/snapshot/2.3.0-20251111)
+
+## Changes from 2.2.0
+
+- Support new governor fields
+
+***
+
 # 2.2.0
 
 This is the _Official Release_ of the Rotorflight 2.2.0 Blackbox Explorer.
