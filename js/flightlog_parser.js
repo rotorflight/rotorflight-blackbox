@@ -186,6 +186,15 @@ var FlightLogParser = function(logData) {
             { name: 'Dynamic Yaw Deadband Filter',   scale: 0.1,     },
 
             { name: 'Yaw Precomp Cutoff'                             },
+
+            // Governor
+            { name: 'Gov Idle Throttle', scale: 0.1                  },
+            { name: 'Gov Auto Throttle', scale: 0.1                  },
+            { name: 'Gov Max Throttle'                               },
+            { name: 'Gov Min Throttle'                               },
+            { name: 'Gov Headspeed'                                  },
+            { name: 'Gov Yaw FF'                                     },
+
         ];
 
     //Private variables:
