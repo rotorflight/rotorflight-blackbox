@@ -952,6 +952,17 @@ html.has-log .log-seek-bar {
     vertical-align:middle;
 }
 
+.log-workspace-panel .workspace-selector-title-preset {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display:inline-block;
+    vertical-align:middle;
+    color: green;
+    font-style: italic;
+    opacity: .75;
+}
+
 .log-workspace-panel input {
     padding-top: 2px;
     margin-left: -2px;
