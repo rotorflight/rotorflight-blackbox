@@ -641,6 +641,17 @@ function FlightLogFieldPresenter() {
             'debug[3]':'Minimum Throttle',
             'debug[5]':'Voltage Compensation Gain',
         },
+        'HS_OFFSET' : {
+            'debug[all]':'HS Offset',
+            'debug[0]':'erroRate',
+            'debug[1]':'itermErrorRate',
+            'debug[2]':'offMod',
+            'debug[3]':'offDelta',
+            'debug[4]':'axisError',
+            'debug[5]':'axisOffset',
+            'debug[6]':'O',
+            'debug[7]':'I',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -652,26 +663,26 @@ function FlightLogFieldPresenter() {
         if (firmwareType === FIRMWARE_TYPE_ROTORFLIGHT) {
            if (semver.gte(firmwareVersion, '4.3.0')) {
         	DEBUG_FRIENDLY_FIELD_NAMES.ITERM_RELAX = {
-                    'debug[all]':'I-term Relax new',
-                    'debug[0]':'Setpoint',
-                    'debug[1]':'Gyro Rate',
-                    'debug[2]':'Setpoint LPF',
-                    'debug[3]':'Setpoint HPF',
-                    'debug[4]':'I Relax Factor',
-                    'debug[5]':'Relaxed I Error',
+                'debug[all]':'I-term Relax new',
+                'debug[0]':'Setpoint',
+                'debug[1]':'Gyro Rate',
+                'debug[2]':'Setpoint LPF',
+                'debug[3]':'Setpoint HPF',
+                'debug[4]':'I Relax Factor',
+                'debug[5]':'Relaxed I Error',
                 };
            };
            if (semver.gte(firmwareVersion, '4.5.0')) {
                 DEBUG_FRIENDLY_FIELD_NAMES.YAW_PRECOMP = {
-		    'debug[all]':'Yaw Precompensation',
-		    'debug[0]':'Total Precompensation',
-		    'debug[1]':'Main Precompensation',
-		    'debug[2]':'Main Deflection',
-		    'debug[3]':'Collective Deflection',
-		    'debug[4]':'Cyclic Deflection',
-		    'debug[6]':'Speed Change',
-		    'debug[7]':'Torque Precompensation',
-        	};
+                'debug[all]':'Yaw Precompensation',
+                'debug[0]':'Total Precompensation',
+                'debug[1]':'Main Precompensation',
+                'debug[2]':'Main Deflection',
+                'debug[3]':'Collective Deflection',
+                'debug[4]':'Cyclic Deflection',
+                'debug[6]':'Speed Change',
+                'debug[7]':'Torque Precompensation',
+                };   
             };
         };
         
@@ -1113,6 +1124,21 @@ function FlightLogFieldPresenter() {
                         case 'debug[2]': // roll actual D
                         case 'debug[3]': // pitch actual D
                             return (value / 10).toFixed(1);
+                    }
+                    break;
+                 case 'HS_OFFSET':
+                    switch (fieldName) {
+                        case 'debug[0]':
+                        case 'debug[1]':
+                        case 'debug[4]': 
+                        case 'debug[5]': 
+                            return (value / 10).toFixed(1) + '°/s';
+                        case 'debug[3]': // offset delta
+                            return (value / 1000).toFixed(2) + '%';
+                        case 'debug[2]': // offset Modulated
+                        case 'debug[6]': // PID Offset
+                        case 'debug[7]': // PID I
+                            return (value / 10).toFixed(1) + '%';
                     }
                     break;
                 case 'ITERM_RELAX':
