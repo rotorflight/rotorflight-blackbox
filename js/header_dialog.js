@@ -422,6 +422,12 @@ function HeaderDialog(dialog, onSave) {
             ]]
         }
 
+        if(sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.6.0')) {
+            fields = [...fields, ...[
+                {name: 'Governor', description: 'Governor PID terms'},
+            ]]
+        }
+
         const fieldsList_e = $('tbody.fields_list').empty()
 
         for (let i = 0; i < fields.length; i++) {
