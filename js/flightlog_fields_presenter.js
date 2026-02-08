@@ -641,6 +641,13 @@ function FlightLogFieldPresenter() {
             'debug[3]':'Minimum Throttle',
             'debug[5]':'Voltage Compensation Gain',
         },
+        'POLAR_RATE' : {
+            'debug[all]':'Polar Rates',
+            'debug[0]':'SP Roll',
+            'debug[1]':'SP Pitch',
+            'debug[2]':'Rate',
+            'debug[3]':'Mult',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
