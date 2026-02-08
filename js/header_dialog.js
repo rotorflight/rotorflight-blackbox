@@ -1056,6 +1056,10 @@ function HeaderDialog(dialog, onSave) {
         setCheckbox('rc_smoothing'                         , sysConfig.rc_smoothing);
         setCheckbox('piro_compensation'                    , sysConfig.piro_compensation);
 
+        if (semver.gte(activeSysConfig.firmwareVersion, '4.6.0')) {
+            $('[name="piro_compensation"]').closest('table').hide();
+        }
+
         /* Selected Fields */
         if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0') || activeSysConfig.firmwareType === FIRMWARE_TYPE_ROTORFLIGHT) {
             builtSelectedFieldsList(sysConfig);
