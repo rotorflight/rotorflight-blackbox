@@ -167,90 +167,73 @@ function SeekBar(canvas) {
     };
 
     function rebuildBackground() {
-        var
-            x, activityIndex, activity,
-            pixelTimeStep, time;
-
         backgroundContext.fillStyle = BACKGROUND_STYLE;
         backgroundContext.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (max > min) {
-            pixelTimeStep = (max - min) / (canvas.width - BAR_INSET * 2);
-
-            if (activityTime.length) {
-                //Draw events
-                backgroundContext.strokeStyle = EVENT_BAR_STYLE;
-                backgroundContext.beginPath();
-
-                time = min;
-                activityIndex = 0;
-
-                for (x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
-                    //Advance to the right entry in the activity array for this time
-                    while (activityIndex < activityTime.length && time >= activityTime[activityIndex]) {
-                        activityIndex++;
-                    }
-
-                    activityIndex--;
-
-                    if (activityIndex > 0) {
-                        if (hasEvent[activityIndex]) {
-                            backgroundContext.moveTo(x, canvas.height);
-                            backgroundContext.lineTo(x, 0);
-                        }
-                    }
-
-                    time += pixelTimeStep;
-                }
-
-                backgroundContext.stroke();
-
-                //Draw activity bars
-                backgroundContext.strokeStyle = ACTIVITY_BAR_STYLE;
-                backgroundContext.beginPath();
-
-                time = min;
-                activityIndex = 0;
-
-                for (x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
-                    //Advance to the right entry in the activity array for this time
-                    while (activityIndex < activityTime.length && time >= activityTime[activityIndex]) {
-                        activityIndex++;
-                    }
-
-                    activityIndex--;
-
-                    if (activityIndex > 0) {
-                        activity = (activityStrength[activityIndex] - activityMin) / (activityMax - activityMin) * canvas.height;
-                        backgroundContext.moveTo(x, canvas.height);
-                        backgroundContext.lineTo(x, canvas.height - activity);
-
-                    }
-
-                    time += pixelTimeStep;
-                }
-
-                backgroundContext.stroke();
-            }
-
-            // Paint in/out region
-            if (inTime !== false || outTime !== false) {
-                backgroundContext.fillStyle = OUTSIDE_EXPORT_RANGE_STYLE;
-
-                if (inTime !== false) {
-                    backgroundContext.fillRect(0, 0, (inTime - min) / pixelTimeStep + BAR_INSET, canvas.height);
-                }
-
-                if (outTime !== false) {
-                    var
-                        barStartX = (outTime - min) / pixelTimeStep + BAR_INSET;
-
-                    backgroundContext.fillRect(barStartX, 0, canvas.width - barStartX, canvas.height);
-                }
-            }
-
-            backgroundValid = true;
+        if (max <= min) {
+            return;
         }
+
+        const pixelTimeStep = (max - min) / (canvas.width - BAR_INSET * 2);
+
+        if (activityTime.length > 0) {
+            let time = min;
+            let activityIndex = 0;
+
+            const eventPath = new Path2D();
+            const activityPath = new Path2D();
+
+            for (let x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
+                //Advance to the right entry in the activity array for this time
+                while (activityIndex + 1 < activityTime.length && time >= activityTime[activityIndex + 1]) {
+                    activityIndex++;
+                }
+
+                if (activityIndex >= 0) {
+
+                    // Event bars
+                    if (hasEvent[activityIndex]) {
+                        eventPath.moveTo(x, canvas.height);
+                        eventPath.lineTo(x, 0);
+                    }
+
+                    // Activity bars
+                    const range = activityMax - activityMin;
+                    if (range > 0) {
+                        const activity = (activityStrength[activityIndex] - activityMin) / range * canvas.height;
+
+                        activityPath.moveTo(x, canvas.height);
+                        activityPath.lineTo(x, canvas.height - activity)
+                    }
+                }
+
+                time += pixelTimeStep;
+            }
+
+            backgroundContext.strokeStyle = EVENT_BAR_STYLE;
+            backgroundContext.stroke(eventPath);
+
+            backgroundContext.strokeStyle = ACTIVITY_BAR_STYLE;
+            backgroundContext.stroke(activityPath);
+
+        }
+
+        // Paint in/out region
+        if (inTime !== false || outTime !== false) {
+            backgroundContext.fillStyle = OUTSIDE_EXPORT_RANGE_STYLE;
+
+            if (inTime !== false) {
+                backgroundContext.fillRect(0, 0, (inTime - min) / pixelTimeStep + BAR_INSET, canvas.height);
+            }
+
+            if (outTime !== false) {
+                const barStartX = (outTime - min) / pixelTimeStep + BAR_INSET;
+
+                backgroundContext.fillRect(barStartX, 0, canvas.width - barStartX, canvas.height);
+            }
+        }
+
+        backgroundValid = true;
     }
 
     this.repaint = function() {
