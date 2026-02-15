@@ -142,7 +142,8 @@ function FlightLog(logData) {
             times: directory.times,
             avgThrottle: directory.avgThrottle,
             collective: directory.collective,
-            hasEvent: directory.hasEvent
+            hasEvent: directory.hasEvent,
+            pidProfile: directory.pidProfile
         };
     };
 

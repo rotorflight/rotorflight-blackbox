@@ -13,6 +13,9 @@ function SeekBar(canvas) {
         //Whether a special event exists at the given time:
         hasEvent,
 
+        //PID profile state at the given time:
+        pidProfile,
+
         //Expect to be plotting PWM-like data by default:
         activityMin = 1000, activityMax = 2000,
 
@@ -31,6 +34,16 @@ function SeekBar(canvas) {
         EVENT_BAR_STYLE = '#8d8',
         ACTIVITY_BAR_STYLE = 'rgba(170,170,255, 0.9)',
         OUTSIDE_EXPORT_RANGE_STYLE = 'rgba(100, 100, 100, 0.5)',
+
+        // PID profile colors - distinct colors for each profile
+        PID_PROFILE_COLORS = [
+            'rgba(100, 149, 237, 0.3)',  // Profile 1: Cornflower blue
+            'rgba(50, 205, 50, 0.3)',    // Profile 2: Lime green
+            'rgba(255, 140, 0, 0.3)',    // Profile 3: Dark orange
+            'rgba(186, 85, 211, 0.3)',   // Profile 4: Medium orchid
+            'rgba(220, 20, 60, 0.3)',    // Profile 5: Crimson (strong red)
+            'rgba(255, 215, 0, 0.3)',    // Profile 6: Gold
+        ],
 
         // Suggested to be the same as that used by the graph's center mark in order to tie them together
         CURSOR_STYLE        = 'rgba(255, 64, 64, 0.75)',
@@ -150,10 +163,11 @@ function SeekBar(canvas) {
         invalidateBackground();
     };
 
-    this.setActivity = function(newActivityTimes, newActivityStrengths, newHasEvent) {
+    this.setActivity = function(newActivityTimes, newActivityStrengths, newHasEvent, newPIDProfile) {
         activityTime = newActivityTimes;
         activityStrength = newActivityStrengths;
         hasEvent = newHasEvent;
+        pidProfile = newPIDProfile ?? [];
 
         invalidateBackground();
     };
@@ -182,6 +196,11 @@ function SeekBar(canvas) {
 
             const eventPath = new Path2D();
             const activityPath = new Path2D();
+            
+            let lastPIDProfile = -1;
+            let pidColorSegmentStartX = BAR_INSET;
+
+            const range = activityMax - activityMin;
 
             for (let x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
                 //Advance to the right entry in the activity array for this time
@@ -191,23 +210,48 @@ function SeekBar(canvas) {
 
                 if (activityIndex >= 0) {
 
-                    // Event bars
+                    // PID profile color bands
+                    if (pidProfile.length > 0) {
+                        const currentPIDProfile = pidProfile[activityIndex] ?? 0;
+
+                        if (currentPIDProfile !== lastPIDProfile) {
+
+                            if (lastPIDProfile !== -1) {
+                                const pidProfileColorIndex = Math.min(Math.max(0, lastPIDProfile), PID_PROFILE_COLORS.length - 1);
+
+                                backgroundContext.fillStyle = PID_PROFILE_COLORS[pidProfileColorIndex];
+                                backgroundContext.fillRect(pidColorSegmentStartX, 0, x - pidColorSegmentStartX, canvas.height);
+                            }
+
+                            pidColorSegmentStartX = x;
+                            lastPIDProfile = currentPIDProfile;
+                        }
+                    }
+
+                    // event bars
                     if (hasEvent[activityIndex]) {
                         eventPath.moveTo(x, canvas.height);
                         eventPath.lineTo(x, 0);
                     }
 
                     // Activity bars
-                    const range = activityMax - activityMin;
                     if (range > 0) {
                         const activity = (activityStrength[activityIndex] - activityMin) / range * canvas.height;
 
                         activityPath.moveTo(x, canvas.height);
-                        activityPath.lineTo(x, canvas.height - activity)
+                        activityPath.lineTo(x, canvas.height - activity);
                     }
                 }
 
                 time += pixelTimeStep;
+            }
+
+            // Flush final PID profile color segment
+            if (pidProfile.length > 0 && lastPIDProfile !== -1) {
+                const pidProfileColorIndex = Math.min(Math.max(0, lastPIDProfile), PID_PROFILE_COLORS.length - 1);
+
+                backgroundContext.fillStyle = PID_PROFILE_COLORS[pidProfileColorIndex];
+                backgroundContext.fillRect(pidColorSegmentStartX, 0, canvas.width - BAR_INSET - pidColorSegmentStartX, canvas.height);
             }
 
             backgroundContext.strokeStyle = EVENT_BAR_STYLE;

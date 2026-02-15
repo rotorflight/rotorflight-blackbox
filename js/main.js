@@ -426,7 +426,7 @@ function BlackboxLogViewer() {
         var
             activity = flightLog.getActivitySummary();
 
-        seekBar.setActivity(activity.times, activity.collective, activity.hasEvent);
+        seekBar.setActivity(activity.times, activity.collective, activity.hasEvent, activity.pidProfile);
 
         seekBar.repaint();
     }
