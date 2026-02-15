@@ -44,6 +44,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                 stickTrails                        : false,                        // Show stick trails?
                 stickInvertYaw                : false,                        // Invert yaw in stick display?
         legendUnits                        : true,                    // Show units on legend?
+        seekbarPIDProfileColorBands        : false,                   // Show PID profile color bands on seekbar?
                 gapless                                : false,
         drawCraft           : "3D",
         hasCraft            : true,
@@ -302,6 +303,10 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
         currentSettings.legendUnits = $(this).is(":checked");
     });
 
+    $(".seekbar-pidprofile-color-bands").click(function() {
+        currentSettings.seekbarPIDProfileColorBands = $(this).is(":checked");
+    });
+
     // Load Custom Logo
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -371,6 +376,11 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                         if(currentSettings.legendUnits!=null) {
                                 // set the toggle switch
                                 $(".legend-units").prop('checked', currentSettings.legendUnits);
+                        }
+
+                        if(currentSettings.seekbarPIDProfileColorBands!=null) {
+                                // set the toggle switch
+                                $(".seekbar-pidprofile-color-bands").prop('checked', currentSettings.seekbarPIDProfileColorBands);
                         }
 
 

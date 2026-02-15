@@ -16,6 +16,9 @@ function SeekBar(canvas) {
         //PID profile state at the given time:
         pidProfile,
 
+        //Whether to show PID profile color bands:
+        pidProfileColorBandsEnabled = false,
+
         //Expect to be plotting PWM-like data by default:
         activityMin = 1000, activityMax = 2000,
 
@@ -211,7 +214,7 @@ function SeekBar(canvas) {
                 if (activityIndex >= 0) {
 
                     // PID profile color bands
-                    if (pidProfile.length > 0) {
+                    if (pidProfileColorBandsEnabled && pidProfile.length > 0) {
                         const currentPIDProfile = pidProfile[activityIndex] ?? 0;
 
                         if (currentPIDProfile !== lastPIDProfile) {
@@ -247,7 +250,7 @@ function SeekBar(canvas) {
             }
 
             // Flush final PID profile color segment
-            if (pidProfile.length > 0 && lastPIDProfile !== -1) {
+            if (pidProfileColorBandsEnabled && pidProfile.length > 0 && lastPIDProfile !== -1) {
                 const pidProfileColorIndex = Math.min(Math.max(0, lastPIDProfile), PID_PROFILE_COLORS.length - 1);
 
                 backgroundContext.fillStyle = PID_PROFILE_COLORS[pidProfileColorIndex];
@@ -289,8 +292,10 @@ function SeekBar(canvas) {
             rebuildBackground();
         }
 
-        if (dirtyRegion === false)
+        if (dirtyRegion === false) {
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
             canvasContext.drawImage(background, 0, 0);
+        }
         else {
             canvasContext.drawImage(background, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height);
         }
@@ -332,6 +337,11 @@ function SeekBar(canvas) {
 
     this.setOutTime = function(newOutTime) {
         outTime = newOutTime;
+        invalidateBackground();
+    };
+
+    this.setPIDProfileColorBandsEnabled = function(enabled) {
+        pidProfileColorBandsEnabled = !!enabled;
         invalidateBackground();
     };
 
