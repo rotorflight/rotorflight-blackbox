@@ -426,7 +426,7 @@ function BlackboxLogViewer() {
         var
             activity = flightLog.getActivitySummary();
 
-        seekBar.setActivity(activity.times, activity.collective, activity.hasEvent);
+        seekBar.setActivity(activity.times, activity.collective, activity.hasEvent, activity.pidProfile);
 
         seekBar.repaint();
     }
@@ -1382,6 +1382,11 @@ function BlackboxLogViewer() {
                     } else {
                         userSettings = defaultSettings;
                     }
+
+                    // Apply seekbar profile hints setting
+                    if(seekBar != null && userSettings.seekbarPIDProfileColorBands !== undefined) {
+                        seekBar.setPIDProfileColorBandsEnabled(userSettings.seekbarPIDProfileColorBands);
+                    }
                 });
             },
 
@@ -1389,6 +1394,12 @@ function BlackboxLogViewer() {
                     userSettings = newSettings;
 
                     prefs.set('userSettings', newSettings);
+
+                    // update seekbar profile hints
+                    if(seekBar != null && newSettings.seekbarPIDProfileColorBands !== undefined) {
+                        seekBar.setPIDProfileColorBandsEnabled(newSettings.seekbarPIDProfileColorBands);
+                        seekBar.repaint();
+                    }
 
                     // refresh the craft model
                     if(graph!=null) {
