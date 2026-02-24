@@ -1405,7 +1405,6 @@ function BlackboxLogViewer() {
                     if(graph!=null) {
                         graph.refreshOptions(newSettings);
                         graph.refreshLogo();
-                        graph.initializeCraftModel();
                         updateCanvasSize();
                     }
 
