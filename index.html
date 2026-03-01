@@ -667,6 +667,7 @@
                     <h5 class="modal-title-board-info"></h5>
                     <h5 class="modal-title-date"></h5>
                     <h5 class="modal-title-craft"></h5>
+                    <h5 class="modal-title-date-time"></h5>
                 </div>
                 <div class="modal-body">
                     <form name="header-information" id="pid-tuning">
@@ -1299,6 +1300,17 @@
                                                         <label>TTA Limit [%]</label>
                                                         <input type="text" step="1" min="0" max="999" />
                                                     </td>
+                                                </tr>
+                                                <tr>
+                                                    <td name="yaw_inertia_precomp_cutoff">
+                                                        <label>Inertia Precomp Cutoff [Hz]</label>
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+                                                    <td name="yaw_inertia_precomp_gain">
+                                                        <label>Intertia Precomp Gain</label>
+                                                        <input type="text" step="1" min="0" max="999" />
+                                                    </td>
+
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -1972,7 +1984,43 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-
+                                        <div class="gui_box grey rpm_notch_config">
+                                            <div class="spacer_box">
+                                                <table class="parameter cf">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="row" colspan="6">RPM Notch Configuration</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Name</td>
+                                                            <td>Value</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="gui_box grey rpm_notches">
+                                            <div class="spacer_box">
+                                                <table class="parameter cf">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="row" colspan="6">RPM Notch Information</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Control</td>
+                                                            <td>Source</td>
+                                                            <td>Type</td>
+                                                            <td>Harmonic</td>
+                                                            <td>Q</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                         <div class="gui_box grey rpm_filters">
                                             <div class="spacer_box">
                                                 <table class="parameter cf">
@@ -3136,6 +3184,22 @@
                                                 <div></div>
                                             </div>
                                             <span>Display actual units on legend.</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="gui_box grey seekbar-settings">
+                                <div class="gui_box_titlebar">
+                                    <div class="spacer_box_title">Seekbar Settings</div>
+                                </div>
+                                <div class="spacer_box">
+                                    <div>
+                                        <label class="option">Profile Hints
+                                            <input class="seekbar-pidprofile-color-bands ios-switch" type="checkbox" />
+                                            <div>
+                                                <div></div>
+                                            </div>
+                                            <span>Display PID profile color bands on seekbar.</span>
                                         </label>
                                     </div>
                                 </div>

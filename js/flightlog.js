@@ -142,7 +142,8 @@ function FlightLog(logData) {
             times: directory.times,
             avgThrottle: directory.avgThrottle,
             collective: directory.collective,
-            hasEvent: directory.hasEvent
+            hasEvent: directory.hasEvent,
+            pidProfile: directory.pidProfile
         };
     };
 
@@ -1139,5 +1140,6 @@ FlightLog.prototype.isFieldEnabled = function() {
             ESC           : (fields & (1 << 19))!==0,
             BEC           : (fields & (1 << 20))!==0,
             ESC2          : (fields & (1 << 21))!==0,
+            GOV           : (fields & (1 << 22))!==0,
         };
 };

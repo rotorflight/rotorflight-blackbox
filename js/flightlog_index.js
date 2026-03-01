@@ -47,6 +47,7 @@ function FlightLogIndex(logData) {
                     initialSlow: [],
                     initialGPSHome: [],
                     hasEvent: [],
+                    pidProfile: [],
                     minTime: false,
                     maxTime: false
                 },
@@ -58,6 +59,7 @@ function FlightLogIndex(logData) {
                 matches,
                 throttleTotal,
                 eventInThisChunk = null,
+                currentPIDProfile = 0,
                 parsedHeader,
                 sawEndMarker = false;
 
@@ -135,6 +137,9 @@ function FlightLogIndex(logData) {
 
                                     intraIndex.collective.push(collectiveIndex !== undefined ? frame[collectiveIndex] : 0)
 
+                                    // Store current PID profile state
+                                    intraIndex.pidProfile.push(currentPIDProfile);
+
                                     /* To enable seeking to an arbitrary point in the log without re-reading anything
                                      * that came before, we have to record the initial state of various items which aren't
                                      * logged anew every iteration.
@@ -157,6 +162,11 @@ function FlightLogIndex(logData) {
 
                             if (frame.event == FlightLogEvent.LOG_END) {
                                 sawEndMarker = true;
+                            }
+
+                            // Track PID Profile changes (INFLIGHT_ADJUSTMENT func=2)
+                            if (frame.event == FlightLogEvent.INFLIGHT_ADJUSTMENT && frame.data && frame.data.func == 2) {
+                                currentPIDProfile = frame.data.value;
                             }
                         break;
                         case 'S':

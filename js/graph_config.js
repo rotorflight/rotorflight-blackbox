@@ -664,6 +664,9 @@ GraphConfig.load = function(config) {
                                 {label: "PID pitch",fields: ["axisP[1]", "axisI[1]", "axisD[1]", "axisF[1]", "axisSum[1]", "gyroADC[1]", "setpoint[1]", "axisO[1]"]},
                                 {label: "PID yaw",fields: ["axisP[2]", "axisI[2]", "axisD[2]", "axisF[2]", "axisSum[2]", "gyroADC[2]", "setpoint[2]", "axisO[2]"]});
         }
+        if (flightLog.isFieldEnabled().GOV) {
+            EXAMPLE_GRAPHS.push({label: "Governor",fields: ["govP", "govI", "govD", "govF", "govSum", "govRequest", "govTarget"]});
+        }
         if (flightLog.isFieldEnabled().RPM) {
             EXAMPLE_GRAPHS.push({label: "Rotor Speeds",fields: ["headspeed", "tailspeed"]});
         }

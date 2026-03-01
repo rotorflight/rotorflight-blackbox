@@ -13,6 +13,12 @@ function SeekBar(canvas) {
         //Whether a special event exists at the given time:
         hasEvent,
 
+        //PID profile state at the given time:
+        pidProfile,
+
+        //Whether to show PID profile color bands:
+        pidProfileColorBandsEnabled = false,
+
         //Expect to be plotting PWM-like data by default:
         activityMin = 1000, activityMax = 2000,
 
@@ -31,6 +37,16 @@ function SeekBar(canvas) {
         EVENT_BAR_STYLE = '#8d8',
         ACTIVITY_BAR_STYLE = 'rgba(170,170,255, 0.9)',
         OUTSIDE_EXPORT_RANGE_STYLE = 'rgba(100, 100, 100, 0.5)',
+
+        // PID profile colors - distinct colors for each profile
+        PID_PROFILE_COLORS = [
+            'rgba(100, 149, 237, 0.3)',  // Profile 1: Cornflower blue
+            'rgba(50, 205, 50, 0.3)',    // Profile 2: Lime green
+            'rgba(255, 140, 0, 0.3)',    // Profile 3: Dark orange
+            'rgba(186, 85, 211, 0.3)',   // Profile 4: Medium orchid
+            'rgba(220, 20, 60, 0.3)',    // Profile 5: Crimson (strong red)
+            'rgba(255, 215, 0, 0.3)',    // Profile 6: Gold
+        ],
 
         // Suggested to be the same as that used by the graph's center mark in order to tie them together
         CURSOR_STYLE        = 'rgba(255, 64, 64, 0.75)',
@@ -150,10 +166,11 @@ function SeekBar(canvas) {
         invalidateBackground();
     };
 
-    this.setActivity = function(newActivityTimes, newActivityStrengths, newHasEvent) {
+    this.setActivity = function(newActivityTimes, newActivityStrengths, newHasEvent, newPIDProfile) {
         activityTime = newActivityTimes;
         activityStrength = newActivityStrengths;
         hasEvent = newHasEvent;
+        pidProfile = newPIDProfile ?? [];
 
         invalidateBackground();
     };
@@ -167,90 +184,103 @@ function SeekBar(canvas) {
     };
 
     function rebuildBackground() {
-        var
-            x, activityIndex, activity,
-            pixelTimeStep, time;
-
         backgroundContext.fillStyle = BACKGROUND_STYLE;
         backgroundContext.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (max > min) {
-            pixelTimeStep = (max - min) / (canvas.width - BAR_INSET * 2);
+        if (max <= min) {
+            return;
+        }
 
-            if (activityTime.length) {
-                //Draw events
-                backgroundContext.strokeStyle = EVENT_BAR_STYLE;
-                backgroundContext.beginPath();
+        const pixelTimeStep = (max - min) / (canvas.width - BAR_INSET * 2);
 
-                time = min;
-                activityIndex = 0;
+        if (activityTime.length > 0) {
+            let time = min;
+            let activityIndex = 0;
 
-                for (x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
-                    //Advance to the right entry in the activity array for this time
-                    while (activityIndex < activityTime.length && time >= activityTime[activityIndex]) {
-                        activityIndex++;
-                    }
+            const eventPath = new Path2D();
+            const activityPath = new Path2D();
+            
+            let lastPIDProfile = -1;
+            let pidColorSegmentStartX = BAR_INSET;
 
-                    activityIndex--;
+            const range = activityMax - activityMin;
 
-                    if (activityIndex > 0) {
-                        if (hasEvent[activityIndex]) {
-                            backgroundContext.moveTo(x, canvas.height);
-                            backgroundContext.lineTo(x, 0);
+            for (let x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
+                //Advance to the right entry in the activity array for this time
+                while (activityIndex + 1 < activityTime.length && time >= activityTime[activityIndex + 1]) {
+                    activityIndex++;
+                }
+
+                if (activityIndex >= 0) {
+
+                    // PID profile color bands
+                    if (pidProfileColorBandsEnabled && pidProfile.length > 0) {
+                        const currentPIDProfile = pidProfile[activityIndex] ?? 0;
+
+                        if (currentPIDProfile !== lastPIDProfile) {
+
+                            if (lastPIDProfile !== -1) {
+                                const pidProfileColorIndex = Math.min(Math.max(0, lastPIDProfile), PID_PROFILE_COLORS.length - 1);
+
+                                backgroundContext.fillStyle = PID_PROFILE_COLORS[pidProfileColorIndex];
+                                backgroundContext.fillRect(pidColorSegmentStartX, 0, x - pidColorSegmentStartX, canvas.height);
+                            }
+
+                            pidColorSegmentStartX = x;
+                            lastPIDProfile = currentPIDProfile;
                         }
                     }
 
-                    time += pixelTimeStep;
-                }
-
-                backgroundContext.stroke();
-
-                //Draw activity bars
-                backgroundContext.strokeStyle = ACTIVITY_BAR_STYLE;
-                backgroundContext.beginPath();
-
-                time = min;
-                activityIndex = 0;
-
-                for (x = BAR_INSET; x < canvas.width - BAR_INSET; x++) {
-                    //Advance to the right entry in the activity array for this time
-                    while (activityIndex < activityTime.length && time >= activityTime[activityIndex]) {
-                        activityIndex++;
+                    // event bars
+                    if (hasEvent[activityIndex]) {
+                        eventPath.moveTo(x, canvas.height);
+                        eventPath.lineTo(x, 0);
                     }
 
-                    activityIndex--;
+                    // Activity bars
+                    if (range > 0) {
+                        const activity = (activityStrength[activityIndex] - activityMin) / range * canvas.height;
 
-                    if (activityIndex > 0) {
-                        activity = (activityStrength[activityIndex] - activityMin) / (activityMax - activityMin) * canvas.height;
-                        backgroundContext.moveTo(x, canvas.height);
-                        backgroundContext.lineTo(x, canvas.height - activity);
-
+                        activityPath.moveTo(x, canvas.height);
+                        activityPath.lineTo(x, canvas.height - activity);
                     }
-
-                    time += pixelTimeStep;
                 }
 
-                backgroundContext.stroke();
+                time += pixelTimeStep;
             }
 
-            // Paint in/out region
-            if (inTime !== false || outTime !== false) {
-                backgroundContext.fillStyle = OUTSIDE_EXPORT_RANGE_STYLE;
+            // Flush final PID profile color segment
+            if (pidProfileColorBandsEnabled && pidProfile.length > 0 && lastPIDProfile !== -1) {
+                const pidProfileColorIndex = Math.min(Math.max(0, lastPIDProfile), PID_PROFILE_COLORS.length - 1);
 
-                if (inTime !== false) {
-                    backgroundContext.fillRect(0, 0, (inTime - min) / pixelTimeStep + BAR_INSET, canvas.height);
-                }
-
-                if (outTime !== false) {
-                    var
-                        barStartX = (outTime - min) / pixelTimeStep + BAR_INSET;
-
-                    backgroundContext.fillRect(barStartX, 0, canvas.width - barStartX, canvas.height);
-                }
+                backgroundContext.fillStyle = PID_PROFILE_COLORS[pidProfileColorIndex];
+                backgroundContext.fillRect(pidColorSegmentStartX, 0, canvas.width - BAR_INSET - pidColorSegmentStartX, canvas.height);
             }
 
-            backgroundValid = true;
+            backgroundContext.strokeStyle = EVENT_BAR_STYLE;
+            backgroundContext.stroke(eventPath);
+
+            backgroundContext.strokeStyle = ACTIVITY_BAR_STYLE;
+            backgroundContext.stroke(activityPath);
+
         }
+
+        // Paint in/out region
+        if (inTime !== false || outTime !== false) {
+            backgroundContext.fillStyle = OUTSIDE_EXPORT_RANGE_STYLE;
+
+            if (inTime !== false) {
+                backgroundContext.fillRect(0, 0, (inTime - min) / pixelTimeStep + BAR_INSET, canvas.height);
+            }
+
+            if (outTime !== false) {
+                const barStartX = (outTime - min) / pixelTimeStep + BAR_INSET;
+
+                backgroundContext.fillRect(barStartX, 0, canvas.width - barStartX, canvas.height);
+            }
+        }
+
+        backgroundValid = true;
     }
 
     this.repaint = function() {
@@ -262,8 +292,10 @@ function SeekBar(canvas) {
             rebuildBackground();
         }
 
-        if (dirtyRegion === false)
+        if (dirtyRegion === false) {
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
             canvasContext.drawImage(background, 0, 0);
+        }
         else {
             canvasContext.drawImage(background, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height, dirtyRegion.x, dirtyRegion.y, dirtyRegion.width, dirtyRegion.height);
         }
@@ -305,6 +337,11 @@ function SeekBar(canvas) {
 
     this.setOutTime = function(newOutTime) {
         outTime = newOutTime;
+        invalidateBackground();
+    };
+
+    this.setPIDProfileColorBandsEnabled = function(enabled) {
+        pidProfileColorBandsEnabled = !!enabled;
         invalidateBackground();
     };
 
