@@ -2,6 +2,264 @@
 
 /*Default workspaces that users can use to populate an open slot and perform analysis*/
 var DEFAULT_WORKSPACES = [
+       {
+        "title": "Filter Tuning",
+        "graphConfig": [
+            {
+                "fields": [
+                    {
+                        "name": "gyroADC[0]",
+                        "smoothing": 3000,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 3000,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#fb8072",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "gyroADC[1]",
+                        "smoothing": 3000,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 3000,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "gyroADC[2]",
+                        "smoothing": 3000,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 3000,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#80b1d3",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Gyro"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "gyroRAW[0]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#fb8072",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "gyroRAW[1]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#8dd3c7",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "gyroRAW[2]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#80b1d3",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Unfiltered Gyro"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "headspeed",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#fb8072",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Head Speed"
+            }
+        ]
+    },
+    {
+        "title": "Governor Preset",
+        "graphConfig": [
+            {
+                "fields": [
+                    {
+                        "name": "debug[0]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "debug[2]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#8dd3c7",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "debug[3]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#bebada",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "debug[4]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#80b1d3",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "debug[5]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#fdb462",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "debug[7]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#fb8072",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "debug[6]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Governor"
+            }
+        ]
+    },
     {
         "graphConfig": [
             {
@@ -539,129 +797,6 @@ var DEFAULT_WORKSPACES = [
             }
         ],
         "title": "Power Preset"
-    },
-    {
-        "title": "Governor Preset",
-        "graphConfig": [
-            {
-                "fields": [
-                    {
-                        "name": "debug[0]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#b3de69",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[2]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#8dd3c7",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[3]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#bebada",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[4]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#80b1d3",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[5]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#fdb462",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[7]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#fdb462",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[6]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#b3de69",
-                        "lineWidth": 1,
-                        "grid": false
-                    }
-                ],
-                "height": 1,
-                "label": "Governor"
-            }
-        ]
     },
     {
         "graphConfig": [
