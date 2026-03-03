@@ -60,6 +60,17 @@ function PrefStorage(keyPrefix) {
         }
     };
 
+    this.delete = function(name) {
+        switch (mode) {
+            case LOCALSTORAGE:
+                delete window.localStorage[name];
+            break;
+            case CHROME_STORAGE_LOCAL:
+                 chrome.storage.local.remove(name);
+            break;
+        }
+    };
+
     if (window.chrome && window.chrome.storage && window.chrome.storage.local) {
         mode = CHROME_STORAGE_LOCAL;
     } else {
