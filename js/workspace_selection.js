@@ -111,6 +111,8 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
         }
 
         // Push to array positions specifically, as workspaces will continue to grow everytime update is called
+        // Also, if there are less than 20 workspaces initially, we don't want to push workspaces in empty slots
+        // Putting workspaces in specific places, for consistency reasons, as this is re-rended over and over again
         DEFAULT_WORKSPACES.forEach(function(workspace, index) {
             workspaces[totalNumberOfWorkspaces+index] = workspace;
         });
