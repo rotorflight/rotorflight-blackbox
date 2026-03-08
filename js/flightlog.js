@@ -266,7 +266,7 @@ function FlightLog(logData) {
         if (!fieldNameToIndex.Vbat) {
             numCells = false;
         } else {
-            for (i = 1; i < 8; i++) {
+            for (i = 1; i < 14; i++) {
                 if (refVoltage < i * sysConfig.vbatmaxcellvoltage)
                     break;
             }
