@@ -2,11 +2,27 @@
 
 /*Default workspaces that users can use to populate an open slot and perform analysis*/
 var DEFAULT_WORKSPACES = [
-       {
+        {
         "title": "Filter Tuning",
         "graphConfig": [
             {
                 "fields": [
+                    {
+                        "name": "gyroRAW[0]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#fb8072",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
                     {
                         "name": "gyroADC[0]",
                         "smoothing": 3000,
@@ -20,6 +36,28 @@ var DEFAULT_WORKSPACES = [
                             "outputRange": 1
                         },
                         "color": "#fb8072",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Roll"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "gyroRAW[1]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
                         "lineWidth": 1,
                         "grid": false
                     },
@@ -36,6 +74,28 @@ var DEFAULT_WORKSPACES = [
                             "outputRange": 1
                         },
                         "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Pitch"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "gyroRAW[2]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 0.25,
+                            "outputRange": 1
+                        },
+                        "color": "#80b1d3",
                         "lineWidth": 1,
                         "grid": false
                     },
@@ -57,61 +117,7 @@ var DEFAULT_WORKSPACES = [
                     }
                 ],
                 "height": 1,
-                "label": "Gyro"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "gyroRAW[0]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 0.25,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 0.25,
-                            "outputRange": 1
-                        },
-                        "color": "#fb8072",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "gyroRAW[1]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 0.25,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 0.25,
-                            "outputRange": 1
-                        },
-                        "color": "#8dd3c7",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "gyroRAW[2]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 0.25,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 0.25,
-                            "outputRange": 1
-                        },
-                        "color": "#80b1d3",
-                        "lineWidth": 1,
-                        "grid": false
-                    }
-                ],
-                "height": 1,
-                "label": "Unfiltered Gyro"
+                "label": "Yaw"
             },
             {
                 "fields": [
@@ -133,7 +139,7 @@ var DEFAULT_WORKSPACES = [
                     }
                 ],
                 "height": 1,
-                "label": "Head Speed"
+                "label": "Headspeed"
             }
         ]
     },
