@@ -696,40 +696,41 @@ var DEFAULT_WORKSPACES = [
         "title": "Roll Preset"
     },
     {
+        "title": "Power Preset",
         "graphConfig": [
             {
                 "fields": [
                     {
-                        "color": "#b3de69",
+                        "name": "Vbat",
+                        "smoothing": 0,
                         "curve": {
-                            "outputRange": 1,
-                            "power": 1
+                            "power": 1,
+                            "outputRange": 1
                         },
                         "default": {
-                            "outputRange": 1,
+                            "smoothing": 0,
                             "power": 1,
-                            "smoothing": 0
+                            "outputRange": 1
                         },
-                        "grid": false,
+                        "color": "#b3de69",
                         "lineWidth": 1,
-                        "name": "Vbat",
-                        "smoothing": 0
+                        "grid": false
                     },
                     {
-                        "color": "#8dd3c7",
+                        "name": "Ibat",
+                        "smoothing": 0,
                         "curve": {
-                            "outputRange": 1,
-                            "power": 1
+                            "power": 1,
+                            "outputRange": 1
                         },
                         "default": {
-                            "outputRange": 1,
+                            "smoothing": 0,
                             "power": 1,
-                            "smoothing": 0
+                            "outputRange": 1
                         },
-                        "grid": false,
+                        "color": "#8dd3c7",
                         "lineWidth": 1,
-                        "name": "Ibat",
-                        "smoothing": 0
+                        "grid": false
                     }
                 ],
                 "height": 1,
@@ -738,36 +739,36 @@ var DEFAULT_WORKSPACES = [
             {
                 "fields": [
                     {
-                        "color": "#fb8072",
+                        "name": "Vbec",
+                        "smoothing": 0,
                         "curve": {
-                            "outputRange": 1,
-                            "power": 1
+                            "power": 1,
+                            "outputRange": 1
                         },
                         "default": {
-                            "outputRange": 1,
+                            "smoothing": 0,
                             "power": 1,
-                            "smoothing": 0
+                            "outputRange": 1
                         },
-                        "grid": false,
+                        "color": "#fb8072",
                         "lineWidth": 1,
-                        "name": "Vbat",
-                        "smoothing": 0
+                        "grid": false
                     },
                     {
-                        "color": "#8dd3c7",
+                        "name": "BecI",
+                        "smoothing": 0,
                         "curve": {
-                            "outputRange": 1,
-                            "power": 1
+                            "power": 1,
+                            "outputRange": 1
                         },
                         "default": {
-                            "outputRange": 1,
+                            "smoothing": 0,
                             "power": 1,
-                            "smoothing": 0
+                            "outputRange": 1
                         },
-                        "grid": false,
+                        "color": "#8dd3c7",
                         "lineWidth": 1,
-                        "name": "BecI",
-                        "smoothing": 0
+                        "grid": false
                     }
                 ],
                 "height": 1,
@@ -776,27 +777,42 @@ var DEFAULT_WORKSPACES = [
             {
                 "fields": [
                     {
-                        "color": "#8dd3c7",
+                        "name": "headspeed",
+                        "smoothing": 0,
                         "curve": {
-                            "outputRange": 1,
-                            "power": 1
+                            "power": 1,
+                            "outputRange": 1
                         },
                         "default": {
-                            "outputRange": 1,
+                            "smoothing": 0,
                             "power": 1,
-                            "smoothing": 0
+                            "outputRange": 1
                         },
-                        "grid": false,
+                        "color": "#d9d9d9",
                         "lineWidth": 1,
-                        "name": "Vbus",
-                        "smoothing": 0
+                        "grid": false
+                    },
+                    {
+                        "name": "motor[all]",
+                        "smoothing": 5000,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 5000,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#fccde5",
+                        "lineWidth": 1,
+                        "grid": false
                     }
                 ],
                 "height": 1,
-                "label": "5V Voltage"
+                "label": "Headspeed and Motor"
             }
-        ],
-        "title": "Power Preset"
+        ]
     },
     {
         "graphConfig": [
