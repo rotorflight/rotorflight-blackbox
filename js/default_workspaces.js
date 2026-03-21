@@ -149,87 +149,7 @@ var DEFAULT_WORKSPACES = [
             {
                 "fields": [
                     {
-                        "name": "debug[0]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#b3de69",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[2]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#8dd3c7",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[3]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#bebada",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[4]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#80b1d3",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[5]",
-                        "smoothing": 0,
-                        "curve": {
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "default": {
-                            "smoothing": 0,
-                            "power": 1,
-                            "outputRange": 1
-                        },
-                        "color": "#fdb462",
-                        "lineWidth": 1,
-                        "grid": false
-                    },
-                    {
-                        "name": "debug[7]",
+                        "name": "govP",
                         "smoothing": 0,
                         "curve": {
                             "power": 1,
@@ -245,7 +165,87 @@ var DEFAULT_WORKSPACES = [
                         "grid": false
                     },
                     {
-                        "name": "debug[6]",
+                        "name": "govI",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#8dd3c7",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "govD",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#ffffb3",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "govF",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#bebada",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "govSum",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#80b1d3",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "govRequest",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#fdb462",
+                        "lineWidth": 1,
+                        "grid": false
+                    },
+                    {
+                        "name": "govTarget",
                         "smoothing": 0,
                         "curve": {
                             "power": 1,
