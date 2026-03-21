@@ -401,6 +401,28 @@ var DEFAULT_WORKSPACES = [
                 ],
                 "height": 1,
                 "label": "Gyro and Setpoint"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "mixer[2]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Mixer"
             }
         ],
         "title": "Yaw Preset"
@@ -546,6 +568,28 @@ var DEFAULT_WORKSPACES = [
                 ],
                 "height": 1,
                 "label": "Gyro and Setpoint"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "mixer[1]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Mixer"
             }
         ],
         "title": "Pitch Preset"
@@ -691,6 +735,28 @@ var DEFAULT_WORKSPACES = [
                 ],
                 "height": 1,
                 "label": "Gyro and Setpoint"
+            },
+            {
+                "fields": [
+                    {
+                        "name": "mixer[0]",
+                        "smoothing": 0,
+                        "curve": {
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "default": {
+                            "smoothing": 0,
+                            "power": 1,
+                            "outputRange": 1
+                        },
+                        "color": "#b3de69",
+                        "lineWidth": 1,
+                        "grid": false
+                    }
+                ],
+                "height": 1,
+                "label": "Mixer"
             }
         ],
         "title": "Roll Preset"
