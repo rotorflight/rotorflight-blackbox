@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Field Glossary</title>
+    <link rel="stylesheet" href="css/glossary.css">
+</head>
+<body>
+   <table>
+    <thead>
+        <tr>
+            <th>Field Name</th>
+            <th>Definition</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>RC Command [roll]</td>
+            <td>Raw input from the transmitter roll stick, representing the pilot's desired lateral rotation.</td>
+        </tr>
+        <tr>
+            <td>RC Command [pitch]</td>
+            <td>Raw input from the transmitter pitch stick, representing the pilot's desired longitudinal rotation.</td>
+        </tr>
+        <tr>
+            <td>RC Command [yaw]</td>
+            <td>Raw input from the transmitter yaw stick, representing the pilot's desired rotation around the vertical axis.</td>
+        </tr>
+        <tr>
+            <td>RC Command [collective]</td>
+            <td>Raw input for the vertical thrust/pitch of all main blades simultaneously.</td>
+        </tr>
+        <tr>
+            <td>RC Command [throttle]</td>
+            <td>Raw input sent to the motor controller to dictate power output or target RPM.</td>
+        </tr>
+
+        <tr>
+            <td>Setpoint [roll/pitch/yaw]</td>
+            <td>The target rotation rate (deg/s) or angle calculated by the FC after applying rates and expo to RC Commands.</td>
+        </tr>
+        <tr>
+            <td>Setpoint [collective]</td>
+            <td>The finalized target for blade pitch after mixing and limits are applied.</td>
+        </tr>
+        <tr>
+            <td>Sqrt SP Max [roll/pitch/yaw/collective]</td>
+            <td>A trajectory limit that smooths the setpoint to prevent instantaneous changes that physics cannot follow.</td>
+        </tr>
+
+        <tr>
+            <td>Mixer SR [roll]</td>
+            <td>The output of the mixer for the Roll axis, ready to be sent to the servos.</td>
+        </tr>
+        <tr>
+            <td>Mixer SP [pitch]</td>
+            <td>The output of the mixer for the Pitch axis.</td>
+        </tr>
+        <tr>
+            <td>Mixer SY [yaw]</td>
+            <td>The output of the mixer for the Yaw axis (usually sent to a tail motor or tail servo).</td>
+        </tr>
+        <tr>
+            <td>Mixer SC [collective]</td>
+            <td>The output of the mixer for the Collective axis.</td>
+        </tr>
+
+        <tr>
+            <td>PID P [roll/pitch/yaw]</td>
+            <td>Proportional term: Immediate correction based on the current difference between setpoint and gyro.</td>
+        </tr>
+        <tr>
+            <td>PID I [roll/pitch/yaw]</td>
+            <td>Integral term: Corrects for accumulated error over time (e.g., holding against wind or weight imbalance).</td>
+        </tr>
+        <tr>
+            <td>PID D [roll/pitch/yaw]</td>
+            <td>Derivative term: Dampens the movement to prevent overshooting the target.</td>
+        </tr>
+        <tr>
+            <td>PID Feedforward [roll/pitch/yaw]</td>
+            <td>Provides instant response based purely on stick movement speed, bypassing the error-check delay.</td>
+        </tr>
+        <tr>
+            <td>PID Boost [roll/pitch/yaw]</td>
+            <td>Dynamic gain increase during rapid stick inputs to improve "snap" and responsiveness.</td>
+        </tr>
+        <tr>
+            <td>PID Offset [roll/pitch/yaw]</td>
+            <td>A constant correction value used to compensate for mechanical biases or trim.</td>
+        </tr>
+
+        <tr>
+            <td>Attitude [roll/pitch/yaw]</td>
+            <td>The calculated orientation of the helicopter in 3D space relative to the horizon.</td>
+        </tr>
+        <tr>
+            <td>Unfiltered Gyro [roll/pitch/yaw]</td>
+            <td>Raw angular velocity data from the IMU before any software filtering is applied.</td>
+        </tr>
+        <tr>
+            <td>Gyro [roll/pitch/yaw]</td>
+            <td>Cleaned angular velocity data used by the PID controller after filtering out vibrations.</td>
+        </tr>
+        <tr>
+            <td>Accel [X, Y, Z]</td>
+            <td>Linear acceleration data used to determine the direction of gravity and for level-mode calculations.</td>
+        </tr>
+
+        <tr>
+            <td>Battery Voltage / Current</td>
+            <td>Real-time voltage and total current draw from the main flight battery.</td>
+        </tr>
+        <tr>
+            <td>ESC Voltage / Current / Consumption</td>
+            <td>Telemetry data specific to the ESC, including mAh consumed during the flight.</td>
+        </tr>
+        <tr>
+            <td>ESC eRPM</td>
+            <td>The electrical RPM of the motor (must be divided by motor poles to get mechanical RPM).</td>
+        </tr>
+        <tr>
+            <td>ESC Throttle / PWM</td>
+            <td>The actual drive signal being sent to the motor by the ESC.</td>
+        </tr>
+        <tr>
+            <td>BEC Voltage / Current</td>
+            <td>Status of the Battery Eliminator Circuit powering the electronics and servos.</td>
+        </tr>
+        <tr>
+            <td>MCU / ESC Temperature</td>
+            <td>Heat readings for the Flight Controller processor and the Motor Controller.</td>
+        </tr>
+
+        <tr>
+            <td>Gov P</td>
+            <td>Proportional gain: The immediate response to an RPM drop; it increases throttle output proportionally to how far the headspeed has fallen below the target.</td>
+        </tr>
+        <tr>
+            <td>Gov I</td>
+            <td>Integral gain: The "persistent" correction that tracks RPM errors over time to ensure the headspeed eventually reaches and holds exactly at the target value.</td>
+        </tr>
+        <tr>
+            <td>Gov D</td>
+            <td>Derivative gain: The "damper" that reacts to the speed of RPM change; it helps prevent the motor from over-revving (overshooting) when the load is suddenly removed.</td>
+        </tr>
+        <tr>
+            <td>Gov F</td>
+            <td>Feedforward: A predictive boost that adds throttle immediately when it sees a change in Collective or Cyclic sticks, anticipating the load before the RPM even has a chance to drop.</td>
+        </tr>
+        <tr>
+            <td>Gov PID sum</td>
+            <td>The total correction output from the governor to the motor.</td>
+        </tr>
+        <tr>
+            <td>HS Target / Requested</td>
+            <td>The desired RPM versus what the governor is currently asking the ESC to provide.</td>
+        </tr>
+        <tr>
+            <td>Headspeed / Tailspeed</td>
+            <td>The calculated actual RPM of the main and tail rotors.</td>
+        </tr>
+
+        <tr>
+            <td>Motor [1] / [2]</td>
+            <td>The final output signals sent to the Main and Tail ESCs.</td>
+        </tr>
+        <tr>
+            <td>Servo [1] / [2] / [3]</td>
+            <td>The final PWM/digital signals sent to the cyclic servos.</td>
+        </tr>
+        <tr>
+            <td>Cos Tilt Angle</td>
+            <td>The cosine of the heli's tilt; used to increase collective automatically when banking.</td>
+        </tr>
+        <tr>
+            <td>Is Spooled Up / Airborne</td>
+            <td>Boolean flags (On/Off) indicating if the motor is active and if the heli has left the ground.</td>
+        </tr>
+        <tr>
+            <td>Is Hands On</td>
+            <td>A flag that triggers when the pilot is actively moving the control sticks.</td>
+        </tr>
+        <tr>
+            <td>Flight Mode / State Flags</td>
+            <td>Digital codes representing the current active modes (Angle, Horizon, Acro, etc.).</td>
+        </tr>
+        <tr>
+            <td>RX Signal Received / RX Flight Ch. Valid</td>
+            <td>Status of the link between the transmitter and the flight controller.</td>
+        </tr>
+
+        <tr>
+            <td>PID Sum [roll/pitch/yaw]</td>
+            <td>The final output of the PID controller (P+I+D+FF) before mixing.</td>
+        </tr>
+        <tr>
+            <td>PID PD Sum [roll/pitch/yaw]</td>
+            <td>The combined value of only the Proportional and Derivative terms, used for vibration analysis.</td>
+        </tr>
+        <tr>
+            <td>PID Error [roll/pitch/yaw]</td>
+            <td>The mathematical difference between where you want the heli to be and where the gyro says it is.</td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

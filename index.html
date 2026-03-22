@@ -640,6 +640,11 @@
                         <ul class="dropdown-menu" role="menu">
                         </ul>
                     </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info glossary-help">
+                            <span class="glyphicon glyphicon-book"></span> Field Glossary
+                        </button>
+                    </div>
                     <button type="button" class="btn btn-default config-graphs-remove-all-graphs pull-right" style="display:none;">
                         <span class="glyphicon glyphicon-trash"></span> Remove all graphs</button>
                     <ul class="list-unstyled config-graphs-list">
@@ -650,6 +655,24 @@
                         title="Close without saving changes">Cancel</button>
                     <button type="button" class="btn btn-primary graph-configuration-dialog-save" data-dismiss="modal" data-toggle="tooltip"
                         title="Close and save changes">Save changes</button>
+                            </div>
+            </div>
+  </div>
+    </div>
+
+    <div class="modal fade" id="glossary-helper-modal-id">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="graphModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-loader" style="display:none; text-align:center;"></div>
+                    <div id="modal-content-area"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
