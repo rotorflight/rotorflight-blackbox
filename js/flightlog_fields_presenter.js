@@ -652,6 +652,13 @@ function FlightLogFieldPresenter() {
             'debug[6]':'O',
             'debug[7]':'I',
         },
+        'CROSS_COUPLING' : {
+            'debug[all]':'Cross Coupling',
+            'debug[0]':'Roll Derivative',
+            'debug[1]':'Pitch Derivative',
+            'debug[2]':'Roll Compensation',
+            'debug[3]':'Pitch Compensation',
+        },
     };
 
     let DEBUG_FRIENDLY_FIELD_NAMES = null;
@@ -1141,6 +1148,16 @@ function FlightLogFieldPresenter() {
                             return (value / 10).toFixed(1) + '%';
                     }
                     break;
+                 case 'CROSS_COUPLING':
+                    switch (fieldName) {
+                        case 'debug[0]':
+                        case 'debug[1]':
+                            return (value / 10).toFixed(1) + '°/s^2';
+                        case 'debug[2]': 
+                        case 'debug[3]': 
+                            return (value / 100).toFixed(1) + '%';
+                    }
+                    break;                    
                 case 'ITERM_RELAX':
                     if (flightLog.getSysConfig().firmwareType === FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(flightLog.getSysConfig().firmwareVersion, '4.3.0')) {
 	                    switch (fieldName) {
