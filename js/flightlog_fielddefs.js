@@ -159,13 +159,13 @@ var
         'CAMERA2',
         'CAMERA3',
         'PREARM',
+        'BEEPGPSCOUNT',
         'VTXPITMODE',
         'PARALYZE',
         'USER1',
         'USER2',
         'USER3',
         'USER4',
-        'PIDAUDIO',
         'ACROTRAINER',
         'VTXCONTROLDISABLE',
     ]),
@@ -195,8 +195,42 @@ var
         'CAMERA3',
         'VTXPITMODE',
         'VTXCONTROLDISABLE',
-        'MSPOVERRIDE',
         'STICKCOMMANDDISABLE',
+        'USER1',
+        'USER2',
+        'USER3',
+        'USER4',
+    ]),
+
+    FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_6 = makeReadOnly([
+        'ARM',
+        'ANGLE',
+        'HORIZON',
+        'TRAINER',
+        'ALTHOLD',
+        'RESCUE',
+        'GPSRESCUE',
+        'FAILSAFE',
+        'PREARM',
+        'PARALYZE',
+        'BEEPERON',
+        'BEEPERMUTE',
+        'LEDLOW',
+        'CALIB',
+        'OSD',
+        'TELEMETRY',
+        'BEEPGPSCOUNT',
+        'BLACKBOX',
+        'BLACKBOXERASE',
+        'CAMERA1',
+        'CAMERA2',
+        'CAMERA3',
+        'VTXPITMODE',
+        'VTXCONTROLDISABLE',
+        'STICKCOMMANDDISABLE',
+        'GOVFALLBACK',
+        'GOVSUSPEND',
+        'GOVBYPASS',
         'USER1',
         'USER2',
         'USER3',
@@ -317,7 +351,9 @@ var
         "ON"
     ]),
 
-    FAST_PROTOCOL = makeReadOnly([
+    FAST_PROTOCOL = [],
+
+    FAST_PROTOCOL_RF = makeReadOnly([
         "PWM",
         "ONESHOT125",
         "ONESHOT42",
@@ -327,6 +363,20 @@ var
         "DSHOT300",
         "DSHOT600",
         "PROSHOT1000",
+        "DISABLED",
+    ]),
+
+    FAST_PROTOCOL_RF_4_5 = makeReadOnly([
+        "PWM",
+        "ONESHOT125",
+        "ONESHOT42",
+        "MULTISHOT",
+        "BRUSHED",
+        "DSHOT150",
+        "DSHOT300",
+        "DSHOT600",
+        "PROSHOT1000",
+        "CASTLE_LINK",
         "DISABLED",
     ]),
 
@@ -624,7 +674,94 @@ var
         "ERROR_DECAY",
         "HS_OFFSET",
         "HS_BLEED",
+        "USER1",
+        "USER2",
+        "USER3",
+        "USER4",
+    ]),
+
+    DEBUG_MODE_RF_4_6 = makeReadOnly([
+        "NONE",
+        "CYCLETIME",
+        "BATTERY",
+        "GYRO",
+        "ACCELEROMETER",
+        "PIDLOOP",
+        "GYRO_SCALED",
+        "RC_COMMAND",
+        "ANGLERATE",
+        "ESC_SENSOR",
+        "SCHEDULER",
+        "STACK",
+        "ESC_SENSOR_DATA",
+        "ESC_SENSOR_FRAME",
+        "ALTITUDE",
+        "DYN_NOTCH",
+        "DYN_NOTCH_TIME",
+        "DYN_NOTCH_FREQ",
+        "RX_FRSKY_SPI",
+        "RX_SFHSS_SPI",
+        "GYRO_RAW",
+        "DUAL_GYRO_RAW",
+        "DUAL_GYRO_DIFF",
+        "MAX7456_SIGNAL",
+        "MAX7456_SPICLOCK",
+        "SBUS",
+        "FPORT",
+        "RANGEFINDER",
+        "RANGEFINDER_QUALITY",
+        "LIDAR_TF",
+        "ADC_INTERNAL",
+        "GOVERNOR",
+        "SDIO",
+        "CURRENT_SENSOR",
+        "USB",
+        "SMARTAUDIO",
+        "RTH",
+        "ITERM_RELAX",
+        "ACRO_TRAINER",
+        "SETPOINT",
+        "RX_SIGNAL_LOSS",
+        "RC_RAW",
+        "RC_DATA",
+        "DYN_LPF",
+        "RX_SPECTRUM_SPI",
+        "DSHOT_RPM_TELEMETRY",
+        "RPM_FILTER",
+        "RPM_SOURCE",
+        "TTA",
+        "AIRBORNE",
+        "DUAL_GYRO_SCALED",
+        "DSHOT_RPM_ERRORS",
+        "CRSF_LINK_STATISTICS_UPLINK",
+        "CRSF_LINK_STATISTICS_PWR",
+        "CRSF_LINK_STATISTICS_DOWN",
+        "BARO",
+        "GPS_RESCUE_THROTTLE_PID",
+        "FREQ_SENSOR",
+        "FEEDFORWARDD_LIMIT",
+        "FEEDFORWARD",
+        "BLACKBOX_OUTPUT",
+        "GYRO_SAMPLE",
+        "RX_TIMING",
+        "D_LPF",
+        "VTX_TRAMP",
+        "GHST",
+        "SCHEDULER_DETERMINISM",
+        "TIMING_ACCURACY",
+        "RX_EXPRESSLRS_SPI",
+        "RX_EXPRESSLRS_PHASELOCK",
+        "RX_STATE_TIME",
+        "PITCH_PRECOMP",
+        "YAW_PRECOMP",
+        "RESCUE",
+        "RESCUE_ALTHOLD",
+        "CROSS_COUPLING",
+        "ERROR_DECAY",
+        "HS_OFFSET",
+        "HS_BLEED",
         "GOV_MOTOR",
+        "POLAR_RATE",
         "USER1",
         "USER2",
         "USER3",
@@ -705,7 +842,10 @@ var
         "IDLE",
         "RX_LOSS_DETECTED",
         "LANDING",
-        "LANDED"
+        "LANDED",
+        "RX_LOSS_MONITORING",
+        "RX_LOSS_RECOVERED",
+        "GPS_RESCUE",
     ]),
 
     FFT_CALC_STEPS = makeReadOnly([
@@ -743,7 +883,9 @@ var
         "SERIAL_IO",
     ]),
 
-    FLIGHT_LOG_GOVSTATES = makeReadOnly([
+    FLIGHT_LOG_GOVSTATES = [],
+
+    FLIGHT_LOG_GOVSTATES_RF = makeReadOnly([
         "THROTTLE_OFF",
         "THROTTLE_IDLE",
         "SPOOLING_UP",
@@ -753,6 +895,19 @@ var
         "LOST_HEADSPEED",
         "AUTOROTATION",
         "BAILOUT",
+    ]),
+
+    FLIGHT_LOG_GOVSTATES_RF_4_6 = makeReadOnly([
+        "THROTTLE_OFF",
+        "THROTTLE_IDLE",
+        "SPOOLUP",
+        "RECOVERY",
+        "ACTIVE",
+        "THROTTLE_HOLD",
+        "FALLBACK",
+        "AUTOROTATION",
+        "BAILOUT",
+        "BYPASS",
     ]),
 
     FLIGHT_LOG_RESCUE_STATES = makeReadOnly([
@@ -776,6 +931,7 @@ var
         "KISS",
         "ACTUAL",
         "QUICK",
+        "ROTORFLIGHT",
     ]),
 
     GYRO_TO_USE = makeReadOnly([
@@ -808,7 +964,10 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
     if(firmwareType == FIRMWARE_TYPE_ROTORFLIGHT) {
 
         // Flight mode names
-        if (semver.gte(firmwareVersion, '4.3.0')) {
+        if (semver.gte(firmwareVersion, '4.6.0')) {
+            FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_6.slice();
+        }
+        else if (semver.gte(firmwareVersion, '4.3.0')) {
             FLIGHT_LOG_FLIGHT_MODE_NAME = FLIGHT_LOG_FLIGHT_MODE_NAME_RF_4_3.slice();
         }
         else if (semver.gte(firmwareVersion, '4.2.0')) {
@@ -826,13 +985,32 @@ function adjustFieldDefsList(firmwareType, firmwareVersion) {
         FLIGHT_LOG_FEATURES = makeReadOnly(FLIGHT_LOG_FEATURES);
 
         // Debug names
-        if (semver.gte(firmwareVersion, '4.3.0')) {
+        if (semver.gte(firmwareVersion, '4.6.0')) {
+            DEBUG_MODE = DEBUG_MODE_RF_4_6.slice();
+        }
+        else if (semver.gte(firmwareVersion, '4.3.0')) {
             DEBUG_MODE = DEBUG_MODE_RF_4_3.slice();
         }
         else if (semver.gte(firmwareVersion, '4.2.0')) {
             DEBUG_MODE = DEBUG_MODE_RF_4_2.slice();
         }
         DEBUG_MODE = makeReadOnly(DEBUG_MODE);
+
+        // Gov states
+        if (semver.gte(firmwareVersion, '4.6.0')) {
+            FLIGHT_LOG_GOVSTATES = FLIGHT_LOG_GOVSTATES_RF_4_6.slice();
+        }
+        else {
+            FLIGHT_LOG_GOVSTATES = FLIGHT_LOG_GOVSTATES_RF.slice();
+        }
+
+        // Fast protocols
+        if (semver.gte(firmwareVersion, '4.5.0')) {
+            FAST_PROTOCOL = FAST_PROTOCOL_RF_4_5.slice();
+        }
+        else {
+            FAST_PROTOCOL = FAST_PROTOCOL_RF.slice();
+        }
 
     } else if((firmwareType == FIRMWARE_TYPE_BETAFLIGHT) && semver.gte(firmwareVersion, '3.3.0')) {
 

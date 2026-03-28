@@ -422,6 +422,12 @@ function HeaderDialog(dialog, onSave) {
             ]]
         }
 
+        if(sysConfig.firmwareType == FIRMWARE_TYPE_ROTORFLIGHT && semver.gte(sysConfig.firmwareVersion, '4.6.0')) {
+            fields = [...fields, ...[
+                {name: 'Governor', description: 'Governor PID terms'},
+            ]]
+        }
+
         const fieldsList_e = $('tbody.fields_list').empty()
 
         for (let i = 0; i < fields.length; i++) {
@@ -1055,6 +1061,10 @@ function HeaderDialog(dialog, onSave) {
         setCheckbox('gyro_cal_on_first_arm'                , sysConfig.gyro_cal_on_first_arm);
         setCheckbox('rc_smoothing'                         , sysConfig.rc_smoothing);
         setCheckbox('piro_compensation'                    , sysConfig.piro_compensation);
+
+        if (semver.gte(activeSysConfig.firmwareVersion, '4.6.0')) {
+            $('[name="piro_compensation"]').closest('table').hide();
+        }
 
         /* Selected Fields */
         if(activeSysConfig.firmwareType === FIRMWARE_TYPE_BETAFLIGHT && semver.gte(activeSysConfig.firmwareVersion, '4.3.0') || activeSysConfig.firmwareType === FIRMWARE_TYPE_ROTORFLIGHT) {
