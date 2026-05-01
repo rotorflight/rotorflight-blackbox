@@ -2158,4 +2158,29 @@ $(document).click(function (e) {
 // Boostrap's data API is extremely slow when there are a lot of DOM elements churning, don't use it
 $(document).off('.data-api');
 
+//Add a watch to the workspace selection div
+//As it gets the open class, send the seekbar to the background
+//Otherwise, bring the seekbar to the foreground
+const targetNode = document.getElementById('workspace-open-close-id');
+const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+        if (mutation.attributeName === 'class') {
+            const currentClassList = targetNode.className;
+            if (currentClassList && currentClassList.includes('open')){
+                    $('.log-seek-bar').css({
+                        'z-index': '-1',
+                        'pointer-events': 'none'
+                    });
+            }else{
+                    $('.log-seek-bar').css({
+                        'z-index': '1',
+                        'pointer-events': 'auto'
+                    });
+            }
+        }
+    }
+});
+
+observer.observe(targetNode, { attributes: true });
+
 window.blackboxLogViewer = new BlackboxLogViewer();
