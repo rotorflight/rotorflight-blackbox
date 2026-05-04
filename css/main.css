@@ -1684,6 +1684,6 @@ dialog h3 {
 }
 
 #workspace-menu-content {
-  max-height: 400px;
-  overflow-y: scroll;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
 }
