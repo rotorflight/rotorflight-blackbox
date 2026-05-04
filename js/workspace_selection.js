@@ -21,7 +21,7 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
         editButton.click(editTitle);
         editButton.tooltip({ trigger: "hover", placement: "auto bottom" });
 
-        menuElem = $('<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="workspace-menu"></ul>');
+        menuElem = $('<ul id="workspace-menu-content" class="dropdown-menu pull-right" role="menu" aria-labelledby="workspace-menu"></ul>');
 
         targetElem.empty();
         targetElem.addClass("dropdown")

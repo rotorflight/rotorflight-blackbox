@@ -1682,3 +1682,8 @@ dialog h3 {
     padding-right: 9px;
     line-height: 28px;
 }
+
+#workspace-menu-content {
+  max-height: 400px;
+  overflow-y: scroll;
+}
