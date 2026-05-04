@@ -72,6 +72,16 @@ function FlightLog(logData) {
         }
     };
 
+    // Keep directory lookup in one place so callers consistently use the indexed view
+    // for either the active log or an explicitly requested log.
+    function getIntraframeDirectory(logIndex) {
+        if (logIndex === undefined) {
+            return iframeDirectory;
+        }
+
+        return logIndexes.getIntraframeDirectory(logIndex);
+    }
+
     /**
      * Get the stats for the log of the given index, or leave off the logIndex argument to fetch the stats
      * for the current log.
@@ -98,6 +108,12 @@ function FlightLog(logData) {
      * argument to fetch details for the current log.
      */
     this.getMinTime = function(logIndex) {
+        var directory = getIntraframeDirectory(logIndex);
+
+        if (directory && directory.minTime !== false) {
+            return directory.minTime;
+        }
+
         return getRawStats(logIndex).frame["I"].field[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME].min;
     };
 
@@ -106,6 +122,12 @@ function FlightLog(logData) {
      * argument to fetch details for the current log.
      */
     this.getMaxTime = function(logIndex) {
+        var directory = getIntraframeDirectory(logIndex);
+
+        if (directory && directory.maxTime !== false) {
+            return directory.maxTime;
+        }
+
         return getRawStats(logIndex).frame["I"].field[FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME].max;
     };
 
@@ -142,6 +164,7 @@ function FlightLog(logData) {
             times: directory.times,
             avgThrottle: directory.avgThrottle,
             collective: directory.collective,
+            gaps: directory.gaps,
             hasEvent: directory.hasEvent,
             pidProfile: directory.pidProfile
         };

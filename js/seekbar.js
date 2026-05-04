@@ -13,6 +13,9 @@ function SeekBar(canvas) {
         //Whether a special event exists at the given time:
         hasEvent,
 
+        //Corrupt or empty time spans to highlight:
+        gaps,
+
         //PID profile state at the given time:
         pidProfile,
 
@@ -34,6 +37,7 @@ function SeekBar(canvas) {
         dirtyRegion = false,
 
         BACKGROUND_STYLE = '#eee',
+        GAP_STYLE = 'rgba(220, 38, 38, 0.35)',
         EVENT_BAR_STYLE = '#8d8',
         ACTIVITY_BAR_STYLE = 'rgba(170,170,255, 0.9)',
         OUTSIDE_EXPORT_RANGE_STYLE = 'rgba(100, 100, 100, 0.5)',
@@ -166,11 +170,12 @@ function SeekBar(canvas) {
         invalidateBackground();
     };
 
-    this.setActivity = function(newActivityTimes, newActivityStrengths, newHasEvent, newPIDProfile) {
+    this.setActivity = function(newActivityTimes, newActivityStrengths, newHasEvent, newPIDProfile, newGaps) {
         activityTime = newActivityTimes;
         activityStrength = newActivityStrengths;
         hasEvent = newHasEvent;
         pidProfile = newPIDProfile ?? [];
+        gaps = newGaps ?? [];
 
         invalidateBackground();
     };
@@ -192,6 +197,24 @@ function SeekBar(canvas) {
         }
 
         const pixelTimeStep = (max - min) / (canvas.width - BAR_INSET * 2);
+
+        if (gaps && gaps.length > 0) {
+            backgroundContext.fillStyle = GAP_STYLE;
+
+            for (const gap of gaps) {
+                const gapStart = Math.max(min, gap.startTime);
+                const gapEnd = Math.min(max, gap.endTime);
+
+                if (gapEnd <= gapStart) {
+                    continue;
+                }
+
+                const startX = (gapStart - min) / pixelTimeStep + BAR_INSET;
+                const endX = (gapEnd - min) / pixelTimeStep + BAR_INSET;
+
+                backgroundContext.fillRect(startX, 0, Math.max(1, endX - startX), canvas.height);
+            }
+        }
 
         if (activityTime.length > 0) {
             let time = min;
