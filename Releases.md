@@ -1,3 +1,24 @@
+# 2.3.0-RC3
+
+This is the third _Release Candidate_ of the Rotorflight 2.3 Blackbox Explorer.
+
+**NOTE** The final 2.3.0 Blackbox Explorer will be released _after_ a few release candidates. Please don't use RCs once the final release is out.
+
+## Downloads
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.3.0-RC3)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.3.0-RC3)
+- [LUA Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.3.0-RC3)
+- [LUA Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.3.0-RC3)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.3.0-RC3)
+
+## Changes from 2.3.0-RC2
+
+- Fix workspace selection list extending off the screen
+- Make workspace selection list adapt to window height
+
+***
+
 # 2.3.0-RC2
 
 This is the second _Release Candidate_ of the Rotorflight 2.3 Blackbox Explorer.
