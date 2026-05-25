@@ -2144,6 +2144,15 @@ function BlackboxLogViewer() {
             return false;
         };
 
+        $('.workspace-reset-btn').click(function(e) {
+            const userConfirmed = confirm("Are you sure you want to delete all of your existing workspaces?");
+            if (userConfirmed){
+                prefs.delete('workspaceGraphConfigs');
+                workspaceSelection.setWorkspaces([])
+            }
+            e.preventDefault();
+        });
+
     });
 }
 
