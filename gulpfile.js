@@ -218,6 +218,7 @@ function dist() {
         './css/keys_dialog.css',
         './css/main.css',
         './css/user_settings_dialog.css',
+        'css/glossary.css',
 
         // JavaScript
         './index.js',

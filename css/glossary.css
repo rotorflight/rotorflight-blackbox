@@ -1,0 +1,27 @@
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    padding: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background: #f4f4f4;
+}
+
+caption {
+    caption-side: top;
+    font-weight: bold;
+    margin-bottom: 8px;
+}

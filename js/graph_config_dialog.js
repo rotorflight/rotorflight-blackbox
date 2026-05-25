@@ -407,6 +407,19 @@ function GraphConfigurationDialog(dialog, onSave) {
         onSave(convertUIToGraphConfig());
     });
 
+    var glossaryHelpButton = $(".glossary-help");
+
+    glossaryHelpButton.on("click", function(e) {
+        e.preventDefault();
+
+        $("#graphModalLabel").text("Field Glossary");
+
+        $("#glossary-helper-modal-id").modal("show");
+
+        $("#modal-content-area").load("field_glossary.html", function() {
+            $("#modal-content-area").fadeIn();
+        });
+    });
 
     var
         exampleGraphsButton = $(".config-graphs-add"),
