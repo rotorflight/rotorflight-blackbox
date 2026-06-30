@@ -1,3 +1,28 @@
+# 2.3.0
+
+This is the _Official Release_ of the Rotorflight 2.3.0 Blackbox Explorer.
+
+## Downloads
+
+- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.3.0)
+- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.3.0)
+- [LUA Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.3.0)
+- [LUA Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.3.0)
+- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.3.0)
+
+## Instructions
+
+Rotorflight setup instructions can be found at [www.rotorflight.org](https://www.rotorflight.org/).
+
+## Changes from 2.2.1
+
+- Support for [Rotorflight Firmware 4.6.0](https://github.com/rotorflight/rotorflight-firmware/releases/tag/release/4.6.0)
+- Add preset workspaces
+- Add profile colour bands to the seekbar
+- Fix battery cell count limited to 8s
+
+***
+
 # 2.3.0-RC3
 
 This is the third _Release Candidate_ of the Rotorflight 2.3 Blackbox Explorer.
