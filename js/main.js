@@ -91,6 +91,7 @@ function BlackboxLogViewer() {
 
         hasVideo = false, hasLog = false, hasMarker = false, // add measure feature
         hasTable = true, hasAnalyser, hasAnalyserFullscreen,
+        hasStepResponse, hasStepResponseFullscreen,
         hasAnalyserSticks = false, viewVideo = true, hasTableOverlay = false, hadTable,
         hasConfig = false, hasConfigOverlay = false,
 
@@ -99,6 +100,7 @@ function BlackboxLogViewer() {
         video = $(".log-graph video")[0],
         canvas = $("#graphCanvas")[0],
         analyserCanvas = $("#analyserCanvas")[0],
+        stepResponseCanvas = $("#stepResponseCanvas")[0],
         stickCanvas = $("#stickCanvas")[0],
         craftWrapper = $("#craftWrapper")[0],
         statusBar = $('#status-bar'),
@@ -601,7 +603,11 @@ function BlackboxLogViewer() {
                 userSettings.analyserSampleRate = 1000000 / (flightLog.getSysConfig().looptime * (validate(flightLog.getSysConfig().pid_process_denom,1)) * flightLog.getSysConfig().frameIntervalPDenom / flightLog.getSysConfig().frameIntervalPNum);
                 }
 
-        graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, userSettings);
+        graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, userSettings);
+
+        $("#stepResponseAxisRoll").prop('checked', userSettings.stepResponseAxes ? userSettings.stepResponseAxes.roll : true);
+        $("#stepResponseAxisPitch").prop('checked', userSettings.stepResponseAxes ? userSettings.stepResponseAxes.pitch : true);
+        $("#stepResponseAxisYaw").prop('checked', userSettings.stepResponseAxes ? userSettings.stepResponseAxes.yaw : true);
 
         setVideoInTime(false);
         setVideoOutTime(false);
@@ -1064,6 +1070,10 @@ function BlackboxLogViewer() {
         hasAnalyser = false;
         html.toggleClass("has-analyser", hasAnalyser);
 
+        // Reset the step response window on application startup.
+        hasStepResponse = false;
+        html.toggleClass("has-stepresponse", hasStepResponse);
+
         $(".btn-new-window").click(function(e) {
             createNewBlackboxWindow();
         });
@@ -1142,6 +1152,35 @@ function BlackboxLogViewer() {
             (hasAnalyserFullscreen)?html.addClass("has-analyser-fullscreen"):html.removeClass("has-analyser-fullscreen");
             graph.setAnalyser(hasAnalyserFullscreen);
             invalidateGraph();
+        });
+
+        $(".view-stepresponse").click(function() {
+            hasStepResponse = !hasStepResponse;
+            graph.setDrawStepResponse(hasStepResponse);
+            html.toggleClass("has-stepresponse", hasStepResponse);
+            prefs.set('hasStepResponse', hasStepResponse);
+            invalidateGraph();
+        });
+
+        $(".view-stepresponse-fullscreen").click(function() {
+            if(hasStepResponse) {
+                hasStepResponseFullscreen = !hasStepResponseFullscreen;
+            } else hasStepResponseFullscreen = false;
+            (hasStepResponseFullscreen)?html.addClass("has-stepresponse-fullscreen"):html.removeClass("has-stepresponse-fullscreen");
+            graph.setStepResponse(hasStepResponseFullscreen);
+            invalidateGraph();
+        });
+
+        $("#stepResponseAxisRoll").change(function() {
+            graph.setStepResponseAxisEnabled('roll', $(this).prop('checked'));
+        });
+
+        $("#stepResponseAxisPitch").change(function() {
+            graph.setStepResponseAxisEnabled('pitch', $(this).prop('checked'));
+        });
+
+        $("#stepResponseAxisYaw").change(function() {
+            graph.setStepResponseAxisEnabled('yaw', $(this).prop('checked'));
         });
 
         $(".view-zoom-in").click(function() {
