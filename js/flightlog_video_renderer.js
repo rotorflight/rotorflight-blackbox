@@ -34,6 +34,7 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         craftWrapper = document.createElement('div'),
         craftCanvas = document.createElement('canvas'),
         analyserCanvas = document.createElement('canvas'),
+        stepResponseCanvas = document.createElement('canvas'),
         stickCanvasLeft, stickCanvasTop, hasStick,
         craftCanvasLeft, craftCanvasTop, hasCraft,
         analyserCanvasLeft, analyserCanvasTop, hasAnalyser,
@@ -294,9 +295,9 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         delete logParameters.flightVideo;
     }
 
-    var options = $.extend({}, userSettings || {}, {eraseBackground : !logParameters.flightVideo, drawEvents : false, fillBackground : !logParameters.flightVideo});
+    var options = $.extend({}, userSettings || {}, {eraseBackground : !logParameters.flightVideo, drawEvents : false, fillBackground : !logParameters.flightVideo, drawStepResponse : false});
 
-    graph = new FlightLogGrapher(flightLog, logParameters.graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, options);
+    graph = new FlightLogGrapher(flightLog, logParameters.graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, options);
 
     stickCanvasLeft = parseInt($(stickCanvas).css('left'), 10);
     stickCanvasTop = parseInt($(stickCanvas).css('top'), 10);
