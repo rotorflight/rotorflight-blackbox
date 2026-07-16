@@ -89,10 +89,44 @@ function CraftConfig(prefs) {
     this.getLines = function() {
         return parsed.lines;
     };
+
+    /**
+     * Motor RPM = main rotor RPM * this ratio, per `set main_rotor_gear_ratio = <a>,<b>` (ratio is b/a).
+     * Returns null if the setting isn't present or isn't parseable.
+     */
+    this.getMainRotorGearRatio = function() {
+        return CraftConfig.parseGearRatio(parsed.settings['main_rotor_gear_ratio']);
+    };
+
+    /**
+     * Tail rotor RPM = main rotor RPM * this ratio, per `set tail_rotor_gear_ratio = <a>,<b>` (ratio is b/a).
+     * Returns null if the setting isn't present or isn't parseable.
+     */
+    this.getTailRotorGearRatio = function() {
+        return CraftConfig.parseGearRatio(parsed.settings['tail_rotor_gear_ratio']);
+    };
 }
 
 CraftConfig.emptyParsed = function() {
     return { craftName: null, settings: {}, commands: {}, lines: [] };
+};
+
+/**
+ * Parses a `<a>,<b>` gear ratio setting value (e.g. "15,137") into the multiplier b/a,
+ * or null if the value is missing or not in that format.
+ */
+CraftConfig.parseGearRatio = function(rawValue) {
+    if (!rawValue) return null;
+
+    var parts = rawValue.split(',');
+    if (parts.length !== 2) return null;
+
+    var a = parseFloat(parts[0]);
+    var b = parseFloat(parts[1]);
+
+    if (!isFinite(a) || !isFinite(b) || a === 0) return null;
+
+    return b / a;
 };
 
 /**

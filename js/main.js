@@ -2,6 +2,7 @@
 
 // Global Level Variables
 var userSettings = {};
+var craftConfig; // persisted craft dump/diff config, available across flight logs (and to graph_spectrum.js)
 
 var VIEWER_VERSION = getManifestVersion(); // Current version
 
@@ -66,7 +67,6 @@ function BlackboxLogViewer() {
         configuration = null,                                                          // is their an associated dump file ?
         configurationDefaults = new ConfigurationDefaults(prefs),  // configuration defaults
 
-        craftConfig = new CraftConfig(prefs),  // persisted craft dump/diff config, available across flight logs
         craftConfigDialog = null,
 
         // User's video render config:
@@ -131,6 +131,8 @@ function BlackboxLogViewer() {
 
         graphZoom = GRAPH_DEFAULT_ZOOM,
         lastGraphZoom = GRAPH_DEFAULT_ZOOM; // QuickZoom function.
+
+        craftConfig = new CraftConfig(prefs); // assign the global declared at the top of this file
 
         function createNewBlackboxWindow(fileToOpen) {
 
