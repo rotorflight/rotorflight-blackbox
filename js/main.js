@@ -387,6 +387,22 @@ function BlackboxLogViewer() {
     }
 
     /**
+     * Show a Yes/No confirmation dialog asking whether to load a different craft config.
+     */
+    function showCraftNameMismatchDialog(message, onYes) {
+        var dialog = $('#dlgCraftNameMismatch');
+
+        $('.craft-name-mismatch-message', dialog).text(message);
+
+        $('.craft-name-mismatch-yes', dialog).off('click').on('click', function() {
+            dialog.modal('hide');
+            onYes();
+        });
+
+        dialog.modal('show');
+    }
+
+    /**
      * Compare the flight log's craft name against the loaded craft config (if any) and colour the
      * status bar accordingly. When they mismatch, optionally offer to load a different config file.
      */
@@ -416,9 +432,9 @@ function BlackboxLogViewer() {
             tooltip = 'Loaded configuration is for "' + configCraftName + '", but this flight log is for "' + logCraftName + '".';
 
             if (promptOnMismatch !== false) {
-                if (confirm(tooltip + "\n\nLoad a different configuration file?")) {
+                showCraftNameMismatchDialog(tooltip, function() {
                     craftConfigDialog.show();
-                }
+                });
             }
         }
 
