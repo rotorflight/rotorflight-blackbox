@@ -1299,6 +1299,16 @@ html:not(.has-log) #status-bar {
     cursor: pointer;
 }
 
+#status-bar .version-craft-name.craft-name-match {
+    color: #5cb85c;
+    font-weight: bold;
+}
+
+#status-bar .version-craft-name.craft-name-mismatch {
+    color: #d9534f;
+    font-weight: bold;
+}
+
 html:not(.has-config) #status-bar .configuration-file-name {
     display: none;    
 }

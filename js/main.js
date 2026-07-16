@@ -67,6 +67,7 @@ function BlackboxLogViewer() {
         configurationDefaults = new ConfigurationDefaults(prefs),  // configuration defaults
 
         craftConfig = new CraftConfig(prefs),  // persisted craft dump/diff config, available across flight logs
+        craftConfigDialog = null,
 
         // User's video render config:
         videoConfig = {},
@@ -384,6 +385,39 @@ function BlackboxLogViewer() {
     }
 
     /**
+     * Compare the flight log's craft name against the loaded craft config (if any) and colour the
+     * status bar accordingly. When they mismatch, optionally offer to load a different config file.
+     */
+    function checkCraftConfigMatch(logCraftName, promptOnMismatch) {
+        var elem = $('.version-craft-name', statusBar);
+
+        elem.removeClass('craft-name-match craft-name-mismatch');
+
+        if (!craftConfig.hasConfig() || !logCraftName) {
+            return;
+        }
+
+        var configCraftName = craftConfig.getCraftName();
+
+        if (!configCraftName) {
+            return;
+        }
+
+        if (logCraftName.trim().toLowerCase() === configCraftName.trim().toLowerCase()) {
+            elem.addClass('craft-name-match');
+        } else {
+            elem.addClass('craft-name-mismatch');
+
+            if (promptOnMismatch !== false) {
+                if (confirm("The loaded configuration is for \"" + configCraftName + "\", but this flight log is for \"" +
+                        logCraftName + "\".\n\nLoad a different configuration file?")) {
+                    craftConfigDialog.show();
+                }
+            }
+        }
+    }
+
+    /**
      * Update the metadata displays to show information about the currently selected log index.
      */
     function renderSelectedLogInfo() {
@@ -417,8 +451,10 @@ function BlackboxLogViewer() {
         **/
 
         // Add log version information to status bar
-        $('.version', statusBar).text( ((sysConfig['Craft name']!=null)?(sysConfig['Craft name'] + ' : '):'') +
-                                        ((sysConfig['Firmware revision']!=null)?(sysConfig['Firmware revision']):''));
+        $('.version-craft-name', statusBar).text( (sysConfig['Craft name']!=null) ? (sysConfig['Craft name'] + ' : ') : '');
+        $('.version-firmware', statusBar).text( (sysConfig['Firmware revision']!=null) ? sysConfig['Firmware revision'] : '');
+
+        checkCraftConfigMatch(sysConfig['Craft name']);
         $('.looptime', statusBar).text( stringLoopTime(sysConfig.looptime, sysConfig.pid_process_denom, sysConfig.unsynced_fast_pwm, sysConfig.motor_pwm_rate));
         $('.lograte', statusBar).text( ((sysConfig['frameIntervalPDenom']!=null && sysConfig['frameIntervalPNum']!=null)?( 'Sample Rate : ' + sysConfig['frameIntervalPNum'] +'/' + sysConfig['frameIntervalPDenom']):''));
 
@@ -1378,8 +1414,6 @@ function BlackboxLogViewer() {
 
             keysDialog = new KeysDialog($("#dlgKeysDialog")),
 
-            craftConfigDialog = new CraftConfigDialog($("#dlgCraftConfig"), craftConfig),
-
             userSettingsDialog = new UserSettingsDialog($("#dlgUserSettings"),
             function(defaultSettings) { // onLoad
                 prefs.get('userSettings', function(item) {
@@ -1421,6 +1455,13 @@ function BlackboxLogViewer() {
 
                     prefs.set('videoConfig', newConfig);
                 });
+
+        craftConfigDialog = new CraftConfigDialog($("#dlgCraftConfig"), craftConfig, function() {
+            // Re-check the currently displayed log against the newly loaded/cleared configuration
+            if (flightLog) {
+                checkCraftConfigMatch(flightLog.getSysConfig()['Craft name'], false);
+            }
+        });
 
         $(".open-graph-configuration-dialog").click(function(e) {
             e.preventDefault();
