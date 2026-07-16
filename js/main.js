@@ -66,6 +66,8 @@ function BlackboxLogViewer() {
         configuration = null,                                                          // is their an associated dump file ?
         configurationDefaults = new ConfigurationDefaults(prefs),  // configuration defaults
 
+        craftConfig = new CraftConfig(prefs),  // persisted craft dump/diff config, available across flight logs
+
         // User's video render config:
         videoConfig = {},
 
@@ -1015,6 +1017,8 @@ function BlackboxLogViewer() {
 
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover", placement: "auto bottom"}); // initialise tooltips
         $('[data-toggle="dropdown"]').dropdown(); // initialise menus
+
+        craftConfig.loadFromCache(); // restore the persisted craft dump/diff config, if any
         $('a.auto-hide-menu').click(function() {
             var test = $(this).closest('.dropdown').children().first().dropdown("toggle");
         });
@@ -1374,6 +1378,8 @@ function BlackboxLogViewer() {
 
             keysDialog = new KeysDialog($("#dlgKeysDialog")),
 
+            craftConfigDialog = new CraftConfigDialog($("#dlgCraftConfig"), craftConfig),
+
             userSettingsDialog = new UserSettingsDialog($("#dlgUserSettings"),
             function(defaultSettings) { // onLoad
                 prefs.get('userSettings', function(item) {
@@ -1431,6 +1437,12 @@ function BlackboxLogViewer() {
             e.preventDefault();
 
             keysDialog.show();
+        });
+
+        $(".open-craft-config-dialog").click(function(e) {
+            e.preventDefault();
+
+            craftConfigDialog.show();
         });
 
         $(".open-user-settings-dialog").click(function(e) {
