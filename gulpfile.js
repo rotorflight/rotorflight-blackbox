@@ -218,6 +218,7 @@ function dist() {
         './css/keys_dialog.css',
         './css/main.css',
         './css/user_settings_dialog.css',
+        './css/craft_config_dialog.css',
 
         // JavaScript
         './index.js',
@@ -225,6 +226,8 @@ function dist() {
         './js/complex.js',
         './js/configuration.js',
         './js/craft_3d.js',
+        './js/craft_config.js',
+        './js/craft_config_dialog.js',
         './js/datastream.js',
         './js/decoders.js',
         './js/expo.js',

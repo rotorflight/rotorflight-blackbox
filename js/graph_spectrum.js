@@ -171,6 +171,11 @@ var
         analyserZoomXElem.on('input', $.debounce(100, function() {
             analyserZoomX = (analyserZoomXElem.val() / 100);
             GraphSpectrumPlot.setZoom(analyserZoomX, analyserZoomY);
+            // The frequency window changed, so the mouse-hover overlay lines (SHIFT/CTRL) no longer
+            // line up with the mouse position that produced them - clear them until the next hover.
+            GraphSpectrumPlot.setMousePosition(0, 0);
+            lastMouseX = -1;
+            lastMouseY = -1;
             that.refresh();
         })).dblclick(function() {
             $(this).val(DEFAULT_ZOOM).trigger("input");
@@ -226,10 +231,11 @@ var
 
         // track frequency under mouse
         var lastMouseX = 0,
-            lastMouseY = 0;
+            lastMouseY = 0,
+            lastMouseMode = 'harmonics';
 
         function trackFrequency(e, analyser) {
-            if(e.shiftKey) {
+            if(e.shiftKey || (e.ctrlKey && craftConfig.hasConfig())) {
 
                 // Hide the combo and maximize buttons
                 spectrumToolbarElem.removeClass('non-shift');
@@ -237,10 +243,24 @@ var
                 var rect = analyserCanvas.getBoundingClientRect();
                 var mouseX = e.clientX - rect.left;
                 var mouseY = e.clientY - rect.top;
-                if (mouseX != lastMouseX || mouseY != lastMouseY) {
+
+                // The mode determines what the hovered frequency is treated as: SHIFT shows its
+                // harmonics (1x-4x); CTRL treats it as the main rotor speed (the "key value") and
+                // derives the tail rotor / motor lines from it via the craft config's gear ratios.
+                var mode = e.ctrlKey ? 'gearRatio' : 'harmonics';
+
+                if (mode === 'gearRatio') {
+                    GraphSpectrumPlot.setRotorGearRatios({
+                        main : craftConfig.getMainRotorGearRatio(),
+                        tail : craftConfig.getTailRotorGearRatio(),
+                    });
+                }
+
+                if (mouseX != lastMouseX || mouseY != lastMouseY || mode != lastMouseMode) {
                     lastMouseX = mouseX;
                     lastMouseY = mouseY;
-                    GraphSpectrumPlot.setMousePosition(mouseX, mouseY);
+                    lastMouseMode = mode;
+                    GraphSpectrumPlot.setMousePosition(mouseX, mouseY, mode);
                     if (analyser) {
                         analyser.refresh();
                     }
