@@ -392,6 +392,7 @@ function BlackboxLogViewer() {
         var elem = $('.version-craft-name', statusBar);
 
         elem.removeClass('craft-name-match craft-name-mismatch');
+        elem.attr('title', '').attr('data-original-title', '');
 
         if (!craftConfig.hasConfig() || !logCraftName) {
             return;
@@ -403,18 +404,23 @@ function BlackboxLogViewer() {
             return;
         }
 
+        var tooltip;
+
         if (logCraftName.trim().toLowerCase() === configCraftName.trim().toLowerCase()) {
             elem.addClass('craft-name-match');
+            tooltip = 'Loaded configuration ("' + configCraftName + '") matches this flight log\'s craft.';
         } else {
             elem.addClass('craft-name-mismatch');
+            tooltip = 'Loaded configuration is for "' + configCraftName + '", but this flight log is for "' + logCraftName + '".';
 
             if (promptOnMismatch !== false) {
-                if (confirm("The loaded configuration is for \"" + configCraftName + "\", but this flight log is for \"" +
-                        logCraftName + "\".\n\nLoad a different configuration file?")) {
+                if (confirm(tooltip + "\n\nLoad a different configuration file?")) {
                     craftConfigDialog.show();
                 }
             }
         }
+
+        elem.attr('title', tooltip).attr('data-original-title', tooltip);
     }
 
     /**
