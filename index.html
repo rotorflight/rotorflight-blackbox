@@ -3436,6 +3436,65 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="gui_box grey top-spacer trim-settings">
+                                <div class="gui_box_titlebar">
+                                    <div class="spacer_box_title">Trim Settings</div>
+                                </div>
+                                <div class="spacer_box">
+                                    <div>
+                                        <label class="option">Auto Trim
+                                            <input class="auto-trim ios-switch" type="checkbox" />
+                                            <div>
+                                                <div></div>
+                                            </div>
+                                            <span>When a log is opened, automatically set the In/Out points (same as the I and O keys) using the events below.</span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label>Start Event</label>
+                                        <select class="form-control auto-trim-start-select" style="width: auto; max-width: 100%;">
+                                            <optgroup label="Arm / Disarm">
+                                                <option value="arm:armed">Armed</option>
+                                                <option value="arm:disarmed">Disarmed</option>
+                                            </optgroup>
+                                            <optgroup label="Governor State" class="auto-trim-start-govstate-group">
+                                                <!-- options populated from FLIGHT_LOG_GOVSTATES_RF_4_6 by js/user_settings_dialog.js -->
+                                            </optgroup>
+                                            <optgroup label="Airborne State">
+                                                <option value="air:1">Airborne: TAKEOFF</option>
+                                                <option value="air:0">Airborne: LANDING</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Stop Event</label>
+                                        <select class="form-control auto-trim-stop-select" style="width: auto; max-width: 100%;">
+                                            <optgroup label="Arm / Disarm">
+                                                <option value="arm:armed">Armed</option>
+                                                <option value="arm:disarmed">Disarmed</option>
+                                            </optgroup>
+                                            <optgroup label="Governor State" class="auto-trim-stop-govstate-group">
+                                                <!-- options populated from FLIGHT_LOG_GOVSTATES_RF_4_6 by js/user_settings_dialog.js -->
+                                            </optgroup>
+                                            <optgroup label="Airborne State">
+                                                <option value="air:1">Airborne: TAKEOFF</option>
+                                                <option value="air:0">Airborne: LANDING</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Offset</label>
+                                        <select class="form-control auto-trim-offset-select" style="width: auto; max-width: 100%;">
+                                            <option value="0">0 seconds</option>
+                                            <option value="0.25">1/4 second</option>
+                                            <option value="0.5">1/2 second</option>
+                                            <option value="1">1 second</option>
+                                            <option value="2">2 seconds</option>
+                                        </select>
+                                        <p>Trim starts this many seconds after the start event, and ends this many seconds before the stop event.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="clear-both"></div>

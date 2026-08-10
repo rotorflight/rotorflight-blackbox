@@ -499,6 +499,95 @@ function BlackboxLogViewer() {
         }
     }
 
+    // Turns an auto-trim select value ("arm:armed", "gov:4", "air:1") into a matcher for log events
+    function parseAutoTrimEventSpec(value) {
+        if (!value) {
+            return null;
+        }
+
+        var parts = value.split(':');
+
+        switch (parts[0]) {
+            case 'arm':
+                return {armed: parts[1] === 'armed'};
+            case 'gov':
+                return {govState: parseInt(parts[1], 10)};
+            case 'air':
+                return {airborneState: parseInt(parts[1], 10)};
+            default:
+                return null;
+        }
+    }
+
+    function autoTrimEventMatchesSpec(event, spec) {
+        if (spec.armed !== undefined) {
+            return event.event === (spec.armed ? FlightLogEvent.SYNC_BEEP : FlightLogEvent.DISARM);
+        }
+        if (spec.govState !== undefined) {
+            return event.event === FlightLogEvent.GOVERNOR_STATE && event.data.govState === spec.govState;
+        }
+        if (spec.airborneState !== undefined) {
+            return event.event === FlightLogEvent.AIRBORNE_STATE && event.data.airborneState === spec.airborneState;
+        }
+        return false;
+    }
+
+    // Finds the time of the first event matching spec, optionally only considering events strictly after afterTime
+    function findAutoTrimEventTime(events, spec, afterTime) {
+        for (var i = 0; i < events.length; i++) {
+            var event = events[i];
+
+            if (event.time == null || (afterTime != null && event.time <= afterTime)) {
+                continue;
+            }
+
+            if (autoTrimEventMatchesSpec(event, spec)) {
+                return event.time;
+            }
+        }
+
+        return null;
+    }
+
+    // Automatically sets the In/Out (trim) points from the events configured in User Settings, just like the I/O keys
+    // Returns the trimmed-in start time it applied, or false if auto trim didn't move the start point
+    function applyAutoTrim() {
+        if (!flightLog || !userSettings.autoTrim) {
+            return false;
+        }
+
+        var startSpec = parseAutoTrimEventSpec(userSettings.autoTrimStart);
+        var stopSpec = parseAutoTrimEventSpec(userSettings.autoTrimStop);
+
+        if (!startSpec && !stopSpec) {
+            return false;
+        }
+
+        var chunks = flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime());
+        var events = [];
+        for (var i = 0; i < chunks.length; i++) {
+            events = events.concat(chunks[i].events);
+        }
+
+        var offsetMicros = (userSettings.autoTrimOffset || 0) * 1000000;
+
+        var rawStartTime = startSpec ? findAutoTrimEventTime(events, startSpec, null) : null;
+        var rawStopTime = stopSpec ? findAutoTrimEventTime(events, stopSpec, rawStartTime) : null;
+
+        var startTime = rawStartTime == null ? false : Math.min(rawStartTime + offsetMicros, flightLog.getMaxTime());
+        var stopTime = rawStopTime == null ? false : Math.max(rawStopTime - offsetMicros, flightLog.getMinTime());
+
+        if (startTime !== false && stopTime !== false && startTime >= stopTime) {
+            // Offset padding has consumed the whole region between the events; leave the trim points untouched.
+            return false;
+        }
+
+        setVideoInTime(startTime);
+        setVideoOutTime(stopTime);
+
+        return startTime;
+    }
+
     function setPlaybackRate(rate, updateUi) {
         if (rate >= PLAYBACK_MIN_RATE && rate <= PLAYBACK_MAX_RATE) {
               playbackRate = rate;
@@ -605,6 +694,7 @@ function BlackboxLogViewer() {
 
         setVideoInTime(false);
         setVideoOutTime(false);
+        var autoTrimStartTime = applyAutoTrim();
 
         activeGraphConfig.adaptGraphs(flightLog, graphConfig);
 
@@ -625,6 +715,10 @@ function BlackboxLogViewer() {
         } else {
             // Start at beginning:
             currentBlackboxTime = flightLog.getMinTime();
+        }
+
+        if (autoTrimStartTime !== false) {
+            setCurrentBlackboxTime(autoTrimStartTime);
         }
 
         renderSelectedLogInfo();
@@ -1407,6 +1501,9 @@ function BlackboxLogViewer() {
                         graph.refreshLogo();
                         updateCanvasSize();
                     }
+
+                    // re-apply auto trim immediately in case it was just enabled/changed on an already-open log
+                    applyAutoTrim();
 
                 }),
 
