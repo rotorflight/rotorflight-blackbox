@@ -57,6 +57,10 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                 drawLapTimer                : false,                        // Show Laptimer on display?
                 drawGradient                : false,                        // Show Gradient on display?
                 drawVerticalBar                : true,                                // Show vertical timebar on display?
+                autoTrim                        : false,                        // Automatically set In/Out points when a log is opened?
+                autoTrimStart                : 'air:1',                        // Event that starts the auto-trimmed region (Airborne: TAKEOFF)
+                autoTrimStop                : 'air:0',                        // Event that ends the auto-trimmed region (Airborne: LANDING)
+                autoTrimOffset                : 0,                                // Seconds to pad in from the start event / out from the stop event
         graphSmoothOverride : true,             // Ability to toggle Smoothing off=normal/ on=force 0%
         graphExpoOverride   : true,             // Ability to toggle Expo off=normal/ on=force 100%
         graphGridOverride   : true,             // Ability to toggle Grid off=normal/ on=force disabled
@@ -219,6 +223,12 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
         mixer_list_e.append('<option value="' + (i + 1) + '">' + mixerList[i].name + '</option>');
     }
 
+    // Populate the Governor State auto-trim options from the RF 4.6+ state list
+    var autoTrimGovstateGroups_e = $('.auto-trim-start-govstate-group, .auto-trim-stop-govstate-group');
+    for (var i = 0; i < FLIGHT_LOG_GOVSTATES_RF_4_6.length; i++) {
+        autoTrimGovstateGroups_e.append('<option value="gov:' + i + '">Governor: ' + FLIGHT_LOG_GOVSTATES_RF_4_6[i] + '</option>');
+    }
+
         function mixerListSelection(val) {
 
                 if(val==null) val=3; // default for invalid values
@@ -307,6 +317,22 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
         currentSettings.seekbarPIDProfileColorBands = $(this).is(":checked");
     });
 
+    $(".auto-trim").click(function() {
+        currentSettings.autoTrim = $(this).is(":checked");
+    });
+
+    $(".auto-trim-start-select").change(function() {
+        currentSettings.autoTrimStart = $(this).val();
+    });
+
+    $(".auto-trim-stop-select").change(function() {
+        currentSettings.autoTrimStop = $(this).val();
+    });
+
+    $(".auto-trim-offset-select").change(function() {
+        currentSettings.autoTrimOffset = parseFloat($(this).val());
+    });
+
     // Load Custom Logo
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -382,6 +408,15 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                                 // set the toggle switch
                                 $(".seekbar-pidprofile-color-bands").prop('checked', currentSettings.seekbarPIDProfileColorBands);
                         }
+
+                        if(currentSettings.autoTrim!=null) {
+                                // set the toggle switch
+                                $(".auto-trim").prop('checked', currentSettings.autoTrim);
+                        }
+
+                        $(".auto-trim-start-select").val(currentSettings.autoTrimStart);
+                        $(".auto-trim-stop-select").val(currentSettings.autoTrimStop);
+                        $(".auto-trim-offset-select").val(currentSettings.autoTrimOffset);
 
 
         mixerListSelection(currentSettings.mixerConfiguration); // select current mixer configuration
