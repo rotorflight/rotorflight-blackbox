@@ -1,8 +1,18 @@
 "use strict";
 
+// Extra yaw (in radians) added on top of the log's real-time yaw so the model's
+// on-screen "zero yaw" pose matches the user's chosen initial facing direction.
+const CRAFT_FACING_OFFSETS = {
+  forward: 0,
+  left: Math.PI / 2,
+  right: -Math.PI / 2,
+  backward: Math.PI,
+};
+
 class Craft3D {
-  constructor(canvas) {
+  constructor(canvas, facing) {
     this.canvas = canvas;
+    this.facingOffset = CRAFT_FACING_OFFSETS[facing] || 0;
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -38,15 +48,25 @@ class Craft3D {
     loader.load("/resources/models/bell_cw.gltf", (gltf) => {
       this.model = gltf.scene;
       this.modelWrapper.add(this.model);
+      this.modelWrapper.rotation.y = this.facingOffset;
       this.render();
     });
+  }
+
+  setFacing(facing) {
+    this.facingOffset = CRAFT_FACING_OFFSETS[facing] || 0;
+
+    if (!this.model) return;
+
+    this.modelWrapper.rotation.y = this.facingOffset;
+    this.render();
   }
 
   rotateTo(x, y, z) {
     if (!this.model) return;
 
     this.model.rotation.x = x;
-    this.modelWrapper.rotation.y = y;
+    this.modelWrapper.rotation.y = y + this.facingOffset;
     this.model.rotation.z = z;
     this.render();
   }
