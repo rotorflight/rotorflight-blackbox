@@ -89,7 +89,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
     let craft;
     if (hasAttitude) {
-        craft = new Craft3D($(craftWrapper).find('canvas').get(0));
+        craft = new Craft3D($(craftWrapper).find('canvas').get(0), options.craft && options.craft.facing);
     }
 
     this.onSeek = null;
@@ -1011,6 +1011,10 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
     // Update user options
     this.refreshOptions = function(newSettings) {
         options = $.extend(defaultOptions, newSettings || {});
+
+        if (craft) {
+            craft.setFacing(options.craft && options.craft.facing);
+        }
     }
 
     this.refreshLogo = function() {

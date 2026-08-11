@@ -68,7 +68,8 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                 craft                                : {
                                                                         left  : '15%',        // position from left (as a percentage of width)
                                                                         top   : '25%',  // position from top (as a percentage of height)
-                                                                        size  : '40%'   // size (as a percentage of width)
+                                                                        size  : '40%',  // size (as a percentage of width)
+                                                                        facing: 'forward' // initial facing direction of the 3D model: left, forward, right, backward
                                                           },
                 sticks                                : {
                                                                         left  : '75%',        // position from left (as a percentage of width)
@@ -125,7 +126,8 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                                                size: $('.stick-mode-group input[name="stick-size"]').val() + '%', },
                             craft:     {top: $('.craft-settings input[name="craft-top"]').val() + '%',
                                                left: $('.craft-settings input[name="craft-left"]').val() + '%',
-                                               size: $('.craft-settings input[name="craft-size"]').val() + '%', },
+                                               size: $('.craft-settings input[name="craft-size"]').val() + '%',
+                                               facing: $('.craft-settings select[name="craft-facing"]').val(), },
                             analyser:  {top: $('.analyser-settings input[name="analyser-top"]').val() + '%',
                                                left: $('.analyser-settings input[name="analyser-left"]').val() + '%',
                                                size: $('.analyser-settings input[name="analyser-size"]').val() + '%', },
@@ -397,6 +399,7 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                     $('.craft-settings input[name="craft-top"]').val(parseInt(currentSettings.craft.top));
                     $('.craft-settings input[name="craft-left"]').val(parseInt(currentSettings.craft.left));
                     $('.craft-settings input[name="craft-size"]').val(parseInt(currentSettings.craft.size));
+                    $('.craft-settings select[name="craft-facing"]').val(currentSettings.craft.facing || 'forward');
                     $('.analyser-settings input[name="analyser-top"]').val(parseInt(currentSettings.analyser.top));
                     $('.analyser-settings input[name="analyser-left"]').val(parseInt(currentSettings.analyser.left));
                     $('.analyser-settings input[name="analyser-size"]').val(parseInt(currentSettings.analyser.size));
