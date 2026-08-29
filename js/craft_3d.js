@@ -99,6 +99,19 @@ class Craft3D {
 
     this.collectiveDisc = disc;
 
+    // The glTF asset's "Cone" material is a physically-lit MeshStandardMaterial, so the scene's
+    // directional light throws a specular highlight across it that washes the collective/cyclic
+    // colors out toward white. Swapping to an unlit MeshBasicMaterial (keeping the same
+    // transparency/side/blend settings) makes the disc read as flat color, matching what this
+    // indicator is actually for -- a data overlay, not a physically-shaded surface.
+    disc.material = new THREE.MeshBasicMaterial({
+      color: disc.material.color,
+      opacity: disc.material.opacity,
+      transparent: disc.material.transparent,
+      depthWrite: disc.material.depthWrite,
+      side: disc.material.side,
+    });
+
     const geometry = disc.geometry;
     const position = geometry.attributes.position;
     const vertexCount = position.count;
