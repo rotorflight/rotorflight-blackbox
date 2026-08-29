@@ -84,12 +84,18 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
       typeof attitudeFrameIndex.y === "number" &&
       typeof attitudeFrameIndex.z === "number";
 
+    // rcCommand[3] is collective, rcCommand[0]/[1] are cyclic roll/pitch -- used to color
+    // the rotor disk to show collective pitch direction and swashplate cyclic tilt.
+    const collectiveFieldIndex = flightLog.getMainFieldIndexByName("rcCommand[3]");
+    const cyclicRollFieldIndex = flightLog.getMainFieldIndexByName("rcCommand[0]");
+    const cyclicPitchFieldIndex = flightLog.getMainFieldIndexByName("rcCommand[1]");
+
     $('#craftWrapper canvas').toggle(hasAttitude);
     $('#craftWrapper p').toggle(!hasAttitude);
 
     let craft;
     if (hasAttitude) {
-        craft = new Craft3D($(craftWrapper).find('canvas').get(0));
+        craft = new Craft3D($(craftWrapper).find('canvas').get(0), flightLog);
     }
 
     this.onSeek = null;
@@ -878,7 +884,10 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                     const x = (-centerFrame[attitudeFrameIndex.x] / 1800) * Math.PI;
                     const y = (-centerFrame[attitudeFrameIndex.y] / 1800) * Math.PI;
                     const z = (-centerFrame[attitudeFrameIndex.z] / 1800) * Math.PI;
-                    craft.rotateTo(x, y, z);
+                    const collectiveRaw = typeof collectiveFieldIndex === "number" ? centerFrame[collectiveFieldIndex] : undefined;
+                    const cyclicRollRaw = typeof cyclicRollFieldIndex === "number" ? centerFrame[cyclicRollFieldIndex] : undefined;
+                    const cyclicPitchRaw = typeof cyclicPitchFieldIndex === "number" ? centerFrame[cyclicPitchFieldIndex] : undefined;
+                    craft.rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw);
                 }
             }
 
