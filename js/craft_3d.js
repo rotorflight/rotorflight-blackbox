@@ -16,13 +16,18 @@ const COLLECTIVE_DISC_MAX_OPACITY = 0.75;
 const COLLECTIVE_DISC_NODE_NAME = "Cone";
 
 // Cyclic (roll/pitch) gradient: on top of the uniform collective color/opacity, the disc is
-// faded in per-vertex so the side of the disc the swashplate is tilting towards stays at full
+// faded in per-fragment so the side of the disc the swashplate is tilting towards stays at full
 // strength while the opposite side fades out, showing at a glance where the blade force is
 // pointing. rcCommand[0]/[1] (roll/pitch) aren't range-scaled per-craft like collective is, so
 // a fixed +-500 stick-deflection range (the standard Betaflight/Rotorflight raw scale) is used.
 // The "Cone" node has no rotation of its own relative to the model root, so its local X/Z axes
 // line up with model.rotation's: rotation.x is driven by pitch and rotation.z by roll, so local
 // X is the lateral (roll) axis and local Z is the longitudinal (pitch) axis of the disc.
+//
+// This needs a small onBeforeCompile shader patch rather than a vertex "color" attribute:
+// the vendored three.js build here (r126) predates per-vertex vertex-color alpha support
+// (added upstream around r125+ as USE_COLOR_ALPHA), so a vec4 color attribute's alpha channel
+// is silently ignored by this build -- only its rgb is read, which is unusable for a fade.
 const CYCLIC_COMMAND_RANGE = 500;
 const CYCLIC_GRADIENT_STRENGTH = 1.5;
 const CYCLIC_GRADIENT_MIN_ALPHA = 0.1;
@@ -74,8 +79,7 @@ class Craft3D {
     this.collectiveMax = collectiveRange[1];
 
     this.collectiveDisc = null;
-    this.discColorAttr = null;
-    this.discVertexXZ = null;
+    this.cyclicUniforms = null;
 
     const loader = new THREE.GLTFLoader();
     loader.load("/resources/models/bell_cw.gltf", (gltf) => {
@@ -86,7 +90,9 @@ class Craft3D {
     });
   }
 
-  // Precomputes the per-vertex data needed to color the rotor disk for collective/cyclic.
+  // Precomputes the per-vertex data needed to color the rotor disk for collective/cyclic, and
+  // patches the disc material's shader so its alpha can be faded per-fragment for the cyclic
+  // gradient (see the CYCLIC_* comment above for why this can't just be a color attribute).
   setupCollectiveDisc() {
     const disc = this.model.getObjectByName(COLLECTIVE_DISC_NODE_NAME);
     if (!disc) return;
@@ -98,7 +104,7 @@ class Craft3D {
     const vertexCount = position.count;
 
     let outerRadius = 0;
-    const discVertexXZ = new Float32Array(vertexCount * 2);
+    const discXZ = new Float32Array(vertexCount * 2);
     for (let i = 0; i < vertexCount; i++) {
       const x = position.getX(i);
       const z = position.getZ(i);
@@ -106,15 +112,41 @@ class Craft3D {
     }
     outerRadius = outerRadius || 1;
     for (let i = 0; i < vertexCount; i++) {
-      discVertexXZ[i * 2] = position.getX(i) / outerRadius;
-      discVertexXZ[i * 2 + 1] = position.getZ(i) / outerRadius;
+      discXZ[i * 2] = position.getX(i) / outerRadius;
+      discXZ[i * 2 + 1] = position.getZ(i) / outerRadius;
     }
-    this.discVertexXZ = discVertexXZ;
+    geometry.setAttribute("discXZ", new THREE.BufferAttribute(discXZ, 2));
 
-    const colors = new Float32Array(vertexCount * 4).fill(1);
-    this.discColorAttr = new THREE.BufferAttribute(colors, 4);
-    geometry.setAttribute("color", this.discColorAttr);
-    disc.material.vertexColors = true;
+    disc.material.onBeforeCompile = (shader) => {
+      shader.uniforms.cyclicDX = { value: 0 };
+      shader.uniforms.cyclicDZ = { value: 0 };
+
+      shader.vertexShader = shader.vertexShader
+        .replace(
+          "#include <common>",
+          "attribute vec2 discXZ;\nvarying vec2 vDiscXZ;\n#include <common>",
+        )
+        .replace(
+          "#include <begin_vertex>",
+          "#include <begin_vertex>\n\tvDiscXZ = discXZ;",
+        );
+
+      shader.fragmentShader = shader.fragmentShader
+        .replace(
+          "#include <common>",
+          "varying vec2 vDiscXZ;\nuniform float cyclicDX;\nuniform float cyclicDZ;\n#include <common>",
+        )
+        .replace(
+          "#include <alphamap_fragment>",
+          "#include <alphamap_fragment>\n\tdiffuseColor.a *= clamp(1.0 + " +
+            CYCLIC_GRADIENT_STRENGTH.toFixed(3) +
+            " * (vDiscXZ.x * cyclicDX + vDiscXZ.y * cyclicDZ), " +
+            CYCLIC_GRADIENT_MIN_ALPHA.toFixed(3) +
+            ", 1.0);",
+        );
+
+      this.cyclicUniforms = shader.uniforms;
+    };
     disc.material.needsUpdate = true;
   }
 
@@ -138,21 +170,9 @@ class Craft3D {
       this.collectiveDisc.material.opacity = magnitude * COLLECTIVE_DISC_MAX_OPACITY;
     }
 
-    if (this.discColorAttr && this.discVertexXZ) {
-      const dx = CYCLIC_ROLL_SIGN * clamp((cyclicRollRaw || 0) / CYCLIC_COMMAND_RANGE, -1, 1);
-      const dz = CYCLIC_PITCH_SIGN * clamp((cyclicPitchRaw || 0) / CYCLIC_COMMAND_RANGE, -1, 1);
-      const colors = this.discColorAttr.array;
-      const vertexCount = colors.length / 4;
-
-      for (let i = 0; i < vertexCount; i++) {
-        const alignment = this.discVertexXZ[i * 2] * dx + this.discVertexXZ[i * 2 + 1] * dz;
-        colors[i * 4 + 3] = clamp(
-          1 + CYCLIC_GRADIENT_STRENGTH * alignment,
-          CYCLIC_GRADIENT_MIN_ALPHA,
-          1,
-        );
-      }
-      this.discColorAttr.needsUpdate = true;
+    if (this.cyclicUniforms) {
+      this.cyclicUniforms.cyclicDX.value = CYCLIC_ROLL_SIGN * clamp((cyclicRollRaw || 0) / CYCLIC_COMMAND_RANGE, -1, 1);
+      this.cyclicUniforms.cyclicDZ.value = CYCLIC_PITCH_SIGN * clamp((cyclicPitchRaw || 0) / CYCLIC_COMMAND_RANGE, -1, 1);
     }
 
     this.render();
