@@ -300,6 +300,7 @@ function dist() {
         './css/branding.css',
         './css/main.css',
         './css/user_settings_dialog.css',
+        'css/glossary.css',
 
         // JavaScript
         './index.js',

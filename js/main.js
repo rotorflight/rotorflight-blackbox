@@ -1908,6 +1908,13 @@ function BlackboxLogViewer() {
             showGraphContextMenu(seekBar.getTimeAtPageX(e.pageX), e.pageX, e.pageY);
         });
 
+        //Allow modals to retain scroll
+        $(document).on('hidden.bs.modal', '.modal', function () {
+            if ($('.modal:visible').length) {
+                $('body').addClass('modal-open');
+            }
+        });
+
         $(document).keydown(function(e) {
             // Pressing any key hides dropdown menus
             //$(".dropdown-toggle").dropdown("toggle");
