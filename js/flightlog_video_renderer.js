@@ -28,12 +28,15 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         WORK_CHUNK_SIZE_UNFOCUSED = 32,
 
         videoWriter,
+        saveTarget = null,
+        completed = false,
 
         canvas = document.createElement('canvas'),
         stickCanvas = document.createElement('canvas'),
         craftWrapper = document.createElement('div'),
         craftCanvas = document.createElement('canvas'),
         analyserCanvas = document.createElement('canvas'),
+        stepResponseCanvas = document.createElement('canvas'),
         stickCanvasLeft, stickCanvasTop, hasStick,
         craftCanvasLeft, craftCanvasTop, hasCraft,
         analyserCanvasLeft, analyserCanvasTop, hasAnalyser,
@@ -92,14 +95,14 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
     }
 
     function supportsFileWriter() {
-        return !!(chrome && chrome.fileSystem);
+        return !!(window.chrome && window.chrome.fileSystem && window.chrome.fileSystem.chooseEntry);
     }
 
     /**
      * Returns a Promise that resolves to a FileWriter for the file the user chose, or fails if the user cancels/
      * something else bad happens.
      */
-    function openFileForWrite(suggestedName, onComplete) {
+    function openFileForWrite(suggestedName) {
         return new Promise(function(resolve, reject) {
             chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName: suggestedName,
                     accepts: [{extensions: ['webm']}]}, function(fileEntry) {
@@ -112,15 +115,19 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
                     } else {
                         reject(error.message);
                     }
+                } else if (!fileEntry) {
+                    reject(null);
                 } else {
                     fileEntry.createWriter(function (fileWriter) {
-                        fileWriter.onerror = function (e) {
-                            console.error(e);
-                        };
+                        fileWriter.onerror = reject;
 
                         fileWriter.onwriteend = function() {
                             fileWriter.onwriteend = null;
-
+                            fileWriter.onerror = function(e) {
+                                reportSaveError((e.target && e.target.error) || e);
+                                cancel = true;
+                                notifyCompletion(false);
+                            };
                             resolve(fileWriter);
                         };
 
@@ -136,6 +143,8 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
     }
 
     function notifyCompletion(success, frameCount) {
+        if (completed) return;
+        completed = true;
         removeVisibilityHandler();
 
         if (events && events.onComplete) {
@@ -146,10 +155,13 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
     function finishRender() {
         videoWriter.complete().then(function(webM) {
             if (webM) {
-                window.saveAs(webM, "video.webm");
+                return saveTarget.write(webM);
             }
-
+        }).then(function() {
             notifyCompletion(true, frameIndex);
+        }).catch(function(error) {
+            reportSaveError(error);
+            notifyCompletion(false);
         });
     }
 
@@ -163,6 +175,8 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
          */
         var
             framesToRender = Math.min(workChunkSize, frameCount - frameIndex);
+
+        if (completed) return;
 
         if (cancel) {
             notifyCompletion(false);
@@ -244,6 +258,7 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
      */
     this.start = function() {
         cancel = false;
+        completed = false;
 
         frameTime = logParameters.inTime;
         frameIndex = 0;
@@ -256,18 +271,31 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
             };
 
         if (supportsFileWriter()) {
-            openFileForWrite("video.webm").then(function(fileWriter) {
+            openFileForWrite(getLogBaseFilename("video") + ".webm").then(function(fileWriter) {
                 webMOptions.fileWriter = fileWriter;
 
                 videoWriter = new WebMWriter(webMOptions);
                 renderChunk();
             }, function(error) {
-                console.error(error);
+                if (error) reportSaveError(error);
                 notifyCompletion(false);
             });
         } else {
-            videoWriter = new WebMWriter(webMOptions);
-            renderChunk();
+            pickSaveFile({
+                suggestedName: getLogBaseFilename("video") + ".webm",
+                extension: ".webm",
+            }).then(function(target) {
+                if (!target || cancel) {
+                    notifyCompletion(false);
+                    return;
+                }
+                saveTarget = target;
+                videoWriter = new WebMWriter(webMOptions);
+                renderChunk();
+            }).catch(function(error) {
+                reportSaveError(error);
+                notifyCompletion(false);
+            });
         }
     };
 
@@ -294,9 +322,9 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         delete logParameters.flightVideo;
     }
 
-    var options = $.extend({}, userSettings || {}, {eraseBackground : !logParameters.flightVideo, drawEvents : false, fillBackground : !logParameters.flightVideo});
+    var options = $.extend({}, userSettings || {}, {eraseBackground : !logParameters.flightVideo, drawEvents : false, fillBackground : !logParameters.flightVideo, drawStepResponse : false});
 
-    graph = new FlightLogGrapher(flightLog, logParameters.graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, options);
+    graph = new FlightLogGrapher(flightLog, logParameters.graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, options);
 
     stickCanvasLeft = parseInt($(stickCanvas).css('left'), 10);
     stickCanvasTop = parseInt($(stickCanvas).css('top'), 10);

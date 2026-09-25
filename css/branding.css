@@ -1,0 +1,777 @@
+/* Rotorflight welcome screen and toolbar: blue accents on dark neutrals. */
+
+:root {
+    --rf-accent: #4da8da;
+    --rf-accent-hover: #80c5eb;
+    --rf-accent-bright: #80c5eb;
+    --rf-chrome-bg: hsl(220, 9%, 13%);
+    --rf-chrome-bg-raised: hsl(220, 9%, 18%);
+    --rf-chrome-bg-sunken: hsl(220, 10%, 9%);
+    --rf-chrome-border: hsl(220, 10%, 22%);
+    --rf-text: #f4f5f7;
+    --rf-text-secondary: #c5cad3;
+    --rf-text-muted: #9da5b1;
+    --rf-font: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * App chrome (shown once a log is open)
+ * ------------------------------------------------------------------------------------------- */
+
+.navbar-inverse {
+    background-image: none;
+    background-color: var(--rf-chrome-bg);
+    border-color: var(--rf-chrome-border);
+    border-bottom: 2px solid var(--rf-accent);
+}
+
+/* The toolbar below is fixed at top: 50px, so the bar must stay exactly 50px tall including its border */
+.rf-navbar {
+    height: 50px;
+    min-height: 50px;
+    margin: 0;
+    border-width: 0 0 2px;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: var(--rf-font);
+    z-index: 1030;
+}
+
+.rf-navbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 48px;
+    padding: 0 16px 0 20px;
+}
+
+.rf-navbar-logo {
+    flex: none;
+    height: 26px;
+    width: auto;
+}
+
+.rf-navbar-divider {
+    flex: none;
+    width: 1px;
+    height: 24px;
+    background: var(--rf-chrome-border);
+}
+
+.rf-navbar-file {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--rf-text);
+}
+
+.rf-navbar-actions {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rf-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--rf-chrome-border);
+    border-radius: 6px;
+    background: var(--rf-chrome-bg-raised);
+    color: var(--rf-text);
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: none;
+    box-shadow: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.rf-nav-btn:hover,
+.rf-nav-btn:focus,
+.open > .rf-nav-btn {
+    background: hsl(220, 9%, 23%);
+    border-color: hsl(220, 10%, 30%);
+    color: #fff;
+    box-shadow: none;
+}
+
+.rf-nav-btn-primary {
+    background: var(--rf-accent);
+    border-color: var(--rf-accent);
+    color: #fff;
+}
+
+.rf-nav-btn-primary:hover,
+.rf-nav-btn-primary:focus-within {
+    background: var(--rf-accent-hover);
+    border-color: var(--rf-accent-hover);
+}
+
+.rf-nav-btn svg,
+.rf-nav-icon svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+}
+
+.rf-nav-btn .caret {
+    margin-left: 2px;
+    opacity: 0.7;
+}
+
+.rf-nav-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--rf-text-muted);
+    box-shadow: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.rf-nav-icon:hover,
+.rf-nav-icon:focus {
+    background: var(--rf-chrome-bg-raised);
+    color: #fff;
+    outline: 0;
+}
+
+/* Only shown once a log is loaded, not for a video on its own */
+.rf-nav-icon.open-flight-analysis-dialog {
+    display: none;
+}
+
+html.has-log .rf-nav-icon.open-flight-analysis-dialog {
+    display: inline-flex;
+}
+
+.rf-export-menu .dropdown-menu {
+    min-width: 160px;
+    width: auto;
+    margin-top: 6px;
+}
+
+html.has-log .rf-export-menu .btn-video-export {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .rf-nav-label {
+        display: none;
+    }
+
+    .rf-navbar-divider:first-of-type,
+    .rf-navbar-logo {
+        display: none;
+    }
+}
+
+.btn-primary {
+    background-image: none;
+    background-color: var(--rf-accent);
+    border-color: var(--rf-accent-hover);
+    text-shadow: none;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+    background-color: var(--rf-accent-hover);
+    border-color: var(--rf-accent-hover);
+}
+
+.navbar .btn-group > .btn-primary + .btn-primary {
+    border-left-color: rgba(0, 0, 0, 0.25);
+}
+
+.btn-nobg:hover {
+    color: var(--rf-accent-bright);
+    text-shadow: none;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Welcome screen (shown until a log or video is opened)
+ * ------------------------------------------------------------------------------------------- */
+
+html:not(.has-log):not(.has-video) body {
+    padding-bottom: 0;
+    background: var(--rf-chrome-bg-sunken);
+}
+
+.welcome-pane {
+    position: relative;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: var(--rf-font);
+    color: var(--rf-text-secondary);
+    background:
+        radial-gradient(circle at 85% -10%, rgba(77, 168, 218, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 0% 110%, rgba(255, 255, 255, 0.06) 0%, transparent 40%),
+        linear-gradient(160deg, var(--rf-chrome-bg) 0%, var(--rf-chrome-bg-sunken) 100%);
+}
+
+.welcome-pane a {
+    color: var(--rf-text);
+}
+
+.welcome-pane a:hover,
+.welcome-pane a:focus {
+    color: var(--rf-accent-bright);
+    text-decoration: none;
+}
+
+/* Top bar */
+
+.rf-topbar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+}
+
+.rf-topbar-logo {
+    height: 40px;
+    width: auto;
+}
+
+.rf-topbar-links {
+    display: flex;
+    gap: 32px;
+}
+
+.rf-topbar-links a {
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rf-text-secondary);
+    transition: color 0.2s ease;
+}
+
+/* Hero */
+
+.rf-hero {
+    position: relative;
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px 60px;
+}
+
+/* A stylised pair of gyro traces running behind the hero, as a nod to what the tool does */
+.rf-trace {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 240px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0.5;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+}
+
+.rf-trace svg {
+    width: 100%;
+    height: 100%;
+}
+
+.rf-trace path {
+    fill: none;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+    animation: rf-trace-draw 2.4s ease-out forwards;
+}
+
+.rf-trace-a {
+    stroke: var(--rf-accent);
+}
+
+.rf-trace path.rf-trace-b {
+    stroke: rgba(255, 255, 255, 0.25);
+    animation-delay: 0.3s;
+}
+
+@keyframes rf-trace-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+.rf-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    text-align: center;
+}
+
+.rf-eyebrow {
+    display: inline-block;
+    margin: 0 0 20px;
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 0.8em;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rf-text-secondary);
+    animation: rf-fade-down 0.7s ease both;
+}
+
+.rf-headline {
+    margin: 0 0 18px;
+    font-family: var(--rf-font);
+    font-size: 4em;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: var(--rf-text);
+    animation: rf-fade-down 0.7s ease 0.1s both;
+}
+
+.rf-accent {
+    color: var(--rf-accent-bright);
+}
+
+.rf-lead {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    font-size: 1.15em;
+    line-height: 1.7;
+    color: var(--rf-text-muted);
+    animation: rf-fade-down 0.7s ease 0.2s both;
+}
+
+@keyframes rf-fade-down {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Drop zone */
+
+.rf-dropzone {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 36px 32px 28px;
+    border: 2px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    background: rgba(20, 22, 26, 0.65);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    animation: rf-fade-down 0.7s ease 0.3s both;
+}
+
+html.is-dragging .rf-dropzone {
+    border-color: var(--rf-accent-bright);
+    background: rgba(77, 168, 218, 0.12);
+    transform: scale(1.02);
+}
+
+.rf-dropzone-icon {
+    width: 44px;
+    height: 44px;
+    color: var(--rf-accent-bright);
+    margin-bottom: 12px;
+}
+
+.rf-dropzone-title {
+    margin: 0;
+    font-size: 1.25em;
+    font-weight: 700;
+    color: var(--rf-text);
+}
+
+.rf-dropzone-or {
+    margin: 6px 0 14px;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--rf-text-muted);
+}
+
+.rf-btn-primary {
+    padding: 14px 34px;
+    border: none;
+    border-radius: 8px;
+    background: var(--rf-accent);
+    color: #fff;
+    font-size: 0.95em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px rgba(77, 168, 218, 0.3);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rf-btn-primary:hover,
+.rf-btn-primary:focus-within {
+    background: var(--rf-accent-hover);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(77, 168, 218, 0.4);
+}
+
+.rf-dropzone .loading-message {
+    padding: 14px 0 0;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--rf-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.rf-formats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rf-formats li {
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--rf-text-muted);
+}
+
+/* Cards */
+
+.rf-cards {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+
+.rf-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid var(--rf-chrome-border);
+    border-radius: 12px;
+    background: rgba(31, 33, 37, 0.8);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+a.rf-card:hover {
+    border-color: var(--rf-accent);
+    transform: translateY(-4px);
+}
+
+.rf-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    background: rgba(77, 168, 218, 0.15);
+    color: var(--rf-accent-bright);
+}
+
+.rf-card-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.rf-card h3 {
+    margin: 0 0 8px;
+    font-family: var(--rf-font);
+    font-size: 1.2em;
+    font-weight: 800;
+    color: var(--rf-text);
+}
+
+.rf-card p {
+    flex: 1;
+    margin: 0 0 14px;
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: var(--rf-text-muted);
+}
+
+.rf-card-link {
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--rf-accent-bright);
+}
+
+.rf-card-hint {
+    font-size: 0.85em;
+    color: var(--rf-text-muted);
+}
+
+.rf-card kbd {
+    background: var(--rf-chrome-bg-raised);
+    border: 1px solid var(--rf-chrome-border);
+    box-shadow: none;
+    color: var(--rf-text);
+}
+
+/* Footer */
+
+.rf-footer {
+    position: relative;
+    z-index: 1;
+    padding: 18px 24px;
+    border-top: 1px solid var(--rf-chrome-border);
+    font-size: 0.85em;
+    text-align: center;
+    color: var(--rf-text-muted);
+}
+
+.rf-footer a {
+    color: var(--rf-text-secondary);
+}
+
+/* Small screens */
+
+@media (max-width: 860px) {
+    .rf-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .rf-headline {
+        font-size: 2.8em;
+        letter-spacing: -1px;
+    }
+}
+
+@media (max-width: 600px) {
+    .rf-topbar {
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px;
+    }
+
+    .rf-topbar-links {
+        gap: 20px;
+    }
+
+    .rf-dropzone {
+        padding: 28px 18px 22px;
+    }
+}
+
+/* Windows too short for the full layout (~1024px): tighten spacing so the page fits without scrolling.
+ * Medium heights keep the full design with less spacing; short heights get a compact layout. */
+
+@media (min-height: 846px) and (max-height: 1040px) {
+    .rf-topbar {
+        padding: 16px 36px;
+    }
+
+    .rf-topbar-logo {
+        height: 36px;
+    }
+
+    .rf-hero {
+        padding: 12px 24px 28px;
+    }
+
+    .rf-eyebrow {
+        margin-bottom: 14px;
+        padding: 6px 14px;
+    }
+
+    .rf-headline {
+        margin-bottom: 14px;
+        font-size: 3.4em;
+    }
+
+    .rf-lead {
+        margin-bottom: 26px;
+    }
+
+    .rf-dropzone {
+        padding: 24px 28px 20px;
+    }
+
+    .rf-dropzone-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 8px;
+    }
+
+    .rf-dropzone-or {
+        margin: 4px 0 12px;
+    }
+
+    .rf-formats {
+        margin-top: 16px;
+    }
+
+    .rf-cards {
+        padding-bottom: 24px;
+    }
+
+    .rf-card {
+        padding: 20px;
+    }
+
+    .rf-card-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 10px;
+    }
+
+    .rf-footer {
+        padding: 14px 24px;
+    }
+}
+
+@media (max-height: 845px) {
+    .rf-topbar {
+        padding: 12px 32px;
+    }
+
+    .rf-topbar-logo {
+        height: 32px;
+    }
+
+    .rf-hero {
+        padding: 0 24px 12px;
+    }
+
+    .rf-eyebrow {
+        display: none;
+    }
+
+    .rf-headline {
+        margin-bottom: 10px;
+        font-size: 2.5em;
+        letter-spacing: -1px;
+    }
+
+    .rf-lead {
+        margin-bottom: 14px;
+        font-size: 1em;
+        line-height: 1.5;
+    }
+
+    .rf-dropzone {
+        padding: 14px 24px 12px;
+    }
+
+    .rf-dropzone-icon {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 6px;
+    }
+
+    .rf-dropzone-or {
+        margin: 2px 0 8px;
+    }
+
+    .rf-btn-primary {
+        padding: 10px 28px;
+    }
+
+    .rf-formats {
+        margin-top: 10px;
+    }
+
+    .rf-cards {
+        gap: 16px;
+        padding-bottom: 12px;
+    }
+
+    /* Icon sits beside the heading rather than above it */
+    .rf-card {
+        display: block;
+        padding: 12px 16px;
+    }
+
+    .rf-card-icon {
+        float: left;
+        width: 28px;
+        height: 28px;
+        margin: 0 10px 0 0;
+        border-radius: 8px;
+    }
+
+    .rf-card-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .rf-card h3 {
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        line-height: 28px;
+    }
+
+    .rf-card p {
+        clear: left;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+
+    .rf-footer {
+        padding: 10px 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rf-trace path,
+    .rf-eyebrow,
+    .rf-headline,
+    .rf-lead,
+    .rf-dropzone {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Blue controls use dark text for contrast. */
+.rf-nav-btn-primary,
+.rf-nav-btn-primary:hover,
+.rf-nav-btn-primary:focus,
+.welcome-pane .rf-btn-primary,
+.welcome-pane .rf-btn-primary:hover,
+.welcome-pane .rf-btn-primary:focus-within,
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+    color: #181818;
+}
