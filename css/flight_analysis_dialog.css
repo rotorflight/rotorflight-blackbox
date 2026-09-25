@@ -1,0 +1,179 @@
+.open-flight-analysis-dialog {
+    display: none;
+}
+
+html.has-log .open-flight-analysis-dialog {
+    display: inline-block;
+}
+
+.flight-analysis-dialog .modal-dialog {
+    width: 75%;
+    min-width: 700px;
+    max-width: 980px;
+}
+
+.flight-analysis-dialog .modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.flight-analysis-loading {
+    color: #808080;
+    font-style: italic;
+}
+
+.flight-analysis-context {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #606060;
+    font-size: 13px;
+}
+
+.flight-analysis-context strong {
+    color: #303030;
+}
+
+.flight-analysis-capped-note {
+    margin: -6px 0 14px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px;
+    font-style: italic;
+    color: #8a6d3b;
+}
+
+.flight-analysis-verdict {
+    margin-bottom: 18px;
+}
+
+.flight-analysis-summary {
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.flight-analysis-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.flight-analysis-card,
+.flight-analysis-lab {
+    border: 1px solid #ddd;
+    border-left: 4px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 12px;
+    background: #fafafa;
+}
+
+.flight-analysis-lab {
+    margin-bottom: 12px;
+}
+
+.flight-analysis-card.status-good,
+.flight-analysis-lab.status-good {
+    border-left-color: #3c9d40;
+    background: #f2f9f2;
+}
+
+.flight-analysis-card.status-watch,
+.flight-analysis-lab.status-watch {
+    border-left-color: #d99a1f;
+    background: #fdf7ea;
+}
+
+.flight-analysis-card.status-attention,
+.flight-analysis-lab.status-attention {
+    border-left-color: #c9483f;
+    background: #fbeeed;
+}
+
+.flight-analysis-lab.status-info {
+    border-left-color: #3a7fc1;
+    background: #eef5fb;
+}
+
+.flight-analysis-lab.status-insufficient {
+    border-left-color: #b0b0b0;
+    background: #f5f5f5;
+}
+
+.flight-analysis-card-top,
+.flight-analysis-lab h4 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.flight-analysis-lab h4 {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+}
+
+.flight-analysis-card-title {
+    font-weight: bold;
+}
+
+.flight-analysis-card-status,
+.flight-analysis-lab-status {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #707070;
+    white-space: nowrap;
+}
+
+.flight-analysis-card-headline {
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+.flight-analysis-card-action {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #505050;
+}
+
+.flight-analysis-lab-story {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #404040;
+}
+
+.flight-analysis-lab-insufficient {
+    margin-bottom: 0;
+    font-style: italic;
+    color: #808080;
+}
+
+.flight-analysis-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+}
+
+.flight-analysis-tile {
+    background: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 6px 9px;
+}
+
+.flight-analysis-tile-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #909090;
+}
+
+.flight-analysis-tile-value {
+    font-weight: 600;
+    font-size: 13px;
+    margin-top: 1px;
+    color: #303030;
+}

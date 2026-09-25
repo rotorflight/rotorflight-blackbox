@@ -1512,7 +1512,9 @@ function BlackboxLogViewer() {
                     videoConfig = newConfig;
 
                     prefs.set('videoConfig', newConfig);
-                });
+                }),
+
+                flightAnalysisDialog = new FlightAnalysisDialog($("#dlgFlightAnalysis"));
 
         $(".open-graph-configuration-dialog").click(function(e) {
             e.preventDefault();
@@ -1535,6 +1537,12 @@ function BlackboxLogViewer() {
             e.preventDefault();
 
             userSettingsDialog.show(flightLog, userSettings);
+        });
+
+        $(".open-flight-analysis-dialog").click(function(e) {
+            e.preventDefault();
+
+            flightAnalysisDialog.show(flightLog);
         });
 
         $(".marker-offset", statusBar).click(function(e) {

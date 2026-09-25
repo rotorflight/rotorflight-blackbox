@@ -300,6 +300,7 @@ function dist() {
         './css/branding.css',
         './css/main.css',
         './css/user_settings_dialog.css',
+        './css/flight_analysis_dialog.css',
 
         // JavaScript
         './index.js',
@@ -341,6 +342,8 @@ function dist() {
         './js/seekbar.js',
         './js/tools.js',
         './js/user_settings_dialog.js',
+        './js/flight_analysis.js',
+        './js/flight_analysis_dialog.js',
         './js/video_export_dialog.js',
         './js/csv-exporter.js',
         './js/webworkers/csv-export-worker.js',
