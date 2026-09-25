@@ -589,6 +589,166 @@ a.rf-card:hover {
     }
 }
 
+/* Windows too short for the full layout (~1024px): tighten spacing so the page fits without scrolling.
+ * Medium heights keep the full design with less spacing; short heights get a compact layout. */
+
+@media (min-height: 846px) and (max-height: 1040px) {
+    .rf-topbar {
+        padding: 16px 36px;
+    }
+
+    .rf-topbar-logo {
+        height: 36px;
+    }
+
+    .rf-hero {
+        padding: 12px 24px 28px;
+    }
+
+    .rf-eyebrow {
+        margin-bottom: 14px;
+        padding: 6px 14px;
+    }
+
+    .rf-headline {
+        margin-bottom: 14px;
+        font-size: 3.4em;
+    }
+
+    .rf-lead {
+        margin-bottom: 26px;
+    }
+
+    .rf-dropzone {
+        padding: 24px 28px 20px;
+    }
+
+    .rf-dropzone-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 8px;
+    }
+
+    .rf-dropzone-or {
+        margin: 4px 0 12px;
+    }
+
+    .rf-formats {
+        margin-top: 16px;
+    }
+
+    .rf-cards {
+        padding-bottom: 24px;
+    }
+
+    .rf-card {
+        padding: 20px;
+    }
+
+    .rf-card-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 10px;
+    }
+
+    .rf-footer {
+        padding: 14px 24px;
+    }
+}
+
+@media (max-height: 845px) {
+    .rf-topbar {
+        padding: 12px 32px;
+    }
+
+    .rf-topbar-logo {
+        height: 32px;
+    }
+
+    .rf-hero {
+        padding: 0 24px 12px;
+    }
+
+    .rf-eyebrow {
+        display: none;
+    }
+
+    .rf-headline {
+        margin-bottom: 10px;
+        font-size: 2.5em;
+        letter-spacing: -1px;
+    }
+
+    .rf-lead {
+        margin-bottom: 14px;
+        font-size: 1em;
+        line-height: 1.5;
+    }
+
+    .rf-dropzone {
+        padding: 14px 24px 12px;
+    }
+
+    .rf-dropzone-icon {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 6px;
+    }
+
+    .rf-dropzone-or {
+        margin: 2px 0 8px;
+    }
+
+    .rf-btn-primary {
+        padding: 10px 28px;
+    }
+
+    .rf-formats {
+        margin-top: 10px;
+    }
+
+    .rf-cards {
+        gap: 16px;
+        padding-bottom: 12px;
+    }
+
+    /* Icon sits beside the heading rather than above it */
+    .rf-card {
+        display: block;
+        padding: 12px 16px;
+    }
+
+    .rf-card-icon {
+        float: left;
+        width: 28px;
+        height: 28px;
+        margin: 0 10px 0 0;
+        border-radius: 8px;
+    }
+
+    .rf-card-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .rf-card h3 {
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        line-height: 28px;
+    }
+
+    .rf-card p {
+        clear: left;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+
+    .rf-footer {
+        padding: 10px 24px;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .rf-trace path,
     .rf-eyebrow,
