@@ -2735,7 +2735,7 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-macos-alias@0.2.12, macos-alias@~0.2.5:
+macos-alias@~0.2.5:
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/macos-alias/-/macos-alias-0.2.12.tgz#c984db71b7c2372924548291a0790b43c080606b"
   integrity sha512-yiLHa7cfJcGRFq4FrR4tMlpNHb4Vy4mWnpajlSSIFM5k4Lv8/7BbbDLzCAVogWNl0LlLhizRp1drXv0hK9h0Yw==
