@@ -35,7 +35,7 @@ jobs:
       run: make version SEMVER="0.0.0-${{ env.GIT_VER }}"
 
     - name: Initialise build environment
-      run: yarn install
+      run: yarn install --frozen-lockfile
 
     - name: Build release for linux64
       run: yarn gulp release --linux64
@@ -77,7 +77,11 @@ jobs:
       run: make version SEMVER="0.0.0-${{ env.GIT_VER }}"
 
     - name: Initialise build environment
-      run: yarn install
+      run: yarn install --frozen-lockfile
+
+    # appdmg is optional on other platforms, but its native dependencies are required here.
+    - name: Verify macOS packaging dependencies
+      run: node -e "require('appdmg'); require('macos-alias'); console.log('macOS DMG dependencies loaded successfully')"
 
     - name: Build release for MacOS
       run: yarn gulp release --osx64
@@ -119,7 +123,7 @@ jobs:
       run: make version SEMVER="0.0.0-${{ env.GIT_VER }}"
 
     - name: Initialise build environment
-      run: yarn install
+      run: yarn install --frozen-lockfile
 
     - name: Build release for windows
       run: yarn gulp release --win64
@@ -161,7 +165,7 @@ jobs:
       run: make version SEMVER="0.0.0-${{ env.GIT_VER }}"
 
     - name: Initialise build environment
-      run: yarn install
+      run: yarn install --frozen-lockfile
 
     - name: Build release for windows
       run: yarn gulp release --win32
