@@ -60,7 +60,7 @@ function SeekBar(canvas) {
 
     this.onSeek = false;
 
-    function seekToDOMPixel(x) {
+    function timeAtDOMPixel(x) {
         var
             bounding = canvas.getBoundingClientRect(),
             time;
@@ -75,6 +75,20 @@ function SeekBar(canvas) {
 
         if (time > max)
             time = max;
+
+        return time;
+    }
+
+    /**
+     * Get the log time under the given page X coordinate.
+     */
+    this.getTimeAtPageX = function(pageX) {
+        return timeAtDOMPixel(pageX - $(canvas).offset().left);
+    };
+
+    function seekToDOMPixel(x) {
+        var
+            time = timeAtDOMPixel(x);
 
         if (that.onSeek)
             that.onSeek(time);

@@ -296,6 +296,8 @@ function dist() {
         './css/header_dialog.css',
         './css/jquery.nouislider.min.css',
         './css/keys_dialog.css',
+        './css/context_menu.css',
+        './css/branding.css',
         './css/main.css',
         './css/user_settings_dialog.css',
 
@@ -350,6 +352,8 @@ function dist() {
         './js/vendor/three.min.js',
         './js/vendor/GLTFLoader.js',
         './js/screenshot.js',
+        './js/save_file.js',
+        './js/context_menu.js',
         './js/default_workspaces.js',
 
         './resources/models/bell_cw.gltf',

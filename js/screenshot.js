@@ -11,11 +11,20 @@ function makeScreenshot() {
             ("00" + now.getSeconds()).slice(-2),
         defaultFilename = $(".log-filename").text().replace(".", "_") + "-"
             + timestamp + ".png";
-    html2canvas(el).then(canvas => {
-        window.canv = canvas;
-        let anchor = document.createElement("a");
-        anchor.download = defaultFilename;
-        anchor.href = canvas.toDataURL();
-        anchor.click();
-    });
+
+    // Ask where to save before rendering the screenshot.
+    pickSaveFile({
+        suggestedName: defaultFilename,
+        description: "PNG image",
+        mimeType: "image/png",
+        extension: ".png",
+    }).then(target => {
+        if (!target) {
+            return;
+        }
+
+        return html2canvas(el)
+            .then(canvas => new Promise(resolve => canvas.toBlob(resolve, "image/png")))
+            .then(blob => target.write(blob));
+    }).catch(error => reportSaveError(error));
 }
