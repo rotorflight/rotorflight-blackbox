@@ -147,6 +147,44 @@ function BlackboxLogViewer() {
 
         }
 
+    // Widen the window (up to the screen width) so every toolbar group is visible.
+    // Toolbar groups appear/expand at CSS breakpoints, so re-check a few times after resizing.
+    function fitWindowToToolbar(attemptsLeft = 3) {
+        let win;
+        try {
+            win = require('nw.gui').Window.get();
+        } catch (e) {
+            return; // not running under NW.js
+        }
+        if (win.isFullscreen) {
+            return;
+        }
+
+        const toolbar = $(".video-top-controls");
+        let contentRight = 0;
+        toolbar.children("li:visible").each(function() {
+            contentRight = Math.max(contentRight, this.getBoundingClientRect().right);
+        });
+        // Mirror the toolbar's left padding on the right-hand side
+        const neededWidth = Math.ceil(contentRight + parseFloat(toolbar.css("padding-left")));
+        const shortfall = neededWidth - window.innerWidth;
+
+        const screenLeft = screen.availLeft || 0;
+        const screenWidth = screen.availWidth;
+        if (shortfall <= 0 || win.width >= screenWidth) {
+            return;
+        }
+
+        const newWidth = Math.min(win.width + shortfall, screenWidth);
+        const newX = Math.max(screenLeft, Math.min(win.x, screenLeft + screenWidth - newWidth));
+        win.moveTo(newX, win.y);
+        win.resizeTo(newWidth, win.height);
+
+        if (attemptsLeft > 1) {
+            setTimeout(() => fitWindowToToolbar(attemptsLeft - 1), 250);
+        }
+    }
+
     function blackboxTimeFromVideoTime() {
         return (video.currentTime - videoOffset) * 1000000 + flightLog.getMinTime();
     }
@@ -741,6 +779,8 @@ function BlackboxLogViewer() {
             html.toggleClass('has-smoothing-override', userSettings.graphSmoothOverride);
             html.toggleClass('has-grid-override',      userSettings.graphSmoothOverride);
 
+            fitWindowToToolbar();
+
             setTimeout(function(){$(window).resize();}, 500 ); // refresh the window size;
 
             selectLog(null);
@@ -779,6 +819,7 @@ function BlackboxLogViewer() {
     function videoLoaded(e) {
         hasVideo = true;
         html.toggleClass("has-video", hasVideo);
+        fitWindowToToolbar();
 
         setGraphState(GRAPH_STATE_PAUSED);
         invalidateGraph();
@@ -984,7 +1025,7 @@ function BlackboxLogViewer() {
         }
         if (flightLog && newWorkspaces[newAciveId] && newWorkspaces[newAciveId].graphConfig) {
            newGraphConfig(newWorkspaces[newAciveId].graphConfig);
-           document.getElementById("legend_title").textContent = newWorkspaces[newAciveId].title
+           setLegendTitle(newWorkspaces[newAciveId].title);
         }
     }
 
@@ -995,6 +1036,22 @@ function BlackboxLogViewer() {
             graphConfig: graphConfig
         };
         onSwitchWorkspace(workspaceGraphConfigs, id)
+    }
+
+    // Delete all user saved workspaces; the built-in presets are unaffected
+    function onClearWorkspaces() {
+        if (!confirm("Delete all of your saved workspaces?\n\nThe built-in preset workspaces are not affected.")) {
+            return;
+        }
+        workspaceGraphConfigs = [];
+        activeWorkspace = 1;
+        onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);
+        setLegendTitle("Legend");
+    }
+
+    // Only replace the heading text so the close button inside it survives
+    function setLegendTitle(title) {
+        document.getElementById("legend_title").firstChild.nodeValue = title + " ";
     }
 
     // New workspaces feature; local storage of user configurations
@@ -1059,7 +1116,7 @@ function BlackboxLogViewer() {
 
         graphLegend = new GraphLegend($(".log-graph-legend"), activeGraphConfig, onLegendVisbilityChange, onLegendSelectionChange, onLegendHighlightChange, zoomGraphConfig, expandGraphConfig, newGraphConfig);
 
-        workspaceSelection = new WorkspaceSelection($(".log-workspace-selection"), workspaceGraphConfigs, onSwitchWorkspace, onSaveWorkspace);
+        workspaceSelection = new WorkspaceSelection($(".log-workspace-selection"), workspaceGraphConfigs, onSwitchWorkspace, onSaveWorkspace, onClearWorkspaces);
         onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);
 
         prefs.get('log-legend-hidden', function(item) {

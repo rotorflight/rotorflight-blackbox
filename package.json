@@ -16,6 +16,8 @@
     "id": "main",
     "show": true,
     "icon": "images/rf_icon_128.png",
+    "width": 1120,
+    "height": 640,
     "min_width": 740,
     "min_height": 480
   },
