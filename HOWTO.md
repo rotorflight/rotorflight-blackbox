@@ -3,10 +3,28 @@
 ### Setup
 
 1. Change to the project folder
-2. Install Node.js: `nvm install`
-3. Install yarn: `npm install yarn -g`
-4. Install dependencies: `yarn install`
-5. Run `yarn start`
+2. Install Node.js 24 (the default in `.nvmrc`): `nvm install`
+3. Install dependencies: `make init`
+4. Start the development server: `make dev-server`
+5. In another terminal, launch the desktop shell: `make dev-client`
+
+Node.js and npm must be on your PATH. The supported Node range is
+`^20.19.0 || >=22.12.0`, matching Wingflight Blackbox. Make downloads and runs Yarn 1.22.22 through
+npm's `npx` command; a global Yarn installation is not required.
+
+The server uses `http://localhost:8080/` and reloads when source files change.
+The app runs in the NW.js desktop client, which provides its native APIs.
+Stop the server with Ctrl+C and close the client window when finished. The first client launch downloads the NW.js SDK into `cache/`.
+
+Run `make` or `make help` for the command list. `make web` aliases `make dev-server`.
+`make debug`, `make apps`, and `make release` retain the existing desktop build workflow.
+Vite is used only for development; Gulp still packages releases.
+
+These Make commands require GNU Make and a POSIX shell (for example Git Bash on Windows).
+Run both commands in the same environment. Under WSL, the client is a Linux GUI app
+and requires WSLg or an X server. Without Make, use `npx --yes --package=yarn@1.22.22 yarn install --frozen-lockfile`,
+`npx --yes --package=yarn@1.22.22 yarn dev`, and
+`npx --yes --package=yarn@1.22.22 yarn gulp dev-client` respectively.
 
 ### App build and release
 
@@ -65,3 +83,14 @@ If no platform is provided, only for the platform you are builing from will be b
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32` and `--linux32` can be used too, but they are not officially supported, so use them at your own risk.
 
+
+### Export regression checks
+
+Run the native save-dialog and video-export tests with Node 24:
+
+```
+node --test test/save_file.test.cjs test/video_export.test.cjs
+```
+
+These tests simulate dialog selection/cancellation and check file writes and error handling.
+Also check native Save As dialogs in the desktop client on your target platform.

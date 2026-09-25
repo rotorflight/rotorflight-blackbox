@@ -70,7 +70,7 @@ function BlackboxLogViewer() {
         videoConfig = {},
 
         // JSON graph configuration:
-        graphConfig = {},
+        graphConfig = null,
 
 
         offsetCache = [], // Storage for the offset cache (last 20 files)
@@ -585,6 +585,7 @@ function BlackboxLogViewer() {
                 currentOffsetCache.index = logIndex;
             }
         } catch (e) {
+            $("#loading-file-text").hide();
             alert("Error opening log: " + e);
             currentOffsetCache.index = null;
             return;
@@ -606,6 +607,10 @@ function BlackboxLogViewer() {
         setVideoInTime(false);
         setVideoOutTime(false);
 
+        // Default graphs depend on the fields in a loaded log, not on startup preferences.
+        if (!graphConfig) {
+            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+        }
         activeGraphConfig.adaptGraphs(flightLog, graphConfig);
 
         graph.onSeek = function(offset) {
@@ -641,6 +646,7 @@ function BlackboxLogViewer() {
     }
 
     function loadFiles(files) {
+        ContextMenu.close();
         for (var i = 0; i < files.length; i++) {
             var
                 isLog = files[i].name.match(/\.(BBL|TXT|CFL|BFL|LOG)$/i),
@@ -682,7 +688,7 @@ function BlackboxLogViewer() {
         reader.onload = function(e) {
             var bytes = e.target.result;
 
-            var fileContents = String.fromCharCode.apply(null, new Uint8Array(bytes, 0,100));
+            var fileContents = String.fromCharCode.apply(null, new Uint8Array(bytes, 0, Math.min(100, bytes.byteLength)));
 
             if(fileContents.match(/# dump|# diff/i)) { // this is actually a configuration file
                 try{
@@ -699,7 +705,12 @@ function BlackboxLogViewer() {
                        html.toggleClass("has-config", hasConfig);
                    }
 
+                   if (!hasLog) {
+                       $("#loading-file-text").text(`Loaded configuration ${file.name}. Open a Blackbox log (.bbl/.bfl) to view it alongside this CLI dump.`);
+                   }
+
                    } catch(e) {
+                       $("#loading-file-text").hide();
                        configuration = null;
                        hasConfig = false;
                    }
@@ -711,6 +722,7 @@ function BlackboxLogViewer() {
             try {
                 flightLog = new FlightLog(flightLogDataArray);
             } catch (err) {
+                $("#loading-file-text").hide();
                 alert("Sorry, an error occured while trying to open this log:\n\n" + err);
                 return;
             }
@@ -852,10 +864,6 @@ function BlackboxLogViewer() {
 
     prefs.get('graphConfig', function(item) {
         graphConfig = GraphConfig.load(item);
-
-        if (!graphConfig) {
-            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
-        }
     });
 
     // Workspace save/restore to/from file.
@@ -870,16 +878,18 @@ function BlackboxLogViewer() {
             data = JSON.stringify(workspaceGraphConfigs, undefined, 4);
         }
 
-        var blob = new Blob([data], {type: 'text/json'}),
-            e    = document.createEvent('MouseEvents'),
-            a    = document.createElement('a');
-
-        a.download = file;
-        a.href = window.URL.createObjectURL(blob);
-        a.dataset.downloadurl =  ['text/json', a.download, a.href].join(':');
-        e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        a.dispatchEvent(e);
-
+        pickSaveFile({
+            suggestedName: file,
+            description: "Workspace file",
+            mimeType: "application/json",
+            extension: ".json",
+        }).then(function(target) {
+            if (target) {
+                return target.write(new Blob([data], {type: 'application/json'}));
+            }
+        }).catch(function(error) {
+            reportSaveError(error);
+        });
     }
 
     function upgradeWorkspaceFormat(oldFormat) {
@@ -927,25 +937,32 @@ function BlackboxLogViewer() {
     }
 
     function exportCsv(file, options={}) {
-
-        function onSuccess(data) {
-            console.debug("CSV export finished in", (performance.now() - startTime) / 1000, "secs");
-            if (!data) {
-                console.debug("Empty data, nothing to save");
+        // Ask where to save before spending time generating the CSV.
+        pickSaveFile({
+            suggestedName: file || getLogBaseFilename("log") + ".csv",
+            description: "CSV file",
+            mimeType: "text/csv",
+            extension: ".csv",
+        }).then(function(target) {
+            if (!target) {
                 return;
             }
-            let blob = new Blob([data], {type: 'text/csv'}),
-                e    = document.createEvent('MouseEvents'),
-                a    = document.createElement('a');
-            a.download = file || $(".log-filename").text() + ".csv";
-            a.href = window.URL.createObjectURL(blob);
-            a.dataset.downloadurl =  ['text/csv', a.download, a.href].join(':');
-            e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-            a.dispatchEvent(e);
-        }
 
-        let startTime = performance.now();
-        CsvExporter(flightLog, options).dump(onSuccess);
+            let startTime = performance.now();
+
+            CsvExporter(flightLog, options).dump(function(data) {
+                console.debug("CSV export finished in", (performance.now() - startTime) / 1000, "secs");
+                if (!data) {
+                    console.debug("Empty data, nothing to save");
+                    return;
+                }
+                target.write(new Blob([data], {type: 'text/csv'})).catch(function(error) {
+                    reportSaveError(error);
+                });
+            });
+        }).catch(function(error) {
+            reportSaveError(error);
+        });
     }
 
     function newGraphConfig(newConfig) {
@@ -961,8 +978,10 @@ function BlackboxLogViewer() {
     function onSwitchWorkspace(newWorkspaces, newAciveId) {
         prefs.set('activeWorkspace', newAciveId);
         prefs.set('workspaceGraphConfigs', newWorkspaces);
-        workspaceSelection.setWorkspaces(newWorkspaces)
-        workspaceSelection.setActiveWorkspace(newAciveId)
+        if (workspaceSelection) {
+            workspaceSelection.setWorkspaces(newWorkspaces);
+            workspaceSelection.setActiveWorkspace(newAciveId);
+        }
         if (flightLog && newWorkspaces[newAciveId] && newWorkspaces[newAciveId].graphConfig) {
            newGraphConfig(newWorkspaces[newAciveId].graphConfig);
            document.getElementById("legend_title").textContent = newWorkspaces[newAciveId].title
@@ -1020,7 +1039,7 @@ function BlackboxLogViewer() {
         });
 
         // Get Latest Version Information
-        $("#viewer-version").text('You are using version ' + VIEWER_VERSION);
+        $("#viewer-version").text('Blackbox Explorer v' + VIEWER_VERSION);
         $(".viewer-version", statusBar).text('v'+VIEWER_VERSION);
         try {
             $.getJSON('https://api.github.com/repos/rotorflight/rotorflight-blackbox/releases/latest',{},function(data){
@@ -1041,7 +1060,7 @@ function BlackboxLogViewer() {
         graphLegend = new GraphLegend($(".log-graph-legend"), activeGraphConfig, onLegendVisbilityChange, onLegendSelectionChange, onLegendHighlightChange, zoomGraphConfig, expandGraphConfig, newGraphConfig);
 
         workspaceSelection = new WorkspaceSelection($(".log-workspace-selection"), workspaceGraphConfigs, onSwitchWorkspace, onSaveWorkspace);
-        onSwitchWorkspace(workspaceGraphConfigs, workspaceSelection);
+        onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);
 
         prefs.get('log-legend-hidden', function(item) {
             if (item) {
@@ -1162,23 +1181,6 @@ function BlackboxLogViewer() {
 
         $(".toggle-grid").click(function () {
             toggleOverrideStatus('graphGridOverride', 'has-grid-override');
-        });
-
-        /** changelog trigger **/
-        $("#changelog_toggle").on('click', function() {
-            var state = $(this).data('state2');
-            if (state) { // log closed
-                $("#changelog").animate({right: -695}, 200, function () {
-                    html.removeClass('log_open');
-                });
-                state = false;
-            } else { // log open
-                $("#changelog").animate({right: 0}, 200);
-                html.addClass('log_open');
-                state = true;
-            }
-            $(this).text(state ? 'Close' : 'Changelog');
-            $(this).data('state2', state);
         });
 
         var logJumpBack = function(fast, slow) {
@@ -1710,57 +1712,200 @@ function BlackboxLogViewer() {
             }
         });
 
-        $(document).on("mousewheel", function(e) {
-
-        if($(e.target).hasClass('no-wheel')) { // prevent mousewheel scrolling on non scrollable elements.
-            e.preventDefault();
-            return;
+        function clampToLog(time) {
+            return Math.min(Math.max(time, flightLog.getMinTime()), flightLog.getMaxTime());
         }
 
-        if (graph && $(e.target).parents('.modal').length == 0){
-            var delta = Math.max(-1, Math.min(1, (e.originalEvent.wheelDelta)));
-            if (delta!=0) {
-                if($(e.target).attr('id') == 'graphCanvas') { // we are scrolling the graph
-                    if (delta < 0) { // scroll down (or left)
-                        if (e.altKey || e.shiftKey) {
-                            setGraphZoomLevel(graphZoom - 1 - ((e.altKey) ? 2 : 0), true);
-                        } else {
-                            logJumpBack(0.1 /*10%*/);
-                        }
-                    } else { // scroll up or right
-                        if (e.altKey || e.shiftKey) {
-                            setGraphZoomLevel(graphZoom + 1 + ((e.altKey) ? 2 : 0), true);
-                        } else {
-                            logJumpForward(0.1 /*10%*/);
-                        }
-                    }
-                    e.preventDefault();
-                    return true;
-                }
-                if($(e.target).hasClass('field-quick-adjust')) {
-                    var refreshRequired = false;
+        // Position of pageX across the graph canvas, from -0.5 (left edge) to 0.5 (right edge)
+        function graphOffsetAtPageX(pageX) {
+            return (pageX - $(canvas).offset().left) / $(canvas).width() - 0.5;
+        }
 
-                    if (e.shiftKey) { // change zoom
-                        refreshRequired = changePenZoom(activeGraphConfig.getGraphs(), $(e.target).attr('graph'), $(e.target).attr('field'), (delta>=0))
-                        e.preventDefault();
-                    } else if (e.altKey) { // change Expo
-                        refreshRequired = changePenExpo(activeGraphConfig.getGraphs(), $(e.target).attr('graph'), $(e.target).attr('field'), (delta>=0))
-                        e.preventDefault();
-                    } else if (e.ctrlKey){ // Change smoothing
-                        refreshRequired = changePenSmoothing(activeGraphConfig.getGraphs(), $(e.target).attr('graph'), $(e.target).attr('field'), (delta>=0))
-                        e.preventDefault();
-                    }
+        function graphTimeAtPageX(pageX) {
+            return currentBlackboxTime + graphOffsetAtPageX(pageX) * graph.getWindowWidthTime();
+        }
 
-                    if(refreshRequired) {
-                        graph.refreshGraphConfig();
-                        invalidateGraph();
-                        mouseNotification.show($('.log-graph'), null, null, refreshRequired, 750, null, 'bottom-right', 0);
-                    }
+        // Zoom by the given number of levels, keeping the time under pageX in the same place on screen
+        function zoomGraphAtPageX(steps, pageX) {
+            var
+                offset = graphOffsetAtPageX(pageX),
+                timeAtCursor = currentBlackboxTime + offset * graph.getWindowWidthTime(),
+                oldZoom = graphZoom;
 
-                    return true;
-                }
+            setGraphZoomLevel(graphZoom + steps, true);
+
+            if (graphZoom != oldZoom) {
+                setCurrentBlackboxTime(clampToLog(timeAtCursor - offset * graph.getWindowWidthTime()));
+                setGraphState(GRAPH_STATE_PAUSED);
             }
         }
+
+        var
+            // Wheel travel (in pixels) per zoom level: one notch of a mouse wheel, or a short trackpad swipe
+            WHEEL_ZOOM_STEP = 100,
+            wheelZoomTravel = 0;
+
+        // Bound natively rather than with jQuery, because document-level wheel listeners default to passive and
+        // couldn't then stop the page scrolling or the browser zooming
+        document.addEventListener("wheel", function(e) {
+            if ($(e.target).hasClass('no-wheel')) { // prevent mousewheel scrolling on non scrollable elements.
+                e.preventDefault();
+                return;
+            }
+
+            if (!graph || $(e.target).parents('.modal').length != 0) {
+                return;
+            }
+
+            var
+                scale = (e.deltaMode == 1) ? 40 : (e.deltaMode == 2) ? 800 : 1, // lines or pages to pixels
+                deltaX = e.deltaX * scale,
+                deltaY = e.deltaY * scale;
+
+            if (e.target === canvas) {
+                e.preventDefault();
+
+                // Shift+wheel scrubs; some browsers already report it as horizontal movement
+                if (e.shiftKey && deltaX == 0) {
+                    deltaX = deltaY;
+                    deltaY = 0;
+                }
+
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Scrub through time: 10% of the visible window per wheel notch
+                    setCurrentBlackboxTime(clampToLog(currentBlackboxTime + deltaX / WHEEL_ZOOM_STEP * 0.1 * graph.getWindowWidthTime()));
+                    setGraphState(GRAPH_STATE_PAUSED);
+                } else if (deltaY != 0) {
+                    // Zoom, wheel up/pinch out to zoom in. Accumulate so trackpads' many small deltas zoom at a sane rate.
+                    if (Math.sign(wheelZoomTravel) == Math.sign(deltaY)) {
+                        wheelZoomTravel = 0;
+                    }
+                    wheelZoomTravel -= deltaY;
+
+                    var steps = Math.trunc(wheelZoomTravel / WHEEL_ZOOM_STEP);
+
+                    if (steps != 0) {
+                        wheelZoomTravel -= steps * WHEEL_ZOOM_STEP;
+                        zoomGraphAtPageX(steps, e.pageX);
+                    }
+                }
+                return;
+            }
+
+            if ($(e.target).hasClass('field-quick-adjust') && deltaY != 0) {
+                var
+                    wheelUp = deltaY < 0,
+                    refreshRequired = false;
+
+                if (e.shiftKey) { // change zoom
+                    refreshRequired = changePenZoom(activeGraphConfig.getGraphs(), $(e.target).attr('graph'), $(e.target).attr('field'), wheelUp);
+                    e.preventDefault();
+                } else if (e.altKey) { // change Expo
+                    refreshRequired = changePenExpo(activeGraphConfig.getGraphs(), $(e.target).attr('graph'), $(e.target).attr('field'), wheelUp);
+                    e.preventDefault();
+                } else if (e.ctrlKey){ // Change smoothing
+                    refreshRequired = changePenSmoothing(activeGraphConfig.getGraphs(), $(e.target).attr('graph'), $(e.target).attr('field'), wheelUp);
+                    e.preventDefault();
+                }
+
+                if(refreshRequired) {
+                    graph.refreshGraphConfig();
+                    invalidateGraph();
+                    mouseNotification.show($('.log-graph'), null, null, refreshRequired, 750, null, 'bottom-right', 0);
+                }
+            }
+        }, {passive: false});
+
+        function placeMarkerAt(time) {
+            markerTime = time;
+            setMarker(true);
+            $(".marker-offset", statusBar).css('visibility', 'visible');
+            invalidateGraph();
+        }
+
+        function removeMarker() {
+            setMarker(false);
+            $(".marker-offset", statusBar).css('visibility', 'hidden');
+            invalidateGraph();
+        }
+
+        // Bookmark slots are 1 to 9, matching the Alt+1..9 recall shortcuts
+        function firstFreeBookmarkSlot() {
+            for (var slot = 1; slot <= 9; slot++) {
+                if (!bookmarkTimes || bookmarkTimes[slot] == null) {
+                    return slot;
+                }
+            }
+            return null;
+        }
+
+        function addBookmarkAt(slot, time) {
+            if (bookmarkTimes == null) {
+                bookmarkTimes = [];
+            }
+            bookmarkTimes[slot] = time;
+
+            $('.bookmark-' + slot, statusBar).css('visibility', 'visible');
+            $('.bookmark-clear', statusBar).css('visibility', 'visible');
+            invalidateGraph();
+        }
+
+        function showGraphContextMenu(time, pageX, pageY) {
+            var
+                hasRange = videoExportInTime !== false || videoExportOutTime !== false,
+                bookmarkSlot = firstFreeBookmarkSlot(),
+                canExportVideo = !$(".btn-video-export").hasClass("disabled");
+
+            ContextMenu.show([
+                {header: "At " + formatTime((time - flightLog.getMinTime()) / 1000, true)},
+                {label: "Go to here", action: function() {
+                    setCurrentBlackboxTime(time);
+                    setGraphState(GRAPH_STATE_PAUSED);
+                }},
+                {divider: true},
+                {label: "Set start here", shortcut: "I", action: function() { setVideoInTime(time); }},
+                {label: "Set end here", shortcut: "O", action: function() { setVideoOutTime(time); }},
+                {label: "Clear start and end", disabled: !hasRange, action: function() {
+                    setVideoInTime(false);
+                    setVideoOutTime(false);
+                }},
+                {divider: true},
+                hasMarker
+                    ? {label: "Remove marker", shortcut: "M", action: removeMarker}
+                    : {label: "Place marker here", shortcut: "M", action: function() { placeMarkerAt(time); }},
+                bookmarkSlot
+                    ? {label: "Add bookmark " + bookmarkSlot + " here", shortcut: "Alt+Shift+" + bookmarkSlot, action: function() { addBookmarkAt(bookmarkSlot, time); }}
+                    : {label: "All 9 bookmarks in use", disabled: true},
+                {divider: true},
+                {label: "Zoom in here", shortcut: "Wheel", action: function() {
+                    setCurrentBlackboxTime(time);
+                    setGraphZoomLevel(graphZoom + 2, true);
+                    setGraphState(GRAPH_STATE_PAUSED);
+                }},
+                {label: "Zoom out", action: function() { setGraphZoomLevel(graphZoom - 2, true); }},
+                {label: "Reset zoom", disabled: graphZoom == GRAPH_DEFAULT_ZOOM, action: function() { setGraphZoomLevel(GRAPH_DEFAULT_ZOOM, true); }},
+                {divider: true},
+                {label: hasRange ? "Export video of start to end…" : "Export video…", disabled: !canExportVideo, action: function() {
+                    $(".btn-video-export").first().trigger("click");
+                }},
+                {label: "Save graph as image…", shortcut: "Alt+S", action: makeScreenshot},
+            ], pageX, pageY);
+        }
+
+        $(canvas).on("contextmenu", function(e) {
+            if (!graph) {
+                return;
+            }
+            e.preventDefault();
+            showGraphContextMenu(clampToLog(graphTimeAtPageX(e.pageX)), e.pageX, e.pageY);
+        });
+
+        $(seekBarCanvas).on("contextmenu", function(e) {
+            if (!graph) {
+                return;
+            }
+            e.preventDefault();
+            showGraphContextMenu(seekBar.getTimeAtPageX(e.pageX), e.pageX, e.pageY);
         });
 
         $(document).keydown(function(e) {
@@ -2067,12 +2212,6 @@ function BlackboxLogViewer() {
                 setGraphZoomLevel(GRAPH_DEFAULT_ZOOM, true);
             });
 
-        $('.navbar-toggle').click(function(e) {
-            $('.navbar-collapse').collapse('toggle');
-
-            e.preventDefault();
-        });
-
         seekBar.onSeek = setCurrentBlackboxTime;
 
         function checkIfFileAsParameter() {
@@ -2124,19 +2263,29 @@ function BlackboxLogViewer() {
 
         /* drag and drop support */
 
+        var dragHighlightTimer;
+        function clearDragHighlight() {
+            clearTimeout(dragHighlightTimer);
+            html.removeClass("is-dragging");
+        }
+
         window.ondragover = function(e) {
             // prevent default behavior from changing page on dropped file
             // NOTE: ondrop events WILL NOT WORK if you do not "preventDefault" in the ondragover event!!
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
+            html.addClass('is-dragging');
+            clearTimeout(dragHighlightTimer);
+            dragHighlightTimer = setTimeout(clearDragHighlight, 150);
             return false;
         };
 
         window.ondrop = function(e) {
             e.preventDefault();
+            clearDragHighlight();
 
             const item = e.dataTransfer.items[0];
-            const entry = item.webkitGetAsEntry();
+            const entry = item && item.webkitGetAsEntry();
             if (entry?.isFile) {
               var file = e.dataTransfer.files[0];
               loadFiles([file]);

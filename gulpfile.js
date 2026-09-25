@@ -22,6 +22,8 @@ const DIST_DIR = './dist/';
 const APPS_DIR = './apps/';
 const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
+const DEV_CLIENT_DIR = './dev-client/';
+const DEV_SERVER_URL = 'http://localhost:8080/';
 
 const LINUX_INSTALL_DIR = '/opt/rotorflight';
 
@@ -43,7 +45,7 @@ const SELECTED_PLATFORMS = getInputPlatforms();
 //Tasks
 //-----------------
 
-gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release));
+gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release, clean_dev_client));
 
 gulp.task('clean-dist', clean_dist);
 
@@ -54,6 +56,8 @@ gulp.task('clean-debug', clean_debug);
 gulp.task('clean-release', clean_release);
 
 gulp.task('clean-cache', clean_cache);
+gulp.task('clean-dev-client', clean_dev_client);
+gulp.task('dev-client', gulp.series(dev_client_manifest, run_dev_client));
 
 const distRebuild = gulp.series(clean_dist, dist);
 gulp.task('dist', distRebuild);
@@ -208,6 +212,82 @@ function clean_cache() {
     return del(['./cache/**'], { force: true }); 
 };
 
+function clean_dev_client() {
+    return del([DEV_CLIENT_DIR + '**'], { force: true });
+}
+
+function dev_client_manifest(done) {
+    var manifest = Object.assign({}, pkg, {
+        main: DEV_SERVER_URL,
+    });
+
+    // Keep native localization available to the remotely served NW.js page.
+    manifest['node-remote'] = DEV_SERVER_URL;
+    manifest.window = Object.assign({}, pkg.window);
+    fs.mkdirSync(DEV_CLIENT_DIR, { recursive: true });
+    fs.cpSync('_locales', path.join(DEV_CLIENT_DIR, '_locales'), { recursive: true });
+
+    // NW.js resolves window.icon relative to the application manifest.
+    const iconDestination = path.join(DEV_CLIENT_DIR, pkg.window.icon);
+    fs.mkdirSync(path.dirname(iconDestination), { recursive: true });
+    fs.copyFileSync(pkg.window.icon, iconDestination);
+
+    fs.writeFileSync(DEV_CLIENT_DIR + 'package.json', JSON.stringify(manifest, null, 2));
+    done();
+}
+
+function run_dev_client(done) {
+    var platforms = getPlatforms();
+
+    if (platforms.length !== 1 || platforms[0] !== getDefaultPlatform()) {
+        done(new Error('dev-client must run on the current platform'));
+        return;
+    }
+
+    var builder = new NwBuilder(Object.assign({}, nwBuilderOptions, {
+        buildDir: DEBUG_DIR,
+        platforms: platforms,
+        flavor: 'sdk',
+        files: DEV_CLIENT_DIR + '**/*',
+    }));
+    builder.on('log', console.log);
+
+    // Reuse the cached SDK but spawn it directly: nw-builder's run() hides
+    // the desktop window on Windows.
+    builder.checkFiles()
+        .then(builder.resolveLatestVersion.bind(builder))
+        .then(builder.checkVersion.bind(builder))
+        .then(builder.platformFilesForVersion.bind(builder))
+        .then(builder.downloadNwjs.bind(builder))
+        .then(function () {
+            var currentPlatform = builder.options.currentPlatform;
+            var platform = builder._platforms[currentPlatform];
+            var runnable = currentPlatform.indexOf('win') === 0 ? 'nw.exe'
+                : currentPlatform.indexOf('osx') === 0 ? 'nwjs.app/Contents/MacOS/nwjs'
+                : 'nw';
+            var executable = path.resolve(platform.cache, runnable);
+            var parentDirectory = (Array.isArray(builder.options.files) ? builder.options.files[0] : builder.options.files)
+                .replace(/\*[/*]*/, '');
+
+            console.log('Launching App: ' + executable);
+
+            var nwProcess = require('child_process').spawn(executable, [parentDirectory], {
+                detached: true,
+                stdio: 'ignore',
+            });
+            // Let the app keep running after this gulp task (and `make dev-client`) exits,
+            // instead of blocking the terminal until the window is closed.
+            nwProcess.once('error', done);
+            nwProcess.once('spawn', function () {
+                nwProcess.unref();
+                done();
+            });
+        })
+        .catch(function (err) {
+            done(err);
+        });
+}
+
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
 function dist() {
@@ -216,6 +296,8 @@ function dist() {
         './css/header_dialog.css',
         './css/jquery.nouislider.min.css',
         './css/keys_dialog.css',
+        './css/context_menu.css',
+        './css/branding.css',
         './css/main.css',
         './css/user_settings_dialog.css',
 
@@ -270,6 +352,9 @@ function dist() {
         './js/vendor/three.min.js',
         './js/vendor/GLTFLoader.js',
         './js/screenshot.js',
+        './js/save_file.js',
+        './js/context_menu.js',
+        './js/default_workspaces.js',
 
         './resources/models/bell_cw.gltf',
         './resources/models/bell_cw.png',

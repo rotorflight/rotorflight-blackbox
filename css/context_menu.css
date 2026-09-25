@@ -1,0 +1,68 @@
+.rf-context-menu {
+    position: absolute;
+    z-index: 2000;
+    min-width: 240px;
+    max-height: calc(100vh - 8px);
+    overflow-y: auto;
+    width: auto;
+    margin: 0;
+    padding: 6px 0;
+    border: 1px solid #42474e;
+    border-radius: 8px;
+    background: #1e2024;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.rf-context-menu > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 6px 14px;
+    color: #f4f5f7;
+}
+
+.rf-context-menu > li > a:hover,
+.rf-context-menu > li > a:focus {
+    background: #4da8da;
+    background-image: none;
+    color: #181818;
+}
+
+.rf-context-menu > .disabled > a,
+.rf-context-menu > .disabled > a:hover,
+.rf-context-menu > .disabled > a:focus {
+    background: transparent;
+    color: #9da5b1;
+    opacity: 0.6;
+}
+
+.rf-context-menu .dropdown-header {
+    padding: 4px 14px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9da5b1;
+}
+
+.rf-context-menu .divider {
+    margin: 5px 0;
+    background: #42474e;
+}
+
+.rf-context-menu-shortcut {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #292d32;
+    box-shadow: none;
+    font-size: 11px;
+    color: #9da5b1;
+}
+
+.rf-context-menu > li > a:hover .rf-context-menu-shortcut {
+    background: rgba(0, 0, 0, 0.2);
+    color: #181818;
+}

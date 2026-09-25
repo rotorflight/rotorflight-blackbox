@@ -9,7 +9,8 @@
   "scripts": {
     "start": "gulp debug",
     "gulp": "gulp",
-    "release": "gulp release"
+    "release": "gulp release",
+    "dev": "vite"
   },
   "window": {
     "id": "main",
@@ -46,15 +47,17 @@
     "rpm-builder": "^1.0.0",
     "temp": "^0.9.0",
     "through2": "4.0.2",
-    "yarn": "^1.22.0"
+    "yarn": "^1.22.0",
+    "vite": "^4.5.14"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.2"
   },
   "resolutions": {
-    "**/**/lodash.template": "^4.5.0"
+    "**/**/lodash.template": "^4.5.0",
+    "nan": "2.29.0"
   },
   "engines": {
-    "node": "16.x"
+    "node": "^20.19.0 || >=22.12.0"
   }
 }
