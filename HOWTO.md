@@ -83,3 +83,14 @@ If no platform is provided, only for the platform you are builing from will be b
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32` and `--linux32` can be used too, but they are not officially supported, so use them at your own risk.
 
+
+### Export regression checks
+
+Run the native save-dialog and video-export tests with Node 24:
+
+```
+node --test test/save_file.test.cjs test/video_export.test.cjs
+```
+
+These tests simulate dialog selection/cancellation and check file writes and error handling.
+Also check native Save As dialogs in the desktop client on your target platform.
