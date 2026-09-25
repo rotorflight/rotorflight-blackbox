@@ -589,9 +589,74 @@ a.rf-card:hover {
     }
 }
 
-/* Short windows (e.g. the default 1120x640 window): tighten spacing so the page fits without scrolling */
+/* Windows too short for the full layout (~1024px): tighten spacing so the page fits without scrolling.
+ * Medium heights keep the full design with less spacing; short heights get a compact layout. */
 
-@media (max-height: 760px) {
+@media (min-height: 846px) and (max-height: 1040px) {
+    .rf-topbar {
+        padding: 16px 36px;
+    }
+
+    .rf-topbar-logo {
+        height: 36px;
+    }
+
+    .rf-hero {
+        padding: 12px 24px 28px;
+    }
+
+    .rf-eyebrow {
+        margin-bottom: 14px;
+        padding: 6px 14px;
+    }
+
+    .rf-headline {
+        margin-bottom: 14px;
+        font-size: 3.4em;
+    }
+
+    .rf-lead {
+        margin-bottom: 26px;
+    }
+
+    .rf-dropzone {
+        padding: 24px 28px 20px;
+    }
+
+    .rf-dropzone-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 8px;
+    }
+
+    .rf-dropzone-or {
+        margin: 4px 0 12px;
+    }
+
+    .rf-formats {
+        margin-top: 16px;
+    }
+
+    .rf-cards {
+        padding-bottom: 24px;
+    }
+
+    .rf-card {
+        padding: 20px;
+    }
+
+    .rf-card-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 10px;
+    }
+
+    .rf-footer {
+        padding: 14px 24px;
+    }
+}
+
+@media (max-height: 845px) {
     .rf-topbar {
         padding: 12px 32px;
     }
