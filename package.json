@@ -54,7 +54,8 @@
     "appdmg": "^0.6.2"
   },
   "resolutions": {
-    "**/**/lodash.template": "^4.5.0"
+    "**/**/lodash.template": "^4.5.0",
+    "nan": "2.29.0"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
