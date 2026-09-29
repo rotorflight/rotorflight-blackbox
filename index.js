@@ -57,6 +57,12 @@ checkForConfiguratorUpdates();
 
 function openLinksInExternalBrowserByDefault() {
 
+    // Only meaningful for the NW.js desktop build -- links opened with target="_blank" in a
+    // normal browser tab already go to a new tab/window without any extra handling needed.
+    if (!window.isNWjs()) {
+        return;
+    }
+
     const gui = require('nw.gui');
 
     //Get the current window

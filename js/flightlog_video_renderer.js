@@ -283,6 +283,8 @@ function FlightLogVideoRenderer(flightLog, logParameters, videoOptions, events) 
         } else {
             pickSaveFile({
                 suggestedName: getLogBaseFilename("video") + ".webm",
+                description: "WebM video",
+                mimeType: "video/webm",
                 extension: ".webm",
             }).then(function(target) {
                 if (!target || cancel) {

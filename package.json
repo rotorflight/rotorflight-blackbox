@@ -10,6 +10,7 @@
     "start": "gulp debug",
     "gulp": "gulp",
     "release": "gulp release",
+    "web-dist": "gulp web-dist",
     "dev": "vite"
   },
   "window": {
@@ -56,7 +57,7 @@
     "appdmg": "^0.6.2"
   },
   "resolutions": {
-    "**/**/lodash.template": "^4.5.0",
+    "lodash.template": "^4.5.0",
     "nan": "2.29.0"
   },
   "engines": {
