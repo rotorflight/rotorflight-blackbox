@@ -1,11 +1,21 @@
 "use strict";
 
 /**
- * Open NW.js's native Save As dialog before generating an export. Cancelling
- * resolves to null; choosing a file returns a target with an async write(blob).
- * No file is created or overwritten until write() is called.
+ * Open a Save As dialog before generating an export. Cancelling resolves to
+ * null; choosing a file returns a target with an async write(blob). No file is
+ * created or overwritten until write() is called.
+ *
+ * NW.js uses its native dialog and writes with Node's fs. A plain browser tab
+ * has no require(), so it uses the File System Access API where available, or
+ * a normal download of suggestedName otherwise (Firefox, Safari). Browsers only
+ * open the picker shortly after a user gesture, so call this from the click or
+ * key handler before doing any slow work.
  */
 function pickSaveFile(options) {
+    if (typeof require !== "function") {
+        return pickBrowserSaveFile(options);
+    }
+
     return new Promise(function(resolve, reject) {
         const input = document.createElement("input");
         input.type = "file";
@@ -47,6 +57,55 @@ function pickSaveFile(options) {
             cleanup();
             reject(error);
         }
+    });
+}
+
+function pickBrowserSaveFile(options) {
+    function checkBlob(blob) {
+        if (!blob) {
+            throw new Error("The export did not produce a file.");
+        }
+    }
+
+    if (typeof window.showSaveFilePicker !== "function") {
+        return Promise.resolve({
+            write: async function(blob) {
+                checkBlob(blob);
+                const anchor = document.createElement("a");
+                anchor.download = options.suggestedName;
+                anchor.href = window.URL.createObjectURL(blob);
+                anchor.click();
+                // Give the browser time to start the download before releasing the blob
+                setTimeout(function() {
+                    window.URL.revokeObjectURL(anchor.href);
+                }, 10000);
+            },
+        });
+    }
+
+    const pickerOptions = {suggestedName: options.suggestedName};
+    if (options.mimeType) {
+        pickerOptions.types = [{
+            description: options.description || options.extension,
+            accept: {[options.mimeType]: [options.extension]},
+        }];
+    }
+
+    return window.showSaveFilePicker(pickerOptions).then(function(fileHandle) {
+        return {
+            write: async function(blob) {
+                checkBlob(blob);
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+            },
+        };
+    }, function(error) {
+        // The user dismissing the picker isn't an error worth reporting
+        if (error && error.name === "AbortError") {
+            return null;
+        }
+        throw error;
     });
 }
 

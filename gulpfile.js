@@ -23,7 +23,92 @@ const APPS_DIR = './apps/';
 const DEBUG_DIR = './debug/';
 const RELEASE_DIR = './release/';
 const DEV_CLIENT_DIR = './dev-client/';
+const WEB_DIST_DIR = './web-dist/';
 const DEV_SERVER_URL = 'http://localhost:8080/';
+
+// Every source file, stylesheet, model, page, image and locale bundle the app loads at
+// runtime, shared by the NW.js dist() build and the static webDist() build.
+const APP_ASSET_SOURCES = [
+    // CSS files
+    './css/header_dialog.css',
+    './css/jquery.nouislider.min.css',
+    './css/keys_dialog.css',
+    './css/context_menu.css',
+    './css/branding.css',
+    './css/main.css',
+    './css/user_settings_dialog.css',
+    './css/flight_analysis_dialog.css',
+
+    // JavaScript
+    './index.js',
+    './js/browser_compat.js',
+    './js/cache.js',
+    './js/complex.js',
+    './js/configuration.js',
+    './js/craft_3d.js',
+    './js/datastream.js',
+    './js/decoders.js',
+    './js/expo.js',
+    './js/flightlog.js',
+    './js/flightlog_fielddefs.js',
+    './js/flightlog_fields_presenter.js',
+    './js/flightlog_index.js',
+    './js/flightlog_parser.js',
+    './js/flightlog_video_renderer.js',
+    './js/graph_config.js',
+    './js/graph_config_dialog.js',
+    './js/graph_legend.js',
+    './js/workspace_selection.js',
+    './js/graph_spectrum.js',
+    './js/graph_spectrum_calc.js',
+    './js/graph_spectrum_plot.js',
+    './js/graph_stepresponse.js',
+    './js/graph_stepresponse_calc.js',
+    './js/graph_stepresponse_plot.js',
+    './js/grapher.js',
+    './js/sticks.js',
+    './js/gui.js',
+    './js/header_dialog.js',
+    './js/imu.js',
+    './js/keys_dialog.js',
+    './js/laptimer.js',
+    './js/localization.js',
+    './js/main.js',
+    './js/pref_storage.js',
+    './js/real.js',
+    './js/release_checker.js',
+    './js/seekbar.js',
+    './js/tools.js',
+    './js/user_settings_dialog.js',
+    './js/flight_analysis.js',
+    './js/flight_analysis_dialog.js',
+    './js/video_export_dialog.js',
+    './js/csv-exporter.js',
+    './js/webworkers/csv-export-worker.js',
+    './js/vendor/FileSaver.js',
+    './js/vendor/jquery-1.11.3.min.js',
+    './js/vendor/jquery-ui-1.11.4.min.js',
+    './js/vendor/jquery.ba-throttle-debounce.js',
+    './js/vendor/jquery.nouislider.all.min.js',
+    './js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
+    './js/vendor/semver.js',
+    './js/vendor/three.js',
+    './js/vendor/three.min.js',
+    './js/vendor/GLTFLoader.js',
+    './js/screenshot.js',
+    './js/save_file.js',
+    './js/context_menu.js',
+    './js/default_workspaces.js',
+
+    './resources/models/bell_cw.gltf',
+    './resources/models/bell_cw.png',
+    './resources/models/bell_cw.bin',
+
+    // everything else
+    './*.html',
+    './images/**/*',
+    './_locales/**/*',
+];
 
 const LINUX_INSTALL_DIR = '/opt/rotorflight';
 
@@ -45,7 +130,7 @@ const SELECTED_PLATFORMS = getInputPlatforms();
 //Tasks
 //-----------------
 
-gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release, clean_dev_client));
+gulp.task('clean', gulp.parallel(clean_dist, clean_apps, clean_debug, clean_release, clean_dev_client, clean_web_dist));
 
 gulp.task('clean-dist', clean_dist);
 
@@ -59,8 +144,13 @@ gulp.task('clean-cache', clean_cache);
 gulp.task('clean-dev-client', clean_dev_client);
 gulp.task('dev-client', gulp.series(dev_client_manifest, run_dev_client));
 
+gulp.task('clean-web-dist', clean_web_dist);
+
 const distRebuild = gulp.series(clean_dist, dist);
 gulp.task('dist', distRebuild);
+
+// Static browser build, deployed to GitHub Pages by .github/workflows/deploy-web.yml.
+gulp.task('web-dist', gulp.series(clean_web_dist, webDist));
 
 const appsBuild = gulp.series(gulp.parallel(clean_apps, distRebuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
 gulp.task('apps', appsBuild);
@@ -216,6 +306,10 @@ function clean_dev_client() {
     return del([DEV_CLIENT_DIR + '**'], { force: true });
 }
 
+function clean_web_dist() {
+    return del([WEB_DIST_DIR + '**'], { force: true });
+}
+
 function dev_client_manifest(done) {
     var manifest = Object.assign({}, pkg, {
         main: DEV_SERVER_URL,
@@ -291,94 +385,33 @@ function run_dev_client(done) {
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
 function dist() {
-    var distSources = [
-        // CSS files
-        './css/header_dialog.css',
-        './css/jquery.nouislider.min.css',
-        './css/keys_dialog.css',
-        './css/context_menu.css',
-        './css/branding.css',
-        './css/main.css',
-        './css/user_settings_dialog.css',
-        './css/flight_analysis_dialog.css',
-
-        // JavaScript
-        './index.js',
-        './js/cache.js',
-        './js/complex.js',
-        './js/configuration.js',
-        './js/craft_3d.js',
-        './js/datastream.js',
-        './js/decoders.js',
-        './js/expo.js',
-        './js/flightlog.js',
-        './js/flightlog_fielddefs.js',
-        './js/flightlog_fields_presenter.js',
-        './js/flightlog_index.js',
-        './js/flightlog_parser.js',
-        './js/flightlog_video_renderer.js',
-        './js/graph_config.js',
-        './js/graph_config_dialog.js',
-        './js/graph_legend.js',
-        './js/workspace_selection.js',
-        './js/graph_spectrum.js',
-        './js/graph_spectrum_calc.js',
-        './js/graph_spectrum_plot.js',
-        './js/graph_stepresponse.js',
-        './js/graph_stepresponse_calc.js',
-        './js/graph_stepresponse_plot.js',
-        './js/grapher.js',
-        './js/sticks.js',
-        './js/gui.js',
-        './js/header_dialog.js',
-        './js/imu.js',
-        './js/keys_dialog.js',
-        './js/laptimer.js',
-        './js/localization.js',
-        './js/main.js',
-        './js/pref_storage.js',
-        './js/real.js',
-        './js/release_checker.js',
-        './js/seekbar.js',
-        './js/tools.js',
-        './js/user_settings_dialog.js',
-        './js/flight_analysis.js',
-        './js/flight_analysis_dialog.js',
-        './js/video_export_dialog.js',
-        './js/csv-exporter.js',
-        './js/webworkers/csv-export-worker.js',
-        './js/vendor/FileSaver.js',
-        './js/vendor/jquery-1.11.3.min.js',
-        './js/vendor/jquery-ui-1.11.4.min.js',
-        './js/vendor/jquery.ba-throttle-debounce.js',
-        './js/vendor/jquery.nouislider.all.min.js',
-        './js/vendor/modernizr-2.6.2-respond-1.1.0.min.js',
-        './js/vendor/semver.js',
-        './js/vendor/three.js',
-        './js/vendor/three.min.js',
-        './js/vendor/GLTFLoader.js',
-        './js/screenshot.js',
-        './js/save_file.js',
-        './js/context_menu.js',
-        './js/default_workspaces.js',
-
-        './resources/models/bell_cw.gltf',
-        './resources/models/bell_cw.png',
-        './resources/models/bell_cw.bin',
-
-        // everything else
+    var distSources = APP_ASSET_SOURCES.concat([
         './package.json', // For NW.js
         './yarn.lock',
-        './*.html',
-        './images/**/*',
-        './_locales/**/*',
-    ];
+    ]);
     return gulp.src(distSources, { base: '.' })
         .pipe(gulp.dest(DIST_DIR))
         .pipe(yarn({
             production: true,
             ignoreScripts: true
         }));;
+};
+
+// Static web build: the same app assets as dist(), but pulls its third-party JS/CSS
+// straight from the already-installed root node_modules/ (the same paths index.html's
+// <link>/<script> tags reference) instead of running a nested yarn install, and skips
+// yarn.lock. package.json is still needed: js/browser_compat.js's
+// chrome.runtime.getManifest() shim fetches it to report the app version.
+function webDist() {
+    var webDistSources = APP_ASSET_SOURCES.concat([
+        './package.json',
+        './node_modules/bootstrap/dist/**/*',
+        './node_modules/html2canvas/dist/html2canvas.min.js',
+        './node_modules/webm-writer/*.js',
+        './node_modules/lodash/lodash.min.js',
+    ]);
+    return gulp.src(webDistSources, { base: '.' })
+        .pipe(gulp.dest(WEB_DIST_DIR));
 };
 
 // Create runable app directories in ./apps
