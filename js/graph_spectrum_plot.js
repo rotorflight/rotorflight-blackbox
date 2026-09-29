@@ -753,17 +753,20 @@ GraphSpectrumPlot._drawMousePosition = function(canvasCtx, mouseX, mouseY, WIDTH
         const marginLeft = this._getActualMarginLeft();
 
         const mouseFrequency = ((mouseX - marginLeft) / WIDTH) * ((this._fftData.blackBoxRate / this._zoomX) / 2);
-        if (mouseFrequency >= 0 && mouseFrequency <= sampleRate) {
-            this._drawRpmFrequency(canvasCtx, mouseFrequency, sampleRate, ` (${Math.round(mouseFrequency * 60)}rpm)`, WIDTH, HEIGHT, OFFSET, "rgba(0,255,0,0.66)", 1);
-        }
-        if (mouseFrequency >= 0 && mouseFrequency * 2 <= sampleRate) {
-            this._drawRpmFrequency(canvasCtx, mouseFrequency * 2, sampleRate, '', WIDTH, HEIGHT, OFFSET + 15, "rgba(0,255,0,0.66)", 1);
-        }
-        if (mouseFrequency >= 0 && mouseFrequency * 3 <= sampleRate) {
-            this._drawRpmFrequency(canvasCtx, mouseFrequency * 3, sampleRate, '', WIDTH, HEIGHT, OFFSET + 15, "rgba(0,255,0,0.66)", 1);
-        }
-        if (mouseFrequency >= 0 && mouseFrequency * 4 <= sampleRate) {
-            this._drawRpmFrequency(canvasCtx, mouseFrequency * 4, sampleRate, '', WIDTH, HEIGHT, OFFSET + 15, "rgba(0,255,0,0.66)", 1);
+        const harmonicOrdinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
+        for (let h = 1; h <= harmonicOrdinals.length; h++) {
+            const harmonicFrequency = mouseFrequency * h;
+            if (mouseFrequency >= 0 && harmonicFrequency <= sampleRate) {
+                this._drawRpmFrequency(
+                    canvasCtx, 
+                    harmonicFrequency, 
+                    sampleRate,
+                    ` - ${harmonicOrdinals[h - 1]} harmonic (${Math.round(harmonicFrequency * 60)}rpm)`,
+                    // ` - ${h}x (${Math.round(harmonicFrequency * 60)}rpm)`,
+                    WIDTH, HEIGHT, OFFSET + (h - 1) * 17, 
+                    "rgba(0,255,0,0.66)", 1
+                );
+            }
         }
 
         // Y axis
