@@ -1,9 +1,3 @@
 {
-  "entries": [
-    {
-      "type": "branch",
-      "name": "feature-web",
-      "path": "./feature-web/"
-    }
-  ]
+  "entries": []
 }
