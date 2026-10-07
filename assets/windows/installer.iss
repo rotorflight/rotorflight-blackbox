@@ -108,3 +108,44 @@ begin
     end;
 
 end;
+
+function DirIsEmpty(const Path: string): Boolean;
+var
+  SR: TFindRec;
+begin
+  Result := True;
+  if FindFirst(Path + '\*', SR) then
+  try
+    repeat
+      if (SR.Name <> '.') and (SR.Name <> '..') then
+      begin
+        Result := False;
+        Break;
+      end;
+    until not FindNext(SR);
+  finally
+    FindClose(SR);
+  end;
+end;
+
+procedure CurUninstallStepChanged(UninstallStep: TUninstallStep);
+var
+  AppDir: String;
+begin
+  if UninstallStep = usPostUninstall then
+    begin
+        AppDir := ExpandConstant('{app}');
+        if DirExists(AppDir) then
+        begin
+            //Make sure the directory is actually empty
+            if not DirIsEmpty(AppDir) then
+            begin
+                MsgBox('Note: The folder "' + AppDir + '" contains files ' +
+                    'that were not removed.' + #13#10#13#10 +
+                    'Please delete this folder manually, before reinstalling Blackbox.',
+                    mbInformation, MB_OK);
+            end;
+        end;
+    end;
+end;
+
