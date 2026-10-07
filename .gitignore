@@ -11,6 +11,9 @@ apps/
 dist/
 debug/
 release/
+web-dist/
 
 # artefacts for Visual Studio Code
 /.vscode/
+# Generated development shell
+dev-client/

@@ -266,8 +266,10 @@ function FlightLog(logData) {
         if (!fieldNameToIndex.Vbat) {
             numCells = false;
         } else {
+            // Allow a little over the configured max cell voltage, so a freshly
+            // charged pack (e.g. 6S HV at 26.18V vs 6 x 4.35V) isn't counted as one cell more
             for (i = 1; i < 14; i++) {
-                if (refVoltage < i * sysConfig.vbatmaxcellvoltage)
+                if (refVoltage <= i * sysConfig.vbatmaxcellvoltage * 1.03)
                     break;
             }
 

@@ -69,11 +69,18 @@ Rotorflight Blackbox requires Windows 10 or later. Windows 7 is not supported.
 
 ## Usage
 
-Click the "Open log file/video" button at the top right and select your log file and your flight video (if you recorded one).
+Click **Open log file / video** on the welcome screen or **Open** in the toolbar and select your log file and flight video (if you recorded one).
 
 You can scroll through the log by clicking or dragging on the seek bar that appears underneath the main graph. The
 current time is represented by the vertical red bar in the center of the graph. You can also click and drag left and
 right on the graph area to scrub backwards and forwards.
+
+Scroll the mouse wheel over the graph to zoom around the pointer. Use Shift+wheel or a horizontal trackpad swipe
+to move through time. Right-click the graph or seek bar to set the start/end of an export, add a marker or bookmark,
+change zoom, or save a graph image. The shortcuts dialog lists these controls.
+
+The **Export** menu contains video, CSV, and workspace exports. Exports and graph screenshots prompt for a save
+location; cancelling the prompt stops the export. Video and CSV filenames default to the loaded log's name.
 
 ### Customizing the graph display
 

@@ -1,6 +1,6 @@
 "use strict";
 
-function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, options) {
+function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, options) {
     var
         PID_P = 0,
         PID_I = 1,
@@ -48,6 +48,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
             drawPidTable:true, drawSticks:true, drawTime:true,
             drawAnalyser:true,              // add an analyser option
             analyserSampleRate:2000/*Hz*/,  // the loop time for the log
+            drawStepResponse:true,          // add a step response option
             eraseBackground: true           // Set to false if you want the graph to draw on top of an existing canvas image
         },
 
@@ -67,6 +68,8 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
             analyser = null, /* define a new spectrum analyser */
 
+            stepResponse = null, /* define a new step response graph */
+
         watermarkLogo, /* Watermark feature */
 
         lapTimer, /* LapTimer feature */
@@ -84,18 +87,28 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
       typeof attitudeFrameIndex.y === "number" &&
       typeof attitudeFrameIndex.z === "number";
 
+    // rcCommand[3] is collective, rcCommand[0]/[1] are cyclic roll/pitch -- used to color
+    // the rotor disk to show collective pitch direction and swashplate cyclic tilt.
+    const collectiveFieldIndex = flightLog.getMainFieldIndexByName("rcCommand[3]");
+    const cyclicRollFieldIndex = flightLog.getMainFieldIndexByName("rcCommand[0]");
+    const cyclicPitchFieldIndex = flightLog.getMainFieldIndexByName("rcCommand[1]");
+
     $('#craftWrapper canvas').toggle(hasAttitude);
     $('#craftWrapper p').toggle(!hasAttitude);
 
     let craft;
     if (hasAttitude) {
-        craft = new Craft3D($(craftWrapper).find('canvas').get(0));
+        craft = new Craft3D($(craftWrapper).find('canvas').get(0), flightLog);
     }
 
     this.onSeek = null;
 
     this.getAnalyser = function() {
         return analyser;
+    }
+
+    this.getStepResponse = function() {
+        return stepResponse;
     }
 
     function extend(base, top) {
@@ -753,6 +766,8 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
         if(analyser!=null) analyser.resize();
 
+        if(stepResponse!=null) stepResponse.resize();
+
         // Calculate again the position/size of frame label
         frameLabelTextWidthFrameNumber = null;
         frameLabelTextWidthFrameTime = null;
@@ -878,7 +893,10 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                     const x = (-centerFrame[attitudeFrameIndex.x] / 1800) * Math.PI;
                     const y = (-centerFrame[attitudeFrameIndex.y] / 1800) * Math.PI;
                     const z = (-centerFrame[attitudeFrameIndex.z] / 1800) * Math.PI;
-                    craft.rotateTo(x, y, z);
+                    const collectiveRaw = typeof collectiveFieldIndex === "number" ? centerFrame[collectiveFieldIndex] : undefined;
+                    const cyclicRollRaw = typeof cyclicRollFieldIndex === "number" ? centerFrame[cyclicRollFieldIndex] : undefined;
+                    const cyclicPitchRaw = typeof cyclicPitchFieldIndex === "number" ? centerFrame[cyclicPitchFieldIndex] : undefined;
+                    craft.rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw);
                 }
             }
 
@@ -889,6 +907,13 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                                 var field = graph.fields[graphConfig.selectedFieldIndex];
                 analyser.plotSpectrum(field.index, field.curve, field.friendlyName);
                 } catch(err) {console.log('Cannot plot analyser ' + err);}
+            }
+
+            // Draw Step Response
+            if (options.drawStepResponse && stepResponse) {
+                try {
+                    stepResponse.plot();
+                } catch(err) {console.log('Cannot plot step response ' + err);}
             }
 
             //Draw Watermark
@@ -971,20 +996,24 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
     this.setInTime = function(time) {
         inTime = time;
         analyser.setInTime(inTime);
+        if (stepResponse) stepResponse.setInTime(inTime);
 
         if (outTime <= inTime) {
             outTime = false;
             analyser.setOutTime(outTime);
+            if (stepResponse) stepResponse.setOutTime(outTime);
         }
     };
 
     this.setOutTime = function(time) {
         outTime = time;
         analyser.setOutTime(outTime);
+        if (stepResponse) stepResponse.setOutTime(outTime);
 
         if (inTime >= outTime) {
             inTime = false;
             analyser.setInTime(inTime);
+            if (stepResponse) stepResponse.setInTime(inTime);
         }
     };
 
@@ -1006,6 +1035,20 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
     // Add analyser zoom toggling
     this.setAnalyser= function(state) {
       analyser.setFullscreen( state );
+    };
+
+    // Add option toggling
+    this.setDrawStepResponse = function(state) {
+      options.drawStepResponse = state;
+    };
+
+    // Add step response zoom toggling
+    this.setStepResponse = function(state) {
+      if (stepResponse) stepResponse.setFullscreen( state );
+    };
+
+    this.setStepResponseAxisEnabled = function(axis, state) {
+      if (stepResponse) stepResponse.setAxisEnabled(axis, state);
     };
 
     // Update user options
@@ -1032,6 +1075,9 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
     /* Create the FlightLogAnalyser object */
         analyser = new FlightLogAnalyser(flightLog, canvas, analyserCanvas);
+
+    /* Create the FlightLogStepResponse object */
+        stepResponse = new FlightLogStepResponse(flightLog, canvas, stepResponseCanvas);
 
     /* Create the Lap Timer object */
         lapTimer = new LapTimer();
