@@ -71,7 +71,8 @@ You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64
 
 The `web/2.3.0` branch is based on the unchanged `release/2.3.0` tag
 (`b9635a975e95159faf1bf7b5efc4ce7cd93a2b37`). It adds only browser
-compatibility and static packaging; later application features are not included.
+compatibility, fresh-profile initialization fixes, and static packaging;
+later application features are not included.
 The browser compatibility layer and desktop API guards are backported from
 commit `855c00fe2237a0704514ef279601382a18038677`.
 

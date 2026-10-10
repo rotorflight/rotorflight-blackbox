@@ -613,6 +613,12 @@ function BlackboxLogViewer() {
         setVideoInTime(false);
         setVideoOutTime(false);
 
+        // A fresh browser profile has no saved graphs. Wait until a log is
+        // available before choosing defaults from its enabled fields.
+        if (!graphConfig) {
+            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+        }
+
         activeGraphConfig.adaptGraphs(flightLog, graphConfig);
 
         graph.onSeek = function(offset) {
@@ -860,9 +866,6 @@ function BlackboxLogViewer() {
     prefs.get('graphConfig', function(item) {
         graphConfig = GraphConfig.load(item);
 
-        if (!graphConfig) {
-            graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
-        }
     });
 
     // Workspace save/restore to/from file.
@@ -968,8 +971,11 @@ function BlackboxLogViewer() {
     function onSwitchWorkspace(newWorkspaces, newAciveId) {
         prefs.set('activeWorkspace', newAciveId);
         prefs.set('workspaceGraphConfigs', newWorkspaces);
-        workspaceSelection.setWorkspaces(newWorkspaces)
-        workspaceSelection.setActiveWorkspace(newAciveId)
+        // Browser storage callbacks can run before document.ready creates the selector.
+        if (workspaceSelection) {
+            workspaceSelection.setWorkspaces(newWorkspaces);
+            workspaceSelection.setActiveWorkspace(newAciveId);
+        }
         if (flightLog && newWorkspaces[newAciveId] && newWorkspaces[newAciveId].graphConfig) {
            newGraphConfig(newWorkspaces[newAciveId].graphConfig);
            document.getElementById("legend_title").textContent = newWorkspaces[newAciveId].title
@@ -1048,7 +1054,7 @@ function BlackboxLogViewer() {
         graphLegend = new GraphLegend($(".log-graph-legend"), activeGraphConfig, onLegendVisbilityChange, onLegendSelectionChange, onLegendHighlightChange, zoomGraphConfig, expandGraphConfig, newGraphConfig);
 
         workspaceSelection = new WorkspaceSelection($(".log-workspace-selection"), workspaceGraphConfigs, onSwitchWorkspace, onSaveWorkspace);
-        onSwitchWorkspace(workspaceGraphConfigs, workspaceSelection);
+        onSwitchWorkspace(workspaceGraphConfigs, activeWorkspace);
 
         prefs.get('log-legend-hidden', function(item) {
             if (item) {
