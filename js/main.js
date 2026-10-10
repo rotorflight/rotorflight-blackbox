@@ -617,6 +617,11 @@ function BlackboxLogViewer() {
         // available before choosing defaults from its enabled fields.
         if (!graphConfig) {
             graphConfig = GraphConfig.getExampleGraphConfigs(flightLog, ["Motors", "Gyros"]);
+            graphConfig.forEach(function(config) {
+                config.fields.forEach(function(field) {
+                    field.curve = GraphConfig.getDefaultCurveForField(flightLog, field.name);
+                });
+            });
         }
 
         activeGraphConfig.adaptGraphs(flightLog, graphConfig);
