@@ -65,3 +65,26 @@ If no platform is provided, only for the platform you are builing from will be b
 
 You can also use multiple platforms e.g. `yarn gulp <taskname> --osx64 --linux64`. Other platforms like `--win32` and `--linux32` can be used too, but they are not officially supported, so use them at your own risk.
 
+
+
+## Web backport of release 2.3.0
+
+The `web/2.3.0` branch is based on the unchanged `release/2.3.0` tag
+(`b9635a975e95159faf1bf7b5efc4ce7cd93a2b37`). It adds only browser
+compatibility and static packaging; later application features are not included.
+The browser compatibility layer and desktop API guards are backported from
+commit `855c00fe2237a0704514ef279601382a18038677`.
+
+Build with the original locked dependencies:
+
+```sh
+yarn install --frozen-lockfile --ignore-engines --ignore-scripts
+make version SEMVER=2.3.0
+node node_modules/gulp/bin/gulp.js web-dist
+```
+
+The resulting `web-dist/` is published to `release/2.3.0/` and `latest/`
+on the official `gh-pages` branch. Preserve the existing landing page and
+other builds, regenerate `versions.json` using the script on master, then
+run the official `publish-pages.yml` workflow. The original release tag and
+desktop release remain unchanged.

@@ -14,3 +14,4 @@ release/
 
 # artefacts for Visual Studio Code
 /.vscode/
+web-dist/

@@ -58,6 +58,11 @@ gulp.task('clean-cache', clean_cache);
 const distRebuild = gulp.series(clean_dist, dist);
 gulp.task('dist', distRebuild);
 
+// Static browser build, using the original release asset list.
+gulp.task('web-dist', gulp.series(function cleanWebDist() {
+    return del(['./web-dist/**']);
+}, webDist));
+
 const appsBuild = gulp.series(gulp.parallel(clean_apps, distRebuild), apps, gulp.parallel(listPostBuildTasks(APPS_DIR)));
 gulp.task('apps', appsBuild);
 
@@ -210,8 +215,8 @@ function clean_cache() {
 
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
-function dist() {
-    var distSources = [
+function appSources() {
+    return [
         // CSS files
         './css/header_dialog.css',
         './css/jquery.nouislider.min.css',
@@ -221,6 +226,7 @@ function dist() {
 
         // JavaScript
         './index.js',
+        './js/browser_compat.js',
         './js/cache.js',
         './js/complex.js',
         './js/configuration.js',
@@ -283,7 +289,19 @@ function dist() {
         './images/**/*',
         './_locales/**/*',
     ];
-    return gulp.src(distSources, { base: '.' })
+};
+
+function webDist() {
+    return gulp.src(appSources().concat([
+        './node_modules/bootstrap/dist/**/*',
+        './node_modules/html2canvas/dist/**/*',
+        './node_modules/lodash/lodash.min.js',
+        './node_modules/webm-writer/*.js',
+    ]), { base: '.' }).pipe(gulp.dest('./web-dist/'));
+};
+
+function dist() {
+    return gulp.src(appSources(), { base: '.' })
         .pipe(gulp.dest(DIST_DIR))
         .pipe(yarn({
             production: true,
