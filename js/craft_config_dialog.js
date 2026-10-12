@@ -13,6 +13,7 @@ function CraftConfigDialog(dialog, craftConfig, onConfigChanged) {
     var errorElem        = $(".craft-config-error", dialog);
     var chooseButton     = $(".craft-config-choose-file", dialog);
     var clearButton      = $(".craft-config-clear", dialog);
+    var loadOtherButton  = $(".modal-footer .craft-config-choose-file", dialog);
     var fileInput        = $(".craft-config-file-input", dialog);
 
     function renderList(filter) {
@@ -45,6 +46,8 @@ function CraftConfigDialog(dialog, craftConfig, onConfigChanged) {
 
         emptyElem.toggle(!has);
         detailsElem.toggle(has);
+        clearButton.toggle(has);
+        loadOtherButton.toggle(has);
 
         if (!has) return;
 

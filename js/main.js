@@ -387,9 +387,10 @@ function BlackboxLogViewer() {
     }
 
     /**
-     * Show a Yes/No confirmation dialog asking whether to load a different craft config.
+     * Show a Yes/No confirmation dialog asking whether to load a different craft config, with an
+     * extra option to clear the loaded config instead.
      */
-    function showCraftNameMismatchDialog(message, onYes) {
+    function showCraftNameMismatchDialog(message, onYes, onClear) {
         var dialog = $('#dlgCraftNameMismatch');
 
         $('.craft-name-mismatch-message', dialog).text(message);
@@ -397,6 +398,11 @@ function BlackboxLogViewer() {
         $('.craft-name-mismatch-yes', dialog).off('click').on('click', function() {
             dialog.modal('hide');
             onYes();
+        });
+
+        $('.craft-name-mismatch-clear', dialog).off('click').on('click', function() {
+            dialog.modal('hide');
+            onClear();
         });
 
         dialog.modal('show');
@@ -434,6 +440,9 @@ function BlackboxLogViewer() {
             if (promptOnMismatch !== false) {
                 showCraftNameMismatchDialog(tooltip, function() {
                     craftConfigDialog.show();
+                }, function() {
+                    craftConfig.clear();
+                    checkCraftConfigMatch(logCraftName, false);
                 });
             }
         }
