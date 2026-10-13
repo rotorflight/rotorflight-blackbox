@@ -455,6 +455,21 @@ function BlackboxLogViewer() {
         dialog.modal('show');
     }
 
+    /**
+     * Called after the craft config is loaded or cleared: re-check the currently displayed log
+     * against it, and drop any spectrum RPM lines drawn from the previous config's gear ratios.
+     */
+    function onCraftConfigChanged() {
+        if (flightLog) {
+            checkCraftConfigMatch(flightLog.getSysConfig()['Craft name'], false);
+        }
+
+        var analyser = graph && graph.getAnalyser();
+        if (analyser) {
+            analyser.clearMouseOverlay();
+        }
+    }
+
     // Only prompt about a craft name mismatch once per opened log file, not on every log
     // index change or header edit. Reset in loadLogFile().
     var craftMismatchPrompted = false;
@@ -494,7 +509,7 @@ function BlackboxLogViewer() {
                     craftConfigDialog.show();
                 }, function() {
                     craftConfig.clear();
-                    checkCraftConfigMatch(logCraftName, false);
+                    onCraftConfigChanged();
                 });
             }
         }
@@ -1603,12 +1618,7 @@ function BlackboxLogViewer() {
 
                 flightAnalysisDialog = new FlightAnalysisDialog($("#dlgFlightAnalysis"));
 
-        craftConfigDialog = new CraftConfigDialog($("#dlgCraftConfig"), craftConfig, function() {
-            // Re-check the currently displayed log against the newly loaded/cleared configuration
-            if (flightLog) {
-                checkCraftConfigMatch(flightLog.getSysConfig()['Craft name'], false);
-            }
-        });
+        craftConfigDialog = new CraftConfigDialog($("#dlgCraftConfig"), craftConfig, onCraftConfigChanged);
 
         $(".open-graph-configuration-dialog").click(function(e) {
             e.preventDefault();

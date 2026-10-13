@@ -154,6 +154,16 @@ var
             that.draw();
         };
 
+        // Clear the mouse-hover overlay lines (SHIFT/CTRL) until the next hover, e.g. when the
+        // frequency window or the craft config's gear ratios they were drawn from change.
+        this.clearMouseOverlay = function() {
+            GraphSpectrumPlot.setMousePosition(0, 0);
+            GraphSpectrumPlot.setRotorGearRatios(null);
+            lastMouseX = -1;
+            lastMouseY = -1;
+            that.refresh();
+        };
+
         this.draw = function() {
             GraphSpectrumPlot.draw();
         };
@@ -171,12 +181,8 @@ var
         analyserZoomXElem.on('input', $.debounce(100, function() {
             analyserZoomX = (analyserZoomXElem.val() / 100);
             GraphSpectrumPlot.setZoom(analyserZoomX, analyserZoomY);
-            // The frequency window changed, so the mouse-hover overlay lines (SHIFT/CTRL) no longer
-            // line up with the mouse position that produced them - clear them until the next hover.
-            GraphSpectrumPlot.setMousePosition(0, 0);
-            lastMouseX = -1;
-            lastMouseY = -1;
-            that.refresh();
+            // The frequency window changed, so the overlay lines no longer line up with the mouse
+            that.clearMouseOverlay();
         })).dblclick(function() {
             $(this).val(DEFAULT_ZOOM).trigger("input");
         }).val(DEFAULT_ZOOM);;
