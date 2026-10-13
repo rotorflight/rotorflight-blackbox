@@ -1198,7 +1198,13 @@ function BlackboxLogViewer() {
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover", placement: "auto bottom"}); // initialise tooltips
         $('[data-toggle="dropdown"]').dropdown(); // initialise menus
 
-        craftConfig.loadFromCache(); // restore the persisted craft dump/diff config, if any
+        // Restore the persisted craft dump/diff config, if any. The read may finish after a log
+        // has already been opened, so re-check that log's craft name once it's done.
+        craftConfig.loadFromCache(function() {
+            if (flightLog) {
+                checkCraftConfigMatch(flightLog.getSysConfig()['Craft name']);
+            }
+        });
         $('a.auto-hide-menu').click(function() {
             var test = $(this).closest('.dropdown').children().first().dropdown("toggle");
         });

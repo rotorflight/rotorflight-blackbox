@@ -13,6 +13,7 @@ function CraftConfig(prefs) {
     var fileName = null;
     var loadedAt = null;
     var parsed = CraftConfig.emptyParsed();
+    var stateGeneration = 0; // bumped on load/clear so a late loadFromCache() result can't overwrite them
 
     function persist() {
         prefs.set('craftConfig', {
@@ -34,6 +35,7 @@ function CraftConfig(prefs) {
                 return;
             }
 
+            stateGeneration++;
             fileName = file.name;
             loadedAt = Date.now();
             parsed = result;
@@ -51,7 +53,15 @@ function CraftConfig(prefs) {
     };
 
     this.loadFromCache = function(onLoaded) {
+        var generation = stateGeneration;
+
         prefs.get('craftConfig', function(item) {
+            // A config was loaded or cleared while the cache read was in flight - keep that instead
+            if (generation !== stateGeneration) {
+                if (onLoaded) onLoaded();
+                return;
+            }
+
             if (item) {
                 fileName = item.fileName;
                 loadedAt = item.loadedAt;
@@ -63,6 +73,7 @@ function CraftConfig(prefs) {
     };
 
     this.clear = function() {
+        stateGeneration++;
         fileName = null;
         loadedAt = null;
         parsed = CraftConfig.emptyParsed();
