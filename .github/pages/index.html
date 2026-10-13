@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotorflight Blackbox</title>
+  <meta name="description" content="Rotorflight Blackbox — Browser-based flight log viewer and analyzer for Rotorflight helicopters.">
+  <link rel="icon" type="image/png" href="logos/rf_icon_128.png">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:       #4da8da;
+      --accent-dark:  #3688b5;
+      --accent-light: #80c5eb;
+      --gray-dark:  #4e4e4e;
+      --gray-light: #f5f5f5;
+      --almost-black: #333333;
+      --border-gray:  #e0e0e0;
+      --bg:         #0f0f0f;
+      --bg-card:    #1a1a1a;
+      --bg-card2:   #222222;
+      --text:       #ffffff;
+      --text-muted: #aaaaaa;
+      --font: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Navigation ───────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 40px;
+      height: 71px;
+      background: rgba(16, 18, 21, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      font-family: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgb(244, 245, 247);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #ffffff; }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 4px;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--accent-dark) !important; }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 24px 64px;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(77, 168, 218, 0.12) 0%, transparent 70%),
+        linear-gradient(180deg, #0f0f0f 0%, #141414 100%);
+      z-index: 0;
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding: 6px 16px;
+      border: 1px solid rgba(77, 168, 218, 0.35);
+      border-radius: 100px;
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-bottom: 44px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 30px;
+      border-radius: 5px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s, background 0.2s;
+      border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.04); }
+
+    /* ── Section Layout ───────────────────────────────────────── */
+    section {
+      padding: 80px 24px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      max-width: 560px;
+      margin-bottom: 52px;
+    }
+
+    /* ── Version Cards ────────────────────────────────────────── */
+    #versions {
+      background: #0c0c0c;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Pinned top row: Stable only */
+    .pinned-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .category-count {
+      margin-left: auto;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0;
+    }
+
+    .versions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    /* Card base */
+    .version-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .version-card:hover {
+      border-color: rgba(77, 168, 218, 0.45);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+    }
+
+    /* Pinned card variant — larger */
+    .pinned-row .version-card {
+      padding: 32px 34px;
+      gap: 16px;
+    }
+
+    .version-card.featured {
+      border-color: rgba(77, 168, 218, 0.35);
+      background: linear-gradient(140deg, #08192a 0%, #1a1a1a 55%);
+    }
+
+    .version-card.featured::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light), var(--accent));
+    }
+
+    /* Badges */
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      align-self: flex-start;
+    }
+
+    .badge-stable {
+      background: rgba(77, 168, 218, 0.18);
+      color: #80c5eb;
+      border: 1px solid rgba(77, 168, 218, 0.4);
+    }
+    .badge-stable::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      box-shadow: 0 0 6px var(--accent-light);
+      animation: pulse 2s infinite;
+    }
+
+    .badge-master {
+      background: rgba(72, 199, 142, 0.12);
+      color: #6fdcaa;
+      border: 1px solid rgba(72, 199, 142, 0.3);
+    }
+    .badge-master::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6fdcaa;
+      box-shadow: 0 0 6px rgba(72, 199, 142, 0.6);
+      animation: pulse 2.5s infinite;
+    }
+
+    .badge-release {
+      background: rgba(255,255,255,0.06);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .badge-snapshot {
+      background: rgba(255, 170, 0, 0.12);
+      color: #ffb84d;
+      border: 1px solid rgba(255, 170, 0, 0.3);
+    }
+
+    .badge-branch, .badge-pr {
+      background: rgba(160, 119, 255, 0.1);
+      color: #c4aaff;
+      border: 1px solid rgba(160, 119, 255, 0.28);
+    }
+
+    .badge-draft {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      border: 1px dashed rgba(255,255,255,0.2);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* ── Development tab sub-groups ───────────────────────────── */
+    .dev-group + .dev-group { margin-top: 40px; }
+
+    .dev-group-title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .dev-group-title .category-count { margin-left: 0; }
+
+    .dev-group-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .version-meta a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: rgba(255,255,255,0.25);
+      text-underline-offset: 2px;
+    }
+    .version-meta a:hover { color: var(--text); }
+
+    .version-meta .is-branch { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break: break-all; }
+
+    /* ── Version tabs ─────────────────────────────────────────── */
+    .version-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border-gray, rgba(255,255,255,0.1));
+      flex-wrap: wrap;
+    }
+
+    .version-tab {
+      appearance: none;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      padding: 10px 18px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid transparent;
+      transform: translateY(1px);
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .version-tab:hover { color: var(--text); }
+
+    .version-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--accent);
+    }
+
+    .version-tab .category-count {
+      font-size: 0.7rem;
+      margin-left: 0;
+    }
+
+    .version-tab:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .version-tab:disabled:hover { color: var(--text-muted); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .version-name {
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      word-break: break-all;
+    }
+    .versions-grid .version-name { font-size: 1.1rem; }
+    .versions-grid .version-name.is-title { word-break: normal; overflow-wrap: anywhere; line-height: 1.3; }
+
+    .version-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .version-meta span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .version-card .btn { display: none; } /* replaced by card-launch */
+
+    /* ── Card launch bar ──────────────────────────────────────── */
+    .card-launch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* bleed to card edges */
+      margin: auto -28px -26px;
+      padding: 13px 22px 13px 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 0 0 10px 10px;
+      transition: background 0.22s, color 0.22s, border-color 0.22s;
+      flex-shrink: 0;
+    }
+    .card-launch:hover {
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.9);
+    }
+    .card-launch-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.22s, background 0.22s, transform 0.22s;
+    }
+    .card-launch:hover .card-launch-icon {
+      border-color: rgba(255,255,255,0.35);
+      transform: translateX(3px);
+    }
+    /* Featured variant */
+    .version-card.featured .card-launch {
+      border-top-color: rgba(77,168,218,0.25);
+      color: rgba(128,197,235,0.7);
+    }
+    .version-card.featured .card-launch:hover {
+      background: rgba(77,168,218,0.1);
+      color: #fff;
+    }
+    .version-card.featured .card-launch .card-launch-icon {
+      border-color: rgba(77,168,218,0.35);
+    }
+    .version-card.featured .card-launch:hover .card-launch-icon {
+      background: rgba(77,168,218,0.2);
+      border-color: rgba(77,168,218,0.6);
+    }
+
+    /* Card icon decoration */
+    .version-card-icon {
+      position: absolute;
+      bottom: -12px;
+      right: -12px;
+      width: 90px;
+      height: 90px;
+      opacity: 0.06;
+      pointer-events: none;
+      transform: rotate(-10deg);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .version-card:hover .version-card-icon {
+      opacity: 0.1;
+      transform: rotate(-8deg) scale(1.05);
+    }
+    .version-card.featured .version-card-icon { opacity: 0.09; }
+    .version-card.featured:hover .version-card-icon { opacity: 0.14; }
+
+    .versions-empty {
+      grid-column: 1 / -1;
+      padding: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    /* ── Divider ──────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    footer {
+      background: #080808;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 48px 24px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-logo img {
+      height: 24px;
+      width: auto;
+      opacity: 0.55;
+      transition: opacity 0.2s;
+    }
+    .footer-logo:hover img { opacity: 0.9; }
+
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 15px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 72px 20px 60px; }
+      section { padding: 60px 20px; }
+      .pinned-row, .versions-grid { grid-template-columns: 1fr; }
+      .footer-top { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ──────────────────────────────────────────── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="logos/rf_logo_white.svg" alt="Rotorflight">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#versions">Versions</a></li>
+      <li><a href="https://github.com/rotorflight/rotorflight-blackbox" target="_blank" rel="noopener" class="nav-cta">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-bg"></div>
+
+    <span class="hero-eyebrow">Open Source Flight Log Analysis</span>
+    <h1>Rotorflight <em>Blackbox</em></h1>
+    <p class="hero-sub">Browser-based flight log viewer and analyzer for Rotorflight helicopters. Visualize your Blackbox recordings, dig into PID and filter tuning, and export video or CSV -- no install required.</p>
+    <div class="hero-actions">
+      <a href="#versions" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5-5 3a.5.5 0 0 1-.5-.866V6.366a.5.5 0 0 1 .5-.866l5 3a.5.5 0 0 1 0 .866z"/></svg>
+        Launch Blackbox Explorer
+      </a>
+      <a href="https://github.com/rotorflight/rotorflight-blackbox" target="_blank" rel="noopener" class="btn btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- ── Versions ─────────────────────────────────────────────── -->
+  <section id="versions">
+    <div class="container">
+      <div class="section-label">Available Builds</div>
+      <h2 class="section-title">Select a Version</h2>
+      <p class="section-sub">Stable is always available. Releases, snapshots, and development builds (master, pull requests and branches) are listed below as they are deployed.</p>
+
+      <!-- Pinned: Stable + Master -->
+      <div class="pinned-row" id="pinned-row"></div>
+
+      <div class="version-tabs" id="version-tabs" role="tablist">
+        <button class="version-tab" id="tab-release" data-panel="panel-release" role="tab">
+          Release <span class="category-count" id="release-count"></span>
+        </button>
+        <button class="version-tab" id="tab-snapshot" data-panel="panel-snapshot" role="tab">
+          Snapshot <span class="category-count" id="snapshot-count"></span>
+        </button>
+        <button class="version-tab" id="tab-development" data-panel="panel-development" role="tab">
+          Development <span class="category-count" id="development-count"></span>
+        </button>
+      </div>
+
+      <div class="tab-panel" id="panel-release" role="tabpanel">
+        <div class="versions-grid" id="release-grid"></div>
+      </div>
+      <div class="tab-panel" id="panel-snapshot" role="tabpanel">
+        <div class="versions-grid" id="snapshot-grid"></div>
+      </div>
+      <div class="tab-panel" id="panel-development" role="tabpanel">
+        <div class="dev-group" id="dev-master" hidden>
+          <div class="dev-group-title">Master <span class="category-count"></span></div>
+          <p class="dev-group-sub">The latest merged development code.</p>
+          <div class="versions-grid"></div>
+        </div>
+        <div class="dev-group" id="dev-pr" hidden>
+          <div class="dev-group-title">Pull Requests <span class="category-count"></span></div>
+          <p class="dev-group-sub">Changes under review, not yet merged into master.</p>
+          <div class="versions-grid"></div>
+        </div>
+        <div class="dev-group" id="dev-branch" hidden>
+          <div class="dev-group-title">Branches <span class="category-count"></span></div>
+          <p class="dev-group-sub">Work in progress without an open pull request.</p>
+          <div class="versions-grid"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <a href="https://www.rotorflight.org/" target="_blank" rel="noopener" class="footer-logo">
+            <img src="logos/rf_logo_white.svg" alt="Rotorflight">
+          </a>
+          <p class="footer-tagline">Flight Log Viewer &amp; Analyzer for Rotorflight Helicopters</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="https://www.rotorflight.org/" target="_blank" rel="noopener">Project Website</a></li>
+          <li><a href="https://github.com/rotorflight/rotorflight-blackbox" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="#versions">Versions</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Rotorflight Project. Licensed under GPL-3.0.</span>
+        <span>Open source helicopter flight control</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── versions.json schema (written by .github/scripts/generate_versions.py) ──
+    // {
+    //   "entries": [
+    //     { "type": "stable",   "name": "Latest Stable", "path": "./latest/",          "notes": "Recommended for all users" },
+    //     { "type": "master",   "name": "master",        "path": "./master/",          "notes": "Latest development build" },
+    //     { "type": "release",  "name": "0.0.9",         "path": "./release/0.0.9/" },
+    //     { "type": "snapshot", "name": "0.0.9",         "path": "./snapshot/0.0.9/" },
+    //     { "type": "branch",   "name": "feature-xyz",   "path": "./feature-xyz/",
+    //       "branch": "feature/xyz", "date": "...", "number": 42, "title": "...", "url": "...", "draft": false },
+    //     { "type": "pr",       "name": "42",            "path": "./pr/42/",
+    //       "branch": "feature/xyz", "date": "...", "number": 42, "title": "...", "url": "...", "draft": false }
+    //   ]
+    // }
+    // Optional per-entry fields: "tag", "date", "notes", and for branch and
+    // PR builds "branch", "number", "title", "url" and "draft". A branch
+    // only has "number" etc. while it has an open PR.
+    // Only "stable" is pinned above the tabs. Master is only "current" for
+    // developers, so it sits in the Development tab, which splits into
+    // Master, Pull Requests (PR previews, and branches with an open PR) and
+    // Branches (no PR yet).
+    // ─────────────────────────────────────────────────────────────
+
+    const ICON_CLOCK  = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" opacity=".45" aria-hidden="true"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>`;
+    const ICON_CAL    = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" opacity=".45" aria-hidden="true"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>`;
+    const ICON_TAG    = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" opacity=".45" aria-hidden="true"><path d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1H2zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg>`;
+    const ICON_PR     = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" opacity=".45" aria-hidden="true"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354z"/></svg>`;
+    const ICON_BRANCH = `<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" opacity=".45" aria-hidden="true"><path d="M11.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zm-2.25.75a2.25 2.25 0 1 1 3 2.122V6A2.5 2.5 0 0 1 10 8.5H6a1 1 0 0 0-1 1v1.128a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.493 2.493 0 0 1 6 7h4a1 1 0 0 0 1-1v-.628A2.25 2.25 0 0 1 9.5 3.25zM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zM3.5 3.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0z"/></svg>`;
+
+    const BADGE_CLASS = { stable: 'badge-stable', master: 'badge-master', release: 'badge-release', snapshot: 'badge-snapshot', branch: 'badge-branch', pr: 'badge-pr' };
+    const BADGE_LABEL = { stable: 'Stable', master: 'Master', release: 'Release', snapshot: 'Snapshot', branch: 'Branch', pr: 'Pull Request' };
+
+    // PR titles and branch names come from contributors; never trust them as HTML.
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const isPr = (e) => e.type === 'pr' || (e.type === 'branch' && Number.isInteger(e.number));
+    const prNumber = (e) => Number.isInteger(e.number) ? e.number : Number(e.name);
+
+    function fmtDate(d) {
+      if (!d) return '';
+      const date = new Date(d);
+      return isNaN(date) ? '' : date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function makeCard(entry) {
+      const { type, name, path, tag, date, notes, branch, title, url, draft } = entry;
+      const card = document.createElement('div');
+      const featured = type === 'stable';
+      card.className = 'version-card' + (featured ? ' featured' : '');
+
+      let badges, heading, meta = '';
+      if (isPr(entry)) {
+        badges = `<span class="version-badge badge-pr">PR #${esc(prNumber(entry))}</span>`
+          + (draft ? '<span class="version-badge badge-draft">Draft</span>' : '');
+        heading = title
+          ? `<div class="version-name is-title">${esc(title)}</div>`
+          : `<div class="version-name">${esc(branch || name)}</div>`;
+        if (branch) meta += `<span>${ICON_BRANCH} <span class="is-branch">${esc(branch)}</span></span>`;
+        if (typeof url === 'string' && url.startsWith('https://github.com/')) {
+          meta += `<span>${ICON_PR} <a href="${esc(url)}" target="_blank" rel="noopener">View pull request on GitHub</a></span>`;
+        }
+      } else {
+        badges = `<span class="version-badge ${BADGE_CLASS[type] || 'badge-release'}">${esc(BADGE_LABEL[type] || type)}</span>`;
+        heading = `<div class="version-name">${esc(type === 'branch' && branch ? branch : name)}</div>`;
+      }
+      if (tag)   meta += `<span>${ICON_TAG} ${esc(tag)}</span>`;
+      if (fmtDate(date)) meta += `<span>${ICON_CAL} Deployed ${esc(fmtDate(date))}</span>`;
+      if (notes) meta += `<span>${ICON_CLOCK} ${esc(notes)}</span>`;
+
+      card.innerHTML = `
+        <img class="version-card-icon" src="logos/rf_icon_128.png" alt="" aria-hidden="true">
+        <div class="badge-row">${badges}</div>
+        ${heading}
+        ${meta ? `<div class="version-meta">${meta}</div>` : ''}
+        <a href="${esc(path)}" class="card-launch">
+          Open Blackbox Explorer
+          <span class="card-launch-icon">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2.5 6h7M6.5 3l3 3-3 3"/>
+            </svg>
+          </span>
+        </a>
+      `;
+      return card;
+    }
+
+    // Splits the development builds into Master / Pull Requests / Branches.
+    // A labelled PR from one of this repo's branches has both a PR preview
+    // and a branch deploy; it gets one card, opening the preview.
+    function groupDevelopment(entries) {
+      const master = entries.filter((e) => e.type === 'master');
+      const prs = new Map();
+      for (const e of entries.filter(isPr)) {
+        const key = prNumber(e);
+        const seen = prs.get(key);
+        if (!seen || (seen.type !== 'pr' && e.type === 'pr')) prs.set(key, e);
+      }
+      const pullRequests = [...prs.values()].sort((a, b) => prNumber(b) - prNumber(a));
+      const branches = entries.filter((e) => e.type === 'branch' && !isPr(e));
+      return { master, pr: pullRequests, branch: branches };
+    }
+
+    (async () => {
+      const pinnedRow = document.getElementById('pinned-row');
+      const tabsRow   = document.getElementById('version-tabs');
+
+      const byId = (id) => document.getElementById(id);
+      const TABS = {
+        release:     { types: ['release'],                tab: byId('tab-release'),     panel: byId('panel-release'),     grid: byId('release-grid'),     count: byId('release-count') },
+        snapshot:    { types: ['snapshot'],               tab: byId('tab-snapshot'),    panel: byId('panel-snapshot'),    grid: byId('snapshot-grid'),    count: byId('snapshot-count') },
+        development: { types: ['master', 'branch', 'pr'], tab: byId('tab-development'), panel: byId('panel-development'), count: byId('development-count') },
+      };
+
+      // Fallback when versions.json is missing or unreadable.
+      let entries = [
+        { type: 'stable', name: 'Latest Stable', path: './latest/', notes: 'Recommended for all users' },
+        { type: 'master', name: 'master',        path: './master/', notes: 'Latest development build' },
+      ];
+
+      try {
+        const res = await fetch('./versions.json', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.entries) && data.entries.length > 0) {
+            entries = data.entries;
+          }
+        }
+      } catch { /* use fallback */ }
+
+      const pinned = entries.filter((e) => e.type === 'stable');
+      pinned.forEach((e) => pinnedRow.appendChild(makeCard(e)));
+      if (!pinned.length) {
+        pinnedRow.innerHTML = '<div class="versions-empty">No stable release yet — check the Snapshot or Development tabs below.</div>';
+      }
+
+      let firstAvailable = null;
+      for (const [key, group] of Object.entries(TABS)) {
+        let total;
+        if (key === 'development') {
+          const groups = groupDevelopment(entries);
+          total = 0;
+          for (const [sub, items] of Object.entries(groups)) {
+            const section = byId(`dev-${sub}`);
+            items.forEach((e) => section.querySelector('.versions-grid').appendChild(makeCard(e)));
+            section.querySelector('.category-count').textContent = items.length || '';
+            section.hidden = !items.length;
+            total += items.length;
+          }
+        } else {
+          const items = entries.filter((e) => group.types.includes(e.type));
+          items.forEach((e) => group.grid.appendChild(makeCard(e)));
+          total = items.length;
+        }
+        group.count.textContent = total || '';
+        group.tab.disabled = !total;
+        if (total && !firstAvailable) firstAvailable = key;
+      }
+
+      if (!firstAvailable) {
+        tabsRow.style.display = 'none';
+        return;
+      }
+
+      const activate = (key) => {
+        for (const [k, group] of Object.entries(TABS)) {
+          const isActive = k === key;
+          group.tab.classList.toggle('active', isActive);
+          group.tab.setAttribute('aria-selected', String(isActive));
+          group.panel.classList.toggle('active', isActive);
+        }
+      };
+      for (const [key, group] of Object.entries(TABS)) {
+        group.tab.addEventListener('click', () => { if (!group.tab.disabled) activate(key); });
+      }
+      activate(firstAvailable);
+    })();
+  </script>
+
+</body>
+</html>
