@@ -491,6 +491,7 @@ html.has-log .log-graph-config {
 
 #craftWrapper,
 #analyserCanvas,
+#stepResponseCanvas,
 #stickCanvas {
     position:absolute;
     top:0;
@@ -519,8 +520,17 @@ html.has-log .log-graph-config {
 
 html.has-craft #craftWrapper,
 html.has-analyser #analyserCanvas,
+html.has-stepresponse #stepResponseCanvas,
 html.has-sticks #stickCanvas {
 	display:block;
+}
+
+#stepResponseToolbar {
+    display: none;
+}
+
+html.has-stepresponse #stepResponseToolbar {
+    display: flex;
 }
 
 html.has-analyser-fullscreen.has-analyser .analyser input:not(.onlyFullScreenException) {
@@ -566,6 +576,56 @@ html.has-analyser-fullscreen.has-analyser .analyser input:not(.onlyFullScreenExc
     position: absolute;
     font-size: 9px;
 }
+
+#stepResponse {
+    z-index: 10;
+}
+
+.stepResponse.non-shift:hover #stepResponseResize {
+    opacity: 1;
+    height: auto;
+    transition: opacity 500ms ease-in;
+}
+
+.stepResponse #stepResponseResize {
+    color: #bbb;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    top: 5px;
+    left: 975px;
+    float: right;
+    z-index: 9;
+    position: absolute;
+    font-size: 18px;
+}
+
+#stepResponseToolbar {
+    color: #bbb;
+    top: 9px;
+    left: 34px;
+    z-index: 9;
+    position: absolute;
+    font-size: 9px;
+    white-space: nowrap;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.55);
+}
+
+.stepResponseAxis {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: normal;
+}
+
+.stepResponseAxis-roll { color: #fb8072; }
+.stepResponseAxis-pitch { color: #8dd3c7; }
+.stepResponseAxis-yaw { color: #ffffb3; }
 
 .analyser #spectrumType select {
     border-radius: 3px;
@@ -625,6 +685,10 @@ html.has-analyser-fullscreen.has-analyser .analyser input:not(.onlyFullScreenExc
 }
 
 .analyser {
+	position: absolute;
+}
+
+.stepResponse {
 	position: absolute;
 }
 
@@ -786,12 +850,15 @@ html .view-sticks,
 html .view-table,
 html .view-analyser,
 html .view-analyser-sticks,
-html .view-analyser-fullscreen {
+html .view-analyser-fullscreen,
+html .view-stepresponse,
+html .view-stepresponse-fullscreen {
      color:black;
 }
 
 html.has-analyser-sticks.isBF .view-analyser-sticks,
 html.has-analyser.isBF .view-analyser,
+html.has-stepresponse.isBF .view-stepresponse,
 html.has-table.isBF .view-table,
 html.has-sticks.isBF .view-sticks,
 html.has-craft.isBF .view-craft,
@@ -801,6 +868,7 @@ html:not(.video-hidden).isBF .view-video {
 
 html.has-analyser-sticks.isRF .view-analyser-sticks,
 html.has-analyser.isRF .view-analyser,
+html.has-stepresponse.isRF .view-stepresponse,
 html.has-table.isRF .view-table,
 html.has-sticks.isRF .view-sticks,
 html.has-craft.isRF .view-craft,
@@ -810,6 +878,7 @@ html:not(.video-hidden).isRF .view-video {
 
 html.has-analyser-sticks.isCF .view-analyser-sticks,
 html.has-analyser.isCF .view-analyser,
+html.has-stepresponse.isCF .view-stepresponse,
 html.has-table.isCF .view-table,
 html.has-sticks.isCF .view-sticks,
 html.has-craft.isCF .view-craft,
@@ -819,6 +888,7 @@ html:not(.video-hidden).isCF .view-video {
 
 html.has-analyser-sticks.isINAV .view-analyser-sticks,
 html.has-analyser.isINAV .view-analyser,
+html.has-stepresponse.isINAV .view-stepresponse,
 html.has-table.isINAV .view-table,
 html.has-sticks.isINAV .view-sticks,
 html.has-craft.isINAV .view-craft,
@@ -841,6 +911,24 @@ html.has-analyser .view-analyser-fullscreen {
 
 html:not(.has-analyser) .view-analyser-fullscreen {
      visibility:hidden;
+}
+
+html.has-stepresponse .view-stepresponse-fullscreen {
+     visibility:inherit;
+}
+
+html:not(.has-stepresponse) .view-stepresponse-fullscreen {
+     visibility:hidden;
+}
+
+html:not(.has-stepresponse-fullscreen) #stepResponseResize .glyphicon-resize-small,
+html.has-stepresponse-fullscreen #stepResponseResize .glyphicon-resize-full {
+     display:none;
+}
+
+html.has-stepresponse-fullscreen #stepResponseResize .glyphicon-resize-small,
+html:not(.has-stepresponse-fullscreen) #stepResponseResize .glyphicon-resize-full {
+     display:inline-block;
 }
 
 .video-top-controls > li {
