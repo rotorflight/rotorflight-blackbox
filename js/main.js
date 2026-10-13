@@ -455,6 +455,10 @@ function BlackboxLogViewer() {
         dialog.modal('show');
     }
 
+    // Only prompt about a craft name mismatch once per opened log file, not on every log
+    // index change or header edit. Reset in loadLogFile().
+    var craftMismatchPrompted = false;
+
     /**
      * Compare the flight log's craft name against the loaded craft config (if any) and colour the
      * status bar accordingly. When they mismatch, optionally offer to load a different config file.
@@ -484,7 +488,8 @@ function BlackboxLogViewer() {
             elem.addClass('craft-name-mismatch');
             tooltip = 'Loaded configuration is for "' + configCraftName + '", but this flight log is for "' + logCraftName + '".';
 
-            if (promptOnMismatch !== false) {
+            if (promptOnMismatch !== false && !craftMismatchPrompted) {
+                craftMismatchPrompted = true;
                 showCraftNameMismatchDialog(tooltip, function() {
                     craftConfigDialog.show();
                 }, function() {
@@ -840,6 +845,8 @@ function BlackboxLogViewer() {
             }
 
             flightLogDataArray = new Uint8Array(bytes);
+
+            craftMismatchPrompted = false;
 
             try {
                 flightLog = new FlightLog(flightLogDataArray);

@@ -832,7 +832,7 @@ GraphSpectrumPlot._drawRotorRpmLines = function(canvasCtx, mainFrequency, sample
         }
 
         const label = ` ${line.label} (${Math.round(line.frequency * 60)}rpm)`;
-        this._drawRpmFrequency(canvasCtx, line.frequency, sampleRate, label, WIDTH, HEIGHT, labelOffset, line.stroke, 2);
+        this._drawRpmFrequency(canvasCtx, line.frequency, sampleRate, label, WIDTH, HEIGHT, labelOffset, line.stroke, 1);
         labelOffset += 15;
     });
 };
