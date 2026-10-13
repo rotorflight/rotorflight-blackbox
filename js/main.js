@@ -546,7 +546,7 @@ function BlackboxLogViewer() {
         }
     }
 
-    // Turns an auto-trim select value ("arm:armed", "gov:4", "air:1") into a matcher for log events
+    // Turns an auto-trim select value ("arm:armed", "gov:ACTIVE", "air:1") into a matcher for log events
     function parseAutoTrimEventSpec(value) {
         if (!value) {
             return null;
@@ -558,7 +558,7 @@ function BlackboxLogViewer() {
             case 'arm':
                 return {armed: parts[1] === 'armed'};
             case 'gov':
-                return {govState: parseInt(parts[1], 10)};
+                return {govState: normalizeAutoTrimGovState(parts[1])};
             case 'air':
                 return {airborneState: parseInt(parts[1], 10)};
             default:
@@ -571,7 +571,9 @@ function BlackboxLogViewer() {
             return event.event === (spec.armed ? FlightLogEvent.SYNC_BEEP : FlightLogEvent.DISARM);
         }
         if (spec.govState !== undefined) {
-            return event.event === FlightLogEvent.GOVERNOR_STATE && event.data.govState === spec.govState;
+            // Compare by name using the open log's own state list, as the indices differ between firmware versions
+            return event.event === FlightLogEvent.GOVERNOR_STATE &&
+                normalizeAutoTrimGovState(FLIGHT_LOG_GOVSTATES[event.data.govState]) === spec.govState;
         }
         if (spec.airborneState !== undefined) {
             return event.event === FlightLogEvent.AIRBORNE_STATE && event.data.airborneState === spec.airborneState;
@@ -579,21 +581,65 @@ function BlackboxLogViewer() {
         return false;
     }
 
-    // Finds the time of the first event matching spec, optionally only considering events strictly after afterTime
-    function findAutoTrimEventTime(events, spec, afterTime) {
-        for (var i = 0; i < events.length; i++) {
-            var event = events[i];
+    // How much of the log to fetch at a time while scanning for auto-trim events
+    var AUTO_TRIM_SCAN_WINDOW = 30 * 1000000; // 30s
 
-            if (event.time == null || (afterTime != null && event.time <= afterTime)) {
-                continue;
-            }
+    // Finds the raw times of the first event matching startSpec, and the first event matching stopSpec strictly
+    // after it (or the first anywhere if there's no start event). Scans the log a window at a time and stops as soon
+    // as both are found, rather than parsing the whole log up front.
+    function findAutoTrimEventTimes(startSpec, stopSpec) {
+        var
+            minTime = flightLog.getMinTime(),
+            maxTime = flightLog.getMaxTime(),
+            startTime = null,
+            firstStopTime = null,       // first stop event anywhere, used when there's no start event
+            stopAfterStartTime = null,  // first stop event strictly after startTime
+            scannedUpTo = -Infinity;
 
-            if (autoTrimEventMatchesSpec(event, spec)) {
-                return event.time;
-            }
+        function done() {
+            return (!startSpec || startTime != null) &&
+                (!stopSpec || (startSpec ? stopAfterStartTime != null : firstStopTime != null));
         }
 
-        return null;
+        for (var windowStart = minTime; windowStart <= maxTime && !done(); windowStart += AUTO_TRIM_SCAN_WINDOW) {
+            // Consecutive windows share their boundary chunk, which also fills in the times of events at the end of
+            // the previous window, so only look at events past the ones already scanned.
+            var
+                chunks = flightLog.getChunksInTimeRange(windowStart, Math.min(windowStart + AUTO_TRIM_SCAN_WINDOW, maxTime)),
+                windowMaxTime = scannedUpTo;
+
+            for (var i = 0; i < chunks.length && !done(); i++) {
+                var events = chunks[i].events;
+
+                for (var j = 0; j < events.length; j++) {
+                    var event = events[j];
+
+                    if (event.time == null || event.time <= scannedUpTo) {
+                        continue;
+                    }
+                    windowMaxTime = Math.max(windowMaxTime, event.time);
+
+                    if (stopSpec && firstStopTime == null && autoTrimEventMatchesSpec(event, stopSpec)) {
+                        firstStopTime = event.time;
+                    }
+                    if (startSpec && startTime == null) {
+                        if (autoTrimEventMatchesSpec(event, startSpec)) {
+                            startTime = event.time;
+                        }
+                    } else if (stopSpec && startTime != null && stopAfterStartTime == null &&
+                            event.time > startTime && autoTrimEventMatchesSpec(event, stopSpec)) {
+                        stopAfterStartTime = event.time;
+                    }
+                }
+            }
+
+            scannedUpTo = windowMaxTime;
+        }
+
+        return {
+            start : startTime,
+            stop  : (startSpec && startTime != null) ? stopAfterStartTime : firstStopTime,
+        };
     }
 
     // Automatically sets the In/Out (trim) points from the events configured in User Settings, just like the I/O keys
@@ -610,16 +656,11 @@ function BlackboxLogViewer() {
             return false;
         }
 
-        var chunks = flightLog.getChunksInTimeRange(flightLog.getMinTime(), flightLog.getMaxTime());
-        var events = [];
-        for (var i = 0; i < chunks.length; i++) {
-            events = events.concat(chunks[i].events);
-        }
-
         var offsetMicros = (userSettings.autoTrimOffset || 0) * 1000000;
 
-        var rawStartTime = startSpec ? findAutoTrimEventTime(events, startSpec, null) : null;
-        var rawStopTime = stopSpec ? findAutoTrimEventTime(events, stopSpec, rawStartTime) : null;
+        var rawTimes = findAutoTrimEventTimes(startSpec, stopSpec);
+        var rawStartTime = rawTimes.start;
+        var rawStopTime = rawTimes.stop;
 
         var startTime = rawStartTime == null ? false : Math.min(rawStartTime + offsetMicros, flightLog.getMaxTime());
         var stopTime = rawStopTime == null ? false : Math.max(rawStopTime - offsetMicros, flightLog.getMinTime());
@@ -1590,6 +1631,12 @@ function BlackboxLogViewer() {
             },
 
             function(newSettings) { // onSave
+                    // Only re-apply auto trim if its own settings changed, so saving an unrelated setting doesn't
+                    // throw away In/Out points the user has adjusted by hand since the log was opened
+                    var autoTrimChanged = ['autoTrim', 'autoTrimStart', 'autoTrimStop', 'autoTrimOffset'].some(function(key) {
+                        return userSettings[key] !== newSettings[key];
+                    });
+
                     userSettings = newSettings;
 
                     prefs.set('userSettings', newSettings);
@@ -1608,7 +1655,9 @@ function BlackboxLogViewer() {
                     }
 
                     // re-apply auto trim immediately in case it was just enabled/changed on an already-open log
-                    applyAutoTrim();
+                    if (autoTrimChanged) {
+                        applyAutoTrim();
+                    }
 
                 }),
 

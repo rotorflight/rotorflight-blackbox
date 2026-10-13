@@ -231,10 +231,18 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
         mixer_list_e.append('<option value="' + (i + 1) + '">' + mixerList[i].name + '</option>');
     }
 
-    // Populate the Governor State auto-trim options from the RF 4.6+ state list
+    // Populate the Governor State auto-trim options by state name, since the state indices differ between
+    // firmware versions: the RF 4.6+ states, then the pre-4.6 states that 4.6 replaced. Matched against the
+    // open log's own state list by name in main.js.
     var autoTrimGovstateGroups_e = $('.auto-trim-start-govstate-group, .auto-trim-stop-govstate-group');
     for (var i = 0; i < FLIGHT_LOG_GOVSTATES_RF_4_6.length; i++) {
-        autoTrimGovstateGroups_e.append('<option value="gov:' + i + '">Governor: ' + FLIGHT_LOG_GOVSTATES_RF_4_6[i] + '</option>');
+        autoTrimGovstateGroups_e.append('<option value="gov:' + FLIGHT_LOG_GOVSTATES_RF_4_6[i] + '">Governor: ' + FLIGHT_LOG_GOVSTATES_RF_4_6[i] + '</option>');
+    }
+    for (var i = 0; i < FLIGHT_LOG_GOVSTATES_RF.length; i++) {
+        var govStateName = normalizeAutoTrimGovState(FLIGHT_LOG_GOVSTATES_RF[i]);
+        if (FLIGHT_LOG_GOVSTATES_RF_4_6.indexOf(govStateName) === -1) {
+            autoTrimGovstateGroups_e.append('<option value="gov:' + govStateName + '">Governor: ' + govStateName + ' (before 4.6)</option>');
+        }
     }
 
         function mixerListSelection(val) {
@@ -422,8 +430,8 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
                                 $(".auto-trim").prop('checked', currentSettings.autoTrim);
                         }
 
-                        $(".auto-trim-start-select").val(currentSettings.autoTrimStart);
-                        $(".auto-trim-stop-select").val(currentSettings.autoTrimStop);
+                        $(".auto-trim-start-select").val(normalizeAutoTrimEvent(currentSettings.autoTrimStart));
+                        $(".auto-trim-stop-select").val(normalizeAutoTrimEvent(currentSettings.autoTrimStop));
                         $(".auto-trim-offset-select").val(currentSettings.autoTrimOffset);
 
 
@@ -489,4 +497,24 @@ function UserSettingsDialog(dialog, onLoad, onSave) {
 
     };
 
+}
+
+/**
+ * Normalises a Governor State auto-trim name so the same state matches across firmware versions:
+ * accepts a numeric index (settings saved when the options were indexed against the RF 4.6+ list)
+ * and maps pre-4.6 names that 4.6 merely renamed onto their 4.6 name.
+ */
+function normalizeAutoTrimGovState(state) {
+    if (/^\d+$/.test(state)) {
+        state = FLIGHT_LOG_GOVSTATES_RF_4_6[parseInt(state, 10)];
+    }
+    return state === 'SPOOLING_UP' ? 'SPOOLUP' : state;
+}
+
+// Normalises an auto-trim select value ("arm:armed", "gov:ACTIVE", "air:1"); only "gov:" values change
+function normalizeAutoTrimEvent(value) {
+    if (value && value.indexOf('gov:') === 0) {
+        return 'gov:' + normalizeAutoTrimGovState(value.substring(4));
+    }
+    return value;
 }
