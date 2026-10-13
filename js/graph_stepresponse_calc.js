@@ -53,7 +53,7 @@ const
 var StepResponseCalc = StepResponseCalc || {
     _timeRange : {
             in: 0,
-            out: STEP_RESPONSE_MAX_LENGTH
+            out: 0
     },
     _blackBoxRate : 0,
     _flightLog : null,
@@ -255,9 +255,19 @@ StepResponseCalc._calculateAxis = function(axisIndex) {
         // inverse transform is unnormalized (verified empirically), so divide by frameLen.
         var stepResponse = new Float64Array(responseLenSamples);
         var acc = 0;
+        var windowIsFinite = true;
         for (var n = 0; n < responseLenSamples; n++) {
             acc += impulse[2 * n] / frameLen;
             stepResponse[n] = acc;
+            if (!isFinite(acc)) windowIsFinite = false;
+        }
+
+        // A dropped/corrupted frame (NaN or Infinity in the raw setpoint or gyro data for this
+        // window) poisons the whole window's FFT output. Since the FFT is a transform over the
+        // entire window, this isn't recoverable per-sample - discard the window rather than
+        // letting a single bad window contaminate the averaged result for every other window.
+        if (!windowIsFinite) {
+            continue;
         }
 
         windowResponses.push(stepResponse);

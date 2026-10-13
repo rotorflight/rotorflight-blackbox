@@ -1,6 +1,6 @@
 "use strict";
 
-function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWorkspace) {
+function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWorkspace, onClearWorkspaces) {
     var
         numberSpan = null,
         titleSpan = null,
@@ -139,11 +139,22 @@ function WorkspaceSelection(targetElem, workspaces, onSelectionChange, onSaveWor
             menuElem.append(item);
         }
 
+        // Destructive action, kept at the bottom of the menu behind a divider
+        const clearLink = $('<a href="#" class="workspace-clear"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Clear saved workspaces</a>');
+        clearLink.click((e) => {
+            buttonElem.dropdown("toggle");
+            onClearWorkspaces();
+            e.preventDefault();
+        });
+        menuElem.append('<li role="separator" class="divider"></li>');
+        menuElem.append($('<li></li>').append(clearLink));
+
         if (workspaces[activeId]) {
             numberSpan.text(activeId);
             titleSpan.text(workspaces[activeId].title);
         }
         else {
+            numberSpan.text("");
             titleSpan.text("");
         }
     }
