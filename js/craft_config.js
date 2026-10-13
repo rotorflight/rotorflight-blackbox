@@ -26,9 +26,17 @@ function CraftConfig(prefs) {
         var reader = new FileReader();
 
         reader.onload = function(e) {
+            var result = CraftConfig.parseText(e.target.result);
+
+            // Keep the current configuration if the file doesn't contain one
+            if (Object.keys(result.settings).length === 0 && Object.keys(result.commands).length === 0) {
+                if (onLoaded) onLoaded(new Error('No Rotorflight configuration found in this file'), null);
+                return;
+            }
+
             fileName = file.name;
             loadedAt = Date.now();
-            parsed = CraftConfig.parseText(e.target.result);
+            parsed = result;
 
             persist();
 
