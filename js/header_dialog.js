@@ -905,6 +905,9 @@ function HeaderDialog(dialog, onSave) {
         setParameter('hsi_gain_p'      , sysConfig.hsi_gain[1], 0);
         setParameter('hsi_limit_r'     , sysConfig.hsi_limit[0], 0);
         setParameter('hsi_limit_p'     , sysConfig.hsi_limit[1], 0);
+        setParameter('master_gain_r'   , sysConfig.master_gain[0], 0);
+        setParameter('master_gain_p'   , sysConfig.master_gain[0], 0);
+        setParameter('master_gain_y'   , sysConfig.master_gain[1], 0);
 
         setParameter('yaw_stop_gain_cw'          , sysConfig.yaw_stop_gain[0], 0);
         setParameter('yaw_stop_gain_ccw'         , sysConfig.yaw_stop_gain[1], 0);

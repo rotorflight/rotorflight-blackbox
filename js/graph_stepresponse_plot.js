@@ -278,6 +278,12 @@ StepResponsePlot._formatPID = function (axis) {
     return null;
   }
 
+  // The master gain scales P, I and D (cyclic for roll/pitch, yaw for the
+  // tail), so name it when it is not 100% or the gains above mislead.
+  const masterGain =
+    this._sysConfig.master_gain &&
+    this._sysConfig.master_gain[axis === "yaw" ? 1 : 0];
+
   // sysConfig.<axis>PID is [P, I, D, F, B, O]
   return (
     "P:" +
@@ -286,7 +292,8 @@ StepResponsePlot._formatPID = function (axis) {
     pid[1] +
     " D:" +
     pid[2] +
-    (pid[3] != null ? " F:" + pid[3] : "")
+    (pid[3] != null ? " F:" + pid[3] : "") +
+    (masterGain != null && masterGain !== 100 ? " MG:" + masterGain + "%" : "")
   );
 };
 
