@@ -8,6 +8,16 @@ function FlightLogIndex(logData) {
         logCount = false,
         intraframeDirectories = false;
 
+    function getExpectedChunkDuration(sysConfig) {
+        if (!sysConfig || !sysConfig.looptime || !sysConfig.frameIntervalI) {
+            return false;
+        }
+
+        var pidProcessDenom = sysConfig.pid_process_denom || 1;
+
+        return sysConfig.looptime * pidProcessDenom * sysConfig.frameIntervalI * 4;
+    }
+
     function buildLogOffsetsIndex() {
         var
             stream = new ArrayDataStream(logData),
@@ -44,6 +54,7 @@ function FlightLogIndex(logData) {
                     offsets: [],
                     avgThrottle: [],
                     collective: [],
+                    gaps: [],
                     initialSlow: [],
                     initialGPSHome: [],
                     hasEvent: [],
@@ -191,6 +202,25 @@ function FlightLogIndex(logData) {
                 }
 
                 intraIndex.stats = parser.stats;
+
+                var typicalChunkDuration = getExpectedChunkDuration(sysConfig);
+                var gapTolerance = typicalChunkDuration ? Math.round(typicalChunkDuration * 0.5) : false;
+
+                if (gapTolerance !== false) {
+                    for (var j = 1; j < intraIndex.times.length; j++) {
+                        var previousTime = intraIndex.times[j - 1];
+                        var currentTime = intraIndex.times[j];
+                        var delta = currentTime - previousTime;
+                        var missingTime = delta - typicalChunkDuration;
+
+                        if (missingTime > gapTolerance) {
+                            intraIndex.gaps.push({
+                                startTime: previousTime + typicalChunkDuration,
+                                endTime: currentTime
+                            });
+                        }
+                    }
+                }
             }
 
             // Did we not find any events in this log?

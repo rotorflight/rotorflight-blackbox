@@ -1077,6 +1077,8 @@ var FlightLogParser = function(logData) {
 
     function invalidateMainStream() {
         mainStreamIsValid = false;
+        lastSkippedFrames = 0;
+        lastMainFrameIteration = -1;
 
         mainHistory[0] = mainHistoryRing ? mainHistoryRing[0]: null;
         mainHistory[1] = null;
@@ -1108,8 +1110,14 @@ var FlightLogParser = function(logData) {
     function completeIntraframe(frameType, frameStart, frameEnd, raw) {
         var acceptFrame = true;
 
-        // Do we have a previous frame to use as a reference to validate field values against?
-        if (!raw && lastMainFrameIteration != -1) {
+        if (!raw && lastMainFrameTime != -1) {
+            acceptFrame =
+                mainHistory[0][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] >= lastMainFrameTime
+                && mainHistory[0][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] < lastMainFrameTime + MAXIMUM_TIME_JUMP_BETWEEN_FRAMES;
+        }
+
+        // Do we have a previous valid iteration to use as a reference?
+        if (acceptFrame && !raw && lastMainFrameIteration != -1) {
             /*
              * Check that iteration count and time didn't move backwards, and didn't move forward too much.
              */
@@ -1308,7 +1316,7 @@ var FlightLogParser = function(logData) {
                     mainHistory[0][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_TIME] > lastMainFrameTime + MAXIMUM_TIME_JUMP_BETWEEN_FRAMES
                     || mainHistory[0][FlightLogParser.prototype.FLIGHT_LOG_FIELD_INDEX_ITERATION] > lastMainFrameIteration + MAXIMUM_ITERATION_JUMP_BETWEEN_FRAMES
                 )) {
-            mainStreamIsValid = false;
+            invalidateMainStream();
         }
 
         if (mainStreamIsValid) {
@@ -1751,7 +1759,8 @@ var FlightLogParser = function(logData) {
             prematureEof = false,
             frameStart = 0,
             frameType = null,
-            lastFrameType = null;
+            lastFrameType = null,
+            frameParseError = null;
 
         invalidateMainStream();
 
@@ -1770,13 +1779,14 @@ var FlightLogParser = function(logData) {
                     frameTypeStats;
 
                 // Is this the beginning of a new frame?
-                looksLikeFrameCompleted = getFrameType(command) || (!prematureEof && command == EOF);
+                looksLikeFrameCompleted = !frameParseError && (getFrameType(command) || (!prematureEof && command == EOF));
 
                 if (!this.stats.frame[lastFrameType.marker]) {
                     this.stats.frame[lastFrameType.marker] = {
                         bytes: 0,
                         sizeCount: new Int32Array(256), /* int32 arrays are zero-filled, handy! */
                         validCount: 0,
+                        desyncCount: 0,
                         corruptCount: 0,
                         field: []
                     };
@@ -1799,11 +1809,13 @@ var FlightLogParser = function(logData) {
                     } else {
                         frameTypeStats.desyncCount++;
                     }
+
+                    frameParseError = null;
                 } else {
                     //The previous frame was corrupt
 
                     //We need to resynchronise before we can deliver another main frame:
-                    mainStreamIsValid = false;
+                    invalidateMainStream();
                     frameTypeStats.corruptCount++;
                     this.stats.totalCorruptFrames++;
 
@@ -1818,6 +1830,7 @@ var FlightLogParser = function(logData) {
                      */
                     stream.pos = frameStart + 1;
                     lastFrameType = null;
+                    frameParseError = null;
                     prematureEof = false;
                     stream.eof = false;
                     continue;
@@ -1833,15 +1846,22 @@ var FlightLogParser = function(logData) {
             // Reject the frame if it is one that we have no definitions for in the header
             if (frameType && (command == 'E' || that.frameDefs[command])) {
                 lastFrameType = frameType;
-                frameType.parse(raw);
+                frameParseError = null;
+
+                try {
+                    frameType.parse(raw);
+                } catch (error) {
+                    frameParseError = error;
+                }
 
                 //We shouldn't read an EOF during reading a frame (that'd imply the frame was truncated)
-                if (stream.eof) {
+                if (!frameParseError && stream.eof) {
                     prematureEof = true;
                 }
             } else {
-                mainStreamIsValid = false;
+                invalidateMainStream();
                 lastFrameType = null;
+                frameParseError = null;
             }
         }
 
