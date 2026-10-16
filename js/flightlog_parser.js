@@ -195,6 +195,12 @@ var FlightLogParser = function(logData) {
             { name: 'Gov Headspeed'                                  },
             { name: 'Gov Yaw FF'                                     },
 
+            { name: 'Battery Profile'                                },
+
+            // Master gains
+            { name: 'Cyclic Master Gain'                             },
+            { name: 'Yaw Master Gain'                                },
+
         ];
 
     //Private variables:
@@ -349,6 +355,7 @@ var FlightLogParser = function(logData) {
             dynamic_idle_min_rpm: null,
             motor_poles: 1,
             yaw_stop_gain: [null, null],
+            master_gain: [null, null],              // Cyclic, yaw master gain [%]
             yaw_precomp: [null, null, null],
             yaw_precomp_impulse: [null, null],
             yaw_inertia_precomp: [null, null],
@@ -894,6 +901,7 @@ var FlightLogParser = function(logData) {
             case "iterm_relax_cutoff":
             case "error_limit":
             case "yaw_stop_gain":
+            case "master_gain":
             case "yaw_precomp":
             case "yaw_precomp_impulse":
             case "yaw_inertia_precomp":
