@@ -121,3 +121,9 @@
 	position: absolute;
 	left: 50px;
 }
+
+/* The description span is absolutely positioned so it doesn't push the row's height out on its own;
+   give this label enough room for its longer, multi-line help text so it doesn't overlap the control below it. */
+.user-settings-dialog .trim-settings label.option {
+	min-height: 36px;
+}
