@@ -38,6 +38,7 @@ const APP_ASSET_SOURCES = [
     './css/main.css',
     './css/user_settings_dialog.css',
     './css/flight_analysis_dialog.css',
+    './css/craft_config_dialog.css',
 
     // JavaScript
     './index.js',
@@ -46,6 +47,8 @@ const APP_ASSET_SOURCES = [
     './js/complex.js',
     './js/configuration.js',
     './js/craft_3d.js',
+    './js/craft_config.js',
+    './js/craft_config_dialog.js',
     './js/datastream.js',
     './js/decoders.js',
     './js/expo.js',
@@ -385,7 +388,7 @@ function run_dev_client(done) {
 // Real work for dist task. Done in another task to call it via
 // run-sequence.
 function dist() {
-    var distSources = APP_ASSET_SOURCES.concat([
+   var distSources = APP_ASSET_SOURCES.concat([
         './package.json', // For NW.js
         './yarn.lock',
     ]);

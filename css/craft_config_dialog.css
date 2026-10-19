@@ -1,0 +1,33 @@
+.craft-config-dialog .modal-dialog {
+    width: 50%;
+    max-width: 700px;
+}
+
+.craft-config-details table td:first-child {
+    font-weight: bold;
+    width: 150px;
+}
+
+.craft-config-filter {
+    margin-bottom: 5px;
+}
+
+.craft-config-list {
+    height: 500px;
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-top: 5px;
+    min-width: 13em;
+    border: 1px solid #ddd;
+}
+
+.craft-config-list li {
+    font-family: monospace;
+    font-size: small;
+    white-space: pre;
+    margin-left: 10px;
+}
+
+.craft-config-list li:nth-child(even) {
+    background-color: #EBF3F7;
+}

@@ -2,6 +2,7 @@
 
 // Global Level Variables
 var userSettings = {};
+var craftConfig; // persisted craft dump/diff config, available across flight logs (and to graph_spectrum.js)
 
 var VIEWER_VERSION = getManifestVersion(); // Current version
 
@@ -65,6 +66,8 @@ function BlackboxLogViewer() {
 
         configuration = null,                                                          // is their an associated dump file ?
         configurationDefaults = new ConfigurationDefaults(prefs),  // configuration defaults
+
+        craftConfigDialog = null,
 
         // User's video render config:
         videoConfig = {},
@@ -130,6 +133,8 @@ function BlackboxLogViewer() {
 
         graphZoom = GRAPH_DEFAULT_ZOOM,
         lastGraphZoom = GRAPH_DEFAULT_ZOOM; // QuickZoom function.
+
+        craftConfig = new CraftConfig(prefs); // assign the global declared at the top of this file
 
         function createNewBlackboxWindow(fileToOpen) {
 
@@ -429,6 +434,90 @@ function BlackboxLogViewer() {
     }
 
     /**
+     * Show a Yes/No confirmation dialog asking whether to load a different craft config, with an
+     * extra option to clear the loaded config instead.
+     */
+    function showCraftNameMismatchDialog(message, onYes, onClear) {
+        var dialog = $('#dlgCraftNameMismatch');
+
+        $('.craft-name-mismatch-message', dialog).text(message);
+
+        $('.craft-name-mismatch-yes', dialog).off('click').on('click', function() {
+            dialog.modal('hide');
+            onYes();
+        });
+
+        $('.craft-name-mismatch-clear', dialog).off('click').on('click', function() {
+            dialog.modal('hide');
+            onClear();
+        });
+
+        dialog.modal('show');
+    }
+
+    /**
+     * Called after the craft config is loaded or cleared: re-check the currently displayed log
+     * against it, and drop any spectrum RPM lines drawn from the previous config's gear ratios.
+     */
+    function onCraftConfigChanged() {
+        if (flightLog) {
+            checkCraftConfigMatch(flightLog.getSysConfig()['Craft name'], false);
+        }
+
+        var analyser = graph && graph.getAnalyser();
+        if (analyser) {
+            analyser.clearMouseOverlay();
+        }
+    }
+
+    // Only prompt about a craft name mismatch once per opened log file, not on every log
+    // index change or header edit. Reset in loadLogFile().
+    var craftMismatchPrompted = false;
+
+    /**
+     * Compare the flight log's craft name against the loaded craft config (if any) and colour the
+     * status bar accordingly. When they mismatch, optionally offer to load a different config file.
+     */
+    function checkCraftConfigMatch(logCraftName, promptOnMismatch) {
+        var elem = $('.version-craft-name', statusBar);
+
+        elem.removeClass('craft-name-match craft-name-mismatch');
+        elem.attr('title', '').attr('data-original-title', '');
+
+        if (!craftConfig.hasConfig() || !logCraftName) {
+            return;
+        }
+
+        var configCraftName = craftConfig.getCraftName();
+
+        if (!configCraftName) {
+            return;
+        }
+
+        var tooltip;
+
+        if (logCraftName.trim().toLowerCase() === configCraftName.trim().toLowerCase()) {
+            elem.addClass('craft-name-match');
+            tooltip = 'Loaded configuration ("' + configCraftName + '") matches this flight log\'s craft.';
+        } else {
+            elem.addClass('craft-name-mismatch');
+            tooltip = 'Loaded configuration is for "' + configCraftName + '", but this flight log is for "' + logCraftName + '".';
+
+            if (promptOnMismatch !== false && !craftMismatchPrompted) {
+                craftMismatchPrompted = true;
+                showCraftNameMismatchDialog(tooltip, function() {
+                    craftConfigDialog.show();
+                }, function() {
+                    craftConfig.clear();
+                    onCraftConfigChanged();
+                });
+            }
+        }
+
+        elem.attr('title', tooltip).attr('data-original-title', tooltip);
+    }
+
+    /**
      * Update the metadata displays to show information about the currently selected log index.
      */
     function renderSelectedLogInfo() {
@@ -462,8 +551,10 @@ function BlackboxLogViewer() {
         **/
 
         // Add log version information to status bar
-        $('.version', statusBar).text( ((sysConfig['Craft name']!=null)?(sysConfig['Craft name'] + ' : '):'') +
-                                        ((sysConfig['Firmware revision']!=null)?(sysConfig['Firmware revision']):''));
+        $('.version-craft-name', statusBar).text( (sysConfig['Craft name']!=null) ? (sysConfig['Craft name'] + ' : ') : '');
+        $('.version-firmware', statusBar).text( (sysConfig['Firmware revision']!=null) ? sysConfig['Firmware revision'] : '');
+
+        checkCraftConfigMatch(sysConfig['Craft name']);
         $('.looptime', statusBar).text( stringLoopTime(sysConfig.looptime, sysConfig.pid_process_denom, sysConfig.unsynced_fast_pwm, sysConfig.motor_pwm_rate));
         $('.lograte', statusBar).text( ((sysConfig['frameIntervalPDenom']!=null && sysConfig['frameIntervalPNum']!=null)?( 'Sample Rate : ' + sysConfig['frameIntervalPNum'] +'/' + sysConfig['frameIntervalPDenom']):''));
 
@@ -769,6 +860,8 @@ function BlackboxLogViewer() {
             }
 
             flightLogDataArray = new Uint8Array(bytes);
+
+            craftMismatchPrompted = false;
 
             try {
                 flightLog = new FlightLog(flightLogDataArray);
@@ -1104,6 +1197,14 @@ function BlackboxLogViewer() {
 
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover", placement: "auto bottom"}); // initialise tooltips
         $('[data-toggle="dropdown"]').dropdown(); // initialise menus
+
+        // Restore the persisted craft dump/diff config, if any. The read may finish after a log
+        // has already been opened, so re-check that log's craft name once it's done.
+        craftConfig.loadFromCache(function() {
+            if (flightLog) {
+                checkCraftConfigMatch(flightLog.getSysConfig()['Craft name']);
+            }
+        });
         $('a.auto-hide-menu').click(function() {
             var test = $(this).closest('.dropdown').children().first().dropdown("toggle");
         });
@@ -1523,6 +1624,8 @@ function BlackboxLogViewer() {
 
                 flightAnalysisDialog = new FlightAnalysisDialog($("#dlgFlightAnalysis"));
 
+        craftConfigDialog = new CraftConfigDialog($("#dlgCraftConfig"), craftConfig, onCraftConfigChanged);
+
         $(".open-graph-configuration-dialog").click(function(e) {
             e.preventDefault();
 
@@ -1538,6 +1641,12 @@ function BlackboxLogViewer() {
             e.preventDefault();
 
             keysDialog.show();
+        });
+
+        $(".open-craft-config-dialog").click(function(e) {
+            e.preventDefault();
+
+            craftConfigDialog.show();
         });
 
         $(".open-user-settings-dialog").click(function(e) {

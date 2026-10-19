@@ -36,6 +36,8 @@ window.GraphSpectrumPlot = window.GraphSpectrumPlot || {
             x : 0,
             y : 0,
     },
+    _mouseMode        : 'harmonics', // 'harmonics' (SHIFT) or 'gearRatio' (CTRL)
+    _rotorGearRatios  : null, // {main, tail} multipliers from the loaded craft config, while CTRL-hovering
     _overdrawType     : null,
     _spectrumType     : null,
     _sysConfig        : null,
@@ -90,9 +92,14 @@ GraphSpectrumPlot.setOverdraw = function(overdrawType) {
     this._invalidateCache();
 };
 
-GraphSpectrumPlot.setMousePosition = function(x, y) {
+GraphSpectrumPlot.setMousePosition = function(x, y, mode) {
     this._mousePosition.x = x;
     this._mousePosition.y = y;
+    this._mouseMode = mode || 'harmonics';
+};
+
+GraphSpectrumPlot.setRotorGearRatios = function(rotorGearRatios) {
+    this._rotorGearRatios = rotorGearRatios;
 };
 
 GraphSpectrumPlot.draw = function() {
@@ -753,19 +760,24 @@ GraphSpectrumPlot._drawMousePosition = function(canvasCtx, mouseX, mouseY, WIDTH
         const marginLeft = this._getActualMarginLeft();
 
         const mouseFrequency = ((mouseX - marginLeft) / WIDTH) * ((this._fftData.blackBoxRate / this._zoomX) / 2);
-        const harmonicOrdinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
-        for (let h = 1; h <= harmonicOrdinals.length; h++) {
-            const harmonicFrequency = mouseFrequency * h;
-            if (mouseFrequency >= 0 && harmonicFrequency <= sampleRate) {
-                this._drawRpmFrequency(
-                    canvasCtx, 
-                    harmonicFrequency, 
-                    sampleRate,
-                    ` - ${harmonicOrdinals[h - 1]} harmonic (${Math.round(harmonicFrequency * 60)}rpm)`,
-                    // ` - ${h}x (${Math.round(harmonicFrequency * 60)}rpm)`,
-                    WIDTH, HEIGHT, OFFSET + (h - 1) * 17, 
-                    "rgba(0,255,0,0.66)", 1
-                );
+        if (this._mouseMode === 'gearRatio' && this._rotorGearRatios) {
+            this._drawRotorRpmLines(canvasCtx, mouseFrequency, sampleRate, WIDTH, HEIGHT, OFFSET);
+        }
+        else{
+            const harmonicOrdinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
+            for (let h = 1; h <= harmonicOrdinals.length; h++) {
+                const harmonicFrequency = mouseFrequency * h;
+                if (mouseFrequency >= 0 && harmonicFrequency <= sampleRate) {
+                    this._drawRpmFrequency(
+                        canvasCtx, 
+                        harmonicFrequency, 
+                        sampleRate,
+                        ` - ${harmonicOrdinals[h - 1]} harmonic (${Math.round(harmonicFrequency * 60)}rpm)`,
+                        // ` - ${h}x (${Math.round(harmonicFrequency * 60)}rpm)`,
+                        WIDTH, HEIGHT, OFFSET + (h - 1) * 17, 
+                        "rgba(0,255,0,0.66)", 1
+                    );
+                }
             }
         }
 
@@ -796,6 +808,33 @@ GraphSpectrumPlot._drawMousePosition = function(canvasCtx, mouseX, mouseY, WIDTH
             this._drawHorizontalMarkerLine(canvasCtx, mousePidError, dataLimits.currentDrawMaxPidError, pidErrorLabel, WIDTH, HEIGHT, OFFSET, stroke, lineWidth);
         }
     }
+};
+
+/**
+ * The hovered frequency is treated as the main rotor speed (the "key value"). The tail rotor and
+ * motor lines are derived from it using the gear ratios from the loaded craft config.
+ */
+GraphSpectrumPlot._drawRotorRpmLines = function(canvasCtx, mainFrequency, sampleRate, WIDTH, HEIGHT, OFFSET) {
+
+    const ratios = this._rotorGearRatios;
+
+    const lines = [
+        { frequency: mainFrequency, label: 'Main Rotor', stroke: "rgba(255,255,0,0.85)" },
+        { frequency: (ratios.tail != null) ? mainFrequency * ratios.tail : null, label: 'Tail Rotor', stroke: "rgba(0,200,255,0.85)" },
+        // A 1:1 main gear ratio (direct drive) means the motor line would just duplicate the main rotor line
+        { frequency: (ratios.main != null && ratios.main !== 1) ? mainFrequency * ratios.main : null, label: 'Motor', stroke: "rgba(255,0,255,0.85)" },
+    ];
+
+    let labelOffset = OFFSET;
+    lines.forEach((line) => {
+        if (line.frequency == null || line.frequency < 0 || line.frequency > sampleRate / 2) {
+            return;
+        }
+
+        const label = ` ${line.label} (${Math.round(line.frequency * 60)}rpm)`;
+        this._drawRpmFrequency(canvasCtx, line.frequency, sampleRate, label, WIDTH, HEIGHT, labelOffset, line.stroke, 1);
+        labelOffset += 15;
+    });
 };
 
 GraphSpectrumPlot._getActualMarginLeft = function() {
