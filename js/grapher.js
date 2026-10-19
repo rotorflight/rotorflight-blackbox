@@ -96,9 +96,20 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
     $('#craftWrapper canvas').toggle(hasAttitude);
     $('#craftWrapper p').toggle(!hasAttitude);
 
+    // Heading (attitude[2]) at the start of the log. The craft's yaw is shown relative to it, so the
+    // model starts out pointing in the chosen initial facing direction (see Craft3D's facing offset)
+    // whatever the flight controller's heading happened to be when logging began.
+    let initialHeading = 0;
+    if (hasAttitude) {
+        const firstFrame = flightLog.getFrameAtTime(flightLog.getMinTime());
+        if (firstFrame) {
+            initialHeading = firstFrame[attitudeFrameIndex.y];
+        }
+    }
+
     let craft;
     if (hasAttitude) {
-        craft = new Craft3D($(craftWrapper).find('canvas').get(0), flightLog);
+        craft = new Craft3D($(craftWrapper).find('canvas').get(0), flightLog, options.craft && options.craft.facing);
     }
 
     this.onSeek = null;
@@ -891,7 +902,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
                 if (craft) {
                     const x = (-centerFrame[attitudeFrameIndex.x] / 1800) * Math.PI;
-                    const y = (-centerFrame[attitudeFrameIndex.y] / 1800) * Math.PI;
+                    const y = (-(centerFrame[attitudeFrameIndex.y] - initialHeading) / 1800) * Math.PI;
                     const z = (-centerFrame[attitudeFrameIndex.z] / 1800) * Math.PI;
                     const collectiveRaw = typeof collectiveFieldIndex === "number" ? centerFrame[collectiveFieldIndex] : undefined;
                     const cyclicRollRaw = typeof cyclicRollFieldIndex === "number" ? centerFrame[cyclicRollFieldIndex] : undefined;
@@ -1054,6 +1065,10 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
     // Update user options
     this.refreshOptions = function(newSettings) {
         options = $.extend(defaultOptions, newSettings || {});
+
+        if (craft) {
+            craft.setFacing(options.craft && options.craft.facing);
+        }
     }
 
     this.refreshLogo = function() {

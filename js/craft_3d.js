@@ -1,5 +1,14 @@
 "use strict";
 
+// Extra yaw (in radians) added on top of the log's real-time yaw so the model's
+// on-screen "zero yaw" pose matches the user's chosen initial facing direction.
+const CRAFT_FACING_OFFSETS = {
+  forward: 0,
+  left: Math.PI / 2,
+  right: -Math.PI / 2,
+  backward: Math.PI,
+};
+
 // Collective color: blue for negative (descending) pitch, green for positive (climb) pitch.
 // Opacity carries the magnitude, so the disc is fully transparent at zero collective and
 // becomes more visible the further the stick is pushed away from center in either direction.
@@ -41,8 +50,9 @@ function clamp(value, min, max) {
 }
 
 class Craft3D {
-  constructor(canvas, flightLog) {
+  constructor(canvas, flightLog, facing) {
     this.canvas = canvas;
+    this.facingOffset = CRAFT_FACING_OFFSETS[facing] || 0;
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -85,9 +95,19 @@ class Craft3D {
     loader.load("/resources/models/bell_cw.gltf", (gltf) => {
       this.model = gltf.scene;
       this.modelWrapper.add(this.model);
+      this.modelWrapper.rotation.y = this.facingOffset;
       this.setupCollectiveDisc();
       this.render();
     });
+  }
+
+  setFacing(facing) {
+    this.facingOffset = CRAFT_FACING_OFFSETS[facing] || 0;
+
+    if (!this.model) return;
+
+    this.modelWrapper.rotation.y = this.facingOffset;
+    this.render();
   }
 
   // Precomputes the per-vertex data needed to color the rotor disk for collective/cyclic, and
@@ -167,7 +187,7 @@ class Craft3D {
     if (!this.model) return;
 
     this.model.rotation.x = x;
-    this.modelWrapper.rotation.y = y;
+    this.modelWrapper.rotation.y = y + this.facingOffset;
     this.model.rotation.z = z;
 
     if (this.collectiveDisc && typeof collectiveRaw === "number") {
