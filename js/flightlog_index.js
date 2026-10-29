@@ -48,6 +48,7 @@ function FlightLogIndex(logData) {
                     initialGPSHome: [],
                     hasEvent: [],
                     pidProfile: [],
+                    profileChanges: [],
                     minTime: false,
                     maxTime: false
                 },
@@ -167,6 +168,17 @@ function FlightLogIndex(logData) {
                             // Track PID Profile changes (INFLIGHT_ADJUSTMENT func=2)
                             if (frame.event == FlightLogEvent.INFLIGHT_ADJUSTMENT && frame.data && frame.data.func == 2) {
                                 currentPIDProfile = frame.data.value;
+                            }
+
+                            // Record PID (func=2) and rate (func=1) bank switches with the time of the
+                            // last frame seen, since events carry no timestamp of their own
+                            if (frame.event == FlightLogEvent.INFLIGHT_ADJUSTMENT && frame.data &&
+                                (frame.data.func == 1 || frame.data.func == 2) && intraIndex.maxTime !== false) {
+                                intraIndex.profileChanges.push({
+                                    time: intraIndex.maxTime,
+                                    type: frame.data.func == 2 ? 'pid' : 'rate',
+                                    bank: frame.data.value
+                                });
                             }
                         break;
                         case 'S':
