@@ -16,6 +16,17 @@
       "type": "release",
       "name": "2.3.0",
       "path": "./release/2.3.0/"
+    },
+    {
+      "type": "pr",
+      "name": "90",
+      "path": "./pr/90/",
+      "branch": "header-bank-notice",
+      "date": "2026-10-29T01:12:44Z",
+      "number": 90,
+      "title": "Show active bank in the log header dialog",
+      "url": "https://github.com/rotorflight/rotorflight-blackbox/pull/90",
+      "draft": false
     }
   ]
 }
