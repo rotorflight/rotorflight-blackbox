@@ -1165,7 +1165,36 @@ function HeaderDialog(dialog, onSave) {
 
         // Public variables
 
-    this.show = function(sysConfig) {
+    /**
+     * The header only holds the settings of the bank active when logging started, and bank
+     * switches are logged as a bank number only. Warn when a switch happened before the cursor.
+     */
+    function renderBankNotice(bankSwitches, logStartTime) {
+        var
+            notice = $('.header-bank-notice', dialog),
+            lines = [];
+
+        function describe(label, change) {
+            if (change) {
+                lines.push(`${label} bank ${change.bank} active (switched at ${formatTime((change.time - logStartTime) / 1000, true)}).`);
+            }
+        }
+
+        if (bankSwitches) {
+            describe('PID', bankSwitches.pid);
+            describe('Rate', bankSwitches.rate);
+        }
+
+        if (lines.length == 0) {
+            notice.hide();
+            return;
+        }
+
+        notice.text(`At the cursor: ${lines.join(' ')} The values below are from the start of the log and may belong to a different bank. The log does not record other banks' settings.`);
+        notice.show();
+    }
+
+    this.show = function(sysConfig, bankSwitches, logStartTime) {
 
         // Workaround to pressing the shortcut key multiple times
         // The modal-backdrop isn't removed
@@ -1176,6 +1205,7 @@ function HeaderDialog(dialog, onSave) {
 
         dialog.one('show.bs.modal', function() {
             renderSysConfig(sysConfig);
+            renderBankNotice(bankSwitches, logStartTime);
             // Disable changing input and dropdowns
             $('#dlgHeaderDialog input').prop('disabled', 'disabled');
             $('#dlgHeaderDialog select').prop('disabled', 'disabled');

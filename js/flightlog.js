@@ -148,6 +148,22 @@ function FlightLog(logData) {
     };
 
     /**
+     * Return the last PID and rate bank switch at or before the given time, as {pid, rate}.
+     * Each is {time, bank} or null when no switch was logged before that time.
+     */
+    this.getBankSwitchesAtTime = function(time) {
+        var
+            changes = logIndexes.getIntraframeDirectory(logIndex).profileChanges || [],
+            result = {pid: null, rate: null};
+
+        for (var i = 0; i < changes.length && changes[i].time <= time; i++) {
+            result[changes[i].type] = {time: changes[i].time, bank: changes[i].bank};
+        }
+
+        return result;
+    };
+
+    /**
      * Get the index of the field with the given name, or undefined if that field doesn't exist in the log.
      */
     this.getMainFieldIndexByName = function(name) {
