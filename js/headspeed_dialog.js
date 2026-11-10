@@ -22,9 +22,10 @@ function HeadspeedDialog(dialog) {
 
     var lastLog = null, lastRange = null, lastResult = null;
 
-    // J toggles the dialog. Usually focus stays outside the modal and the main
-    // key handler calls toggle(); this covers focus inside it (e.g. after
-    // clicking it), where the main handler ignores keys.
+    // J closes the dialog. The modal has tabindex="-1", so Bootstrap moves focus
+    // into it when it opens and the main key handler (which ignores keys inside
+    // modals) won't see the second J. The main handler's toggle() still covers
+    // the case where focus has left the modal.
     dialog.on("keydown", function(e) {
         if (e.which === "J".charCodeAt(0) && !(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
             dialog.modal("hide");
@@ -63,7 +64,7 @@ function HeadspeedDialog(dialog) {
 
         if (first < 0) {
             return { error: "The rotor never went above " + ROTOR_SPINNING_RPM + " rpm " +
-                (hasMarks ? "between the I and O marks." : "in this log (no RPM source configured?).") };
+                (hasMarks ? "in the selected range." : "in this log (no RPM source configured?).") };
         }
 
         // Time-weighted average over the samples above the threshold, between IN and OUT.
