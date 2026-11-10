@@ -1521,7 +1521,9 @@ function BlackboxLogViewer() {
                     prefs.set('videoConfig', newConfig);
                 }),
 
-                flightAnalysisDialog = new FlightAnalysisDialog($("#dlgFlightAnalysis"));
+                flightAnalysisDialog = new FlightAnalysisDialog($("#dlgFlightAnalysis")),
+
+                headspeedDialog = new HeadspeedDialog($("#dlgHeadspeed"));
 
         $(".open-graph-configuration-dialog").click(function(e) {
             e.preventDefault();
@@ -2095,6 +2097,13 @@ function BlackboxLogViewer() {
                     case "H".charCodeAt(0):
                         if(!(shifted)) {
                             headerDialog.show(flightLog.getSysConfig());
+                            e.preventDefault();
+                        }
+                        break;
+
+                    case "J".charCodeAt(0):
+                        if(!(shifted)) {
+                            headspeedDialog.show(flightLog, videoExportInTime, videoExportOutTime);
                             e.preventDefault();
                         }
                         break;
