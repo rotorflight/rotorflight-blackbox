@@ -30,6 +30,10 @@ function HeadspeedDialog(dialog) {
         if (e.which === "J".charCodeAt(0) && !(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
             dialog.modal("hide");
             e.preventDefault();
+            // Focus is usually the modal element itself, which the main key
+            // handler's "inside a modal" check doesn't catch (it only looks at
+            // parents), so without this it would toggle the dialog open again.
+            e.stopPropagation();
         }
     });
 
