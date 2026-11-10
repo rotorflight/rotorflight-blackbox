@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="css/branding.css">
     <link rel="stylesheet" href="css/user_settings_dialog.css">
     <link rel="stylesheet" href="css/flight_analysis_dialog.css">
+    <link rel="stylesheet" href="css/headspeed_dialog.css">
 
     <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     <script src="js/browser_compat.js"></script>
@@ -2779,6 +2780,12 @@
                                         </span>
                                         <div class="description">Toggle QuickConfig, Quickly show the configuration dump file (if loaded).</div>
                                     </li>
+                                    <li>
+                                        <span class="keys">
+                                            <div class="key">J</div>
+                                        </span>
+                                        <div class="description">Show or hide the average, minimum and maximum headspeed for the log.</div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -2794,6 +2801,12 @@
                                             <div class="key">Shift</div>
                                         </span>
                                         <div class="description">Shows the frequency under the mouse</div>
+                                    </li>
+                                    <li>
+                                        <span class="keys">
+                                            <div class="key">K</div>
+                                        </span>
+                                        <div class="description">Open the frequency analyser (if hidden) and move the 1st harmonic line to the average headspeed (between the I/O marks if set). Press again to clear.</div>
                                     </li>
                                 </ul>
                             </div>
@@ -3531,6 +3544,26 @@
             </div>
         </div>
     </div>
+    <div class="modal fade headspeed-dialog" id="dlgHeadspeed" role="dialog" aria-modal="true" aria-labelledby="dlgHeadspeedTitle" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="dlgHeadspeedTitle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3.5 17a9 9 0 1 1 17 0"/>
+                            <path d="M12 13l4-4"/>
+                        </svg>
+                        HeadSpeed - Information
+                    </h4>
+                </div>
+                <div class="modal-body headspeed-dialog-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="node_modules/html2canvas/dist/html2canvas.min.js"></script>
     <script src="js/save_file.js"></script>
@@ -3582,6 +3615,7 @@
     <script src="js/user_settings_dialog.js"></script>
     <script src="js/flight_analysis.js"></script>
     <script src="js/flight_analysis_dialog.js"></script>
+    <script src="js/headspeed_dialog.js"></script>
     <script src="js/release_checker.js"></script>
     <script src="js/seekbar.js"></script>
     <script src="js/context_menu.js"></script>

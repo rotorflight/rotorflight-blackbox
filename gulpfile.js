@@ -38,6 +38,7 @@ const APP_ASSET_SOURCES = [
     './css/main.css',
     './css/user_settings_dialog.css',
     './css/flight_analysis_dialog.css',
+    './css/headspeed_dialog.css',
 
     // JavaScript
     './index.js',
@@ -82,6 +83,7 @@ const APP_ASSET_SOURCES = [
     './js/user_settings_dialog.js',
     './js/flight_analysis.js',
     './js/flight_analysis_dialog.js',
+    './js/headspeed_dialog.js',
     './js/video_export_dialog.js',
     './js/csv-exporter.js',
     './js/webworkers/csv-export-worker.js',
