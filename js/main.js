@@ -2103,7 +2103,22 @@ function BlackboxLogViewer() {
 
                     case "J".charCodeAt(0):
                         if(!(shifted)) {
-                            headspeedDialog.show(flightLog, videoExportInTime, videoExportOutTime);
+                            headspeedDialog.toggle(flightLog, videoExportInTime, videoExportOutTime);
+                            e.preventDefault();
+                        }
+                        break;
+
+                    case "K".charCodeAt(0): // pin the analyser's 1st harmonic line at the average headspeed (toggle)
+                        if(!(shifted)) {
+                            if (GraphSpectrumPlot.getHarmonicFrequency() != null) {
+                                GraphSpectrumPlot.setHarmonicFrequency(null);
+                            } else {
+                                var headspeed = headspeedDialog.getStats(flightLog, videoExportInTime, videoExportOutTime);
+                                if (!headspeed.error) {
+                                    GraphSpectrumPlot.setHarmonicFrequency(headspeed.average / 60);
+                                }
+                            }
+                            invalidateGraph();
                             e.preventDefault();
                         }
                         break;

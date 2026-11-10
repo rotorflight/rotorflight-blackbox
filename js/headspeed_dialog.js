@@ -22,6 +22,16 @@ function HeadspeedDialog(dialog) {
 
     var lastLog = null, lastRange = null, lastResult = null;
 
+    // J toggles the dialog. Usually focus stays outside the modal and the main
+    // key handler calls toggle(); this covers focus inside it (e.g. after
+    // clicking it), where the main handler ignores keys.
+    dialog.on("keydown", function(e) {
+        if (e.which === "J".charCodeAt(0) && !(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
+            dialog.modal("hide");
+            e.preventDefault();
+        }
+    });
+
     function compute(flightLog, startTime, endTime, hasMarks) {
         var fieldIndex = flightLog.getMainFieldIndexByName("headspeed");
         if (fieldIndex === undefined) {
@@ -137,30 +147,58 @@ function HeadspeedDialog(dialog) {
         );
     }
 
-    /**
-     * inTime / outTime are the I and O marks in log time (microseconds), or
-     * false when not set.
-     */
-    this.show = function(flightLog, inTime, outTime) {
-        if (!flightLog) return;
-
+    function resolveRange(flightLog, inTime, outTime) {
         var minTime = flightLog.getMinTime(), maxTime = flightLog.getMaxTime();
         var start = inTime !== false && inTime !== undefined ? Math.max(minTime, Math.min(maxTime, inTime)) : minTime;
         var end = outTime !== false && outTime !== undefined ? Math.max(minTime, Math.min(maxTime, outTime)) : maxTime;
         if (start > end) { var swap = start; start = end; end = swap; }
-        var hasMarks = start !== minTime || end !== maxTime;
+        return { start: start, end: end, hasMarks: start !== minTime || end !== maxTime };
+    }
 
-        var range = [start, end];
+    function isCached(flightLog, range) {
+        return flightLog === lastLog && lastRange && range.start === lastRange.start && range.end === lastRange.end;
+    }
 
-        if (flightLog !== lastLog || !lastRange || range[0] !== lastRange[0] || range[1] !== lastRange[1]) {
+    function computeAndCache(flightLog, range) {
+        lastResult = compute(flightLog, range.start, range.end, range.hasMarks);
+        lastLog = flightLog;
+        lastRange = range;
+        return lastResult;
+    }
+
+    /**
+     * Headspeed stats between the I/O marks, from the cache when nothing has
+     * changed. Runs synchronously. Returns average/min/max in rpm, or an
+     * object with `error` set when there is no usable data.
+     *
+     * inTime / outTime are the I and O marks in log time (microseconds), or
+     * false when not set.
+     */
+    this.getStats = function(flightLog, inTime, outTime) {
+        var range = resolveRange(flightLog, inTime, outTime);
+        return isCached(flightLog, range) ? lastResult : computeAndCache(flightLog, range);
+    };
+
+    /** Closes the dialog if it is open, otherwise shows it. */
+    this.toggle = function(flightLog, inTime, outTime) {
+        if (dialog.hasClass("in")) {
+            dialog.modal("hide");
+        } else {
+            this.show(flightLog, inTime, outTime);
+        }
+    };
+
+    this.show = function(flightLog, inTime, outTime) {
+        if (!flightLog) return;
+
+        var range = resolveRange(flightLog, inTime, outTime);
+
+        if (!isCached(flightLog, range)) {
             body.html('<p class="headspeed-note">Reading headspeed&hellip;</p>');
 
             // Let the modal paint before the synchronous decode of the whole log.
             window.setTimeout(function() {
-                lastResult = compute(flightLog, start, end, hasMarks);
-                lastLog = flightLog;
-                lastRange = range;
-                render(lastResult);
+                render(computeAndCache(flightLog, range));
             }, 0);
         } else {
             render(lastResult);
