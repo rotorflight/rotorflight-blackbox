@@ -859,6 +859,37 @@ function BlackboxLogViewer() {
         invalidateGraph();
     }
 
+    /**
+     * Shows the analyser if it is hidden, on the first graphed field when none
+     * is selected, and switches it to a frequency view if it is on PID error
+     * vs setpoint (the harmonic lines only draw on frequency views).
+     */
+    function openFrequencyAnalyser() {
+        if (!hasAnalyser) {
+            if (activeGraphConfig.selectedFieldName == null) {
+                var graphs = activeGraphConfig.getGraphs();
+                if (graphs.length == 0 || graphs[0].fields.length == 0) {
+                    return;
+                }
+                activeGraphConfig.selectedFieldName = graphs[0].fields[0].friendlyName;
+                activeGraphConfig.selectedGraphIndex = 0;
+                activeGraphConfig.selectedFieldIndex = 0;
+            }
+
+            hasAnalyser = true;
+            graph.setDrawAnalyser(hasAnalyser);
+            html.toggleClass("has-analyser", hasAnalyser);
+            prefs.set('hasAnalyser', hasAnalyser);
+        }
+
+        var spectrumTypeElem = $("#spectrumTypeSelect");
+        if (parseInt(spectrumTypeElem.val(), 10) === SPECTRUM_TYPE.PIDERROR_VS_SETPOINT) {
+            spectrumTypeElem.val(SPECTRUM_TYPE.FREQUENCY).change();
+        }
+
+        invalidateGraph();
+    }
+
     function onLegendHighlightChange() {
         invalidateGraph();
     }
@@ -2116,6 +2147,7 @@ function BlackboxLogViewer() {
                                 var headspeed = headspeedDialog.getStats(flightLog, videoExportInTime, videoExportOutTime);
                                 if (!headspeed.error) {
                                     GraphSpectrumPlot.setHarmonicFrequency(headspeed.average / 60);
+                                    openFrequencyAnalyser();
                                 }
                             }
                             invalidateGraph();
