@@ -24,10 +24,13 @@ function GraphLegend(targetElem, config, onVisibilityChange, onNewSelectionChang
             for (j = 0; j < graph.fields.length; j++) {
                 var
                     field = graph.fields[j],
-                    li = $('<li class="graph-legend-field field-quick-adjust" name="' + field.name + '" graph="' + i + '" field="' + j +'"></li>'),
-                    nameElem = $('<span class="graph-legend-field-name field-quick-adjust" name="' + field.name + '" graph="' + i + '" field="' + j +'"></span>'),
-                    valueElem = $('<span class="graph-legend-field-value field-quick-adjust" name="' + field.name + '" graph="' + i + '" field="' + j +'"></span>'),
-                    settingsElem = $('<div class="graph-legend-field-settings field-quick-adjust" name="' + field.name + '" graph="' + i + '" field="' + j +'"></div>'),
+                    // Field names come from the log header, so they are set as
+                    // attribute values rather than written into the HTML.
+                    attrs = { name: field.name, graph: i, field: j },
+                    li = $('<li class="graph-legend-field field-quick-adjust"></li>').attr(attrs),
+                    nameElem = $('<span class="graph-legend-field-name field-quick-adjust"></span>').attr(attrs),
+                    valueElem = $('<span class="graph-legend-field-value field-quick-adjust"></span>').attr(attrs),
+                    settingsElem = $('<div class="graph-legend-field-settings field-quick-adjust"></div>').attr(attrs),
                     analyseElem = $('<span class="glyphicon glyphicon-equalizer"></span>');
                 li.append(nameElem);
                 li.append(analyseElem);

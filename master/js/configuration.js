@@ -8,6 +8,17 @@
  */
 
 
+// CLI dumps and their file names can come from anyone (shared logs), so
+// they are always inserted as text.
+function escapeConfigurationHtml(text) {
+        return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+}
+
 function Configuration(file, configurationDefaults, showConfigFile) {
 
         // Private Variables
@@ -25,7 +36,7 @@ function Configuration(file, configurationDefaults, showConfigFile) {
                         if(!filter || filter.length<1) { //Everything
                                 // li = $('<li class="configuration-row' + ((configurationDefaults.isDefault(fileLinesArray[i]))?(''):(' configuration-changed')) +'">' + fileLinesArray[i] + '</li>');
 
-                                li = $('<li class="configuration-row"' + ((fileLinesArray[i].length==0)?' style="background-color: white; height: 10px;"':'') + '>' + ((fileLinesArray[i].length==0)?'&nbsp':fileLinesArray[i]) + '</li>'); // Removed default syntax highlighting
+                                li = $('<li class="configuration-row"' + ((fileLinesArray[i].length==0)?' style="background-color: white; height: 10px;"':'') + '>' + ((fileLinesArray[i].length==0)?'&nbsp':escapeConfigurationHtml(fileLinesArray[i])) + '</li>'); // Removed default syntax highlighting
                                 configurationList.append(li);
 
                         } else {
@@ -33,7 +44,7 @@ function Configuration(file, configurationDefaults, showConfigFile) {
                                 var regFilter = new RegExp('(.*)(' + filter + ')(.*)','i');
                                 var highLight = fileLinesArray[i].match(regFilter);
                                 if(highLight!=null) { // don't include blank lines
-                                        li = $('<li class="configuration-row">' + highLight[1] + '<b>' + highLight[2] + '</b>' + highLight[3] + '</li>'); // Removed default syntax highlighting
+                                        li = $('<li class="configuration-row">' + escapeConfigurationHtml(highLight[1]) + '<b>' + escapeConfigurationHtml(highLight[2]) + '</b>' + escapeConfigurationHtml(highLight[3]) + '</li>'); // Removed default syntax highlighting
                                         configurationList.append(li);
                                         }
                                 } catch(e) {
@@ -49,7 +60,7 @@ function Configuration(file, configurationDefaults, showConfigFile) {
                 configurationElem  = ('.configuration-file'), // point to the actual element in index.html
                 configurationDiv   = $('<div class="configuration-file">'
                                                           +                '<div class="configuration-header">'
-                                                          +                 '<h4>' + file.name
+                                                          +                 '<h4>' + escapeConfigurationHtml(file.name)
                                                           +                         '<span class="configuration-close glyphicon glyphicon-remove"></span>'
                                                           +                 '</h4>'
                                                           +             '<input type="text" class="form-control configuration-filter" placeholder="Enter filter" size="5"/>'
