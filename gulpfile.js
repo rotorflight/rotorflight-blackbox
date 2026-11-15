@@ -42,6 +42,7 @@ const APP_ASSET_SOURCES = [
     // JavaScript
     './index.js',
     './js/browser_compat.js',
+    './js/pwa_register.js',
     './js/cache.js',
     './js/complex.js',
     './js/configuration.js',
@@ -402,9 +403,12 @@ function dist() {
 // <link>/<script> tags reference) instead of running a nested yarn install, and skips
 // yarn.lock. package.json is still needed: js/browser_compat.js's
 // chrome.runtime.getManifest() shim fetches it to report the app version.
+// manifest.webmanifest and sw.js make the site installable as a PWA (see js/pwa_register.js).
 function webDist() {
     var webDistSources = APP_ASSET_SOURCES.concat([
         './package.json',
+        './manifest.webmanifest',
+        './sw.js',
         './node_modules/bootstrap/dist/**/*',
         './node_modules/html2canvas/dist/html2canvas.min.js',
         './node_modules/webm-writer/*.js',
