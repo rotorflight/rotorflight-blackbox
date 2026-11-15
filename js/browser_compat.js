@@ -37,6 +37,48 @@
 
     window.chrome = window.chrome || {};
 
+    /**
+     * Synchronously loads and parses a JSON file next to the page, or returns null. Each
+     * successful load is copied to localStorage and used when the request fails, because
+     * synchronous XHR bypasses the service worker (sw.js), so the installed PWA could not
+     * otherwise read these files offline. The key is the absolute URL, because several
+     * deployments (latest/, pr/<n>/, ...) share the GitHub Pages origin.
+     */
+    function loadJsonSync(path) {
+        var url = new URL(path, location.href).href;
+        var storageKey = 'browser_compat:' + url;
+        var text = null;
+
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', path, false);
+            xhr.send(null);
+
+            if (xhr.status === 200 || xhr.status === 0) { // status 0: local file:// requests
+                text = xhr.responseText;
+            }
+        } catch (e) {
+            console.warn('browser_compat: request for ' + path + ' failed', e);
+        }
+
+        try {
+            if (text) {
+                window.localStorage.setItem(storageKey, text);
+            } else {
+                text = window.localStorage.getItem(storageKey);
+            }
+        } catch (_e) {
+            // localStorage unavailable (private mode, blocked storage): no offline copy
+        }
+
+        try {
+            return text ? JSON.parse(text) : null;
+        } catch (e) {
+            console.error('browser_compat: ' + path + ' is not valid JSON', e);
+            return null;
+        }
+    }
+
     // chrome.i18n.getMessage() backs every [i18n]/[i18n_title]/... attribute in index.html
     // (see js/localization.js) plus the update-notice string in index.js. NW.js serves this
     // from _locales/<lang>/messages.json; we load the same file ourselves.
@@ -46,19 +88,7 @@
         (function loadI18nMessages() {
             var locale = 'en'; // only English is shipped today; add a lookup here if that changes
 
-            try {
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', '_locales/' + locale + '/messages.json', false);
-                xhr.send(null);
-
-                if (xhr.status === 200 || xhr.status === 0) { // status 0: local file:// requests
-                    i18nMessages = JSON.parse(xhr.responseText);
-                }
-            } catch (e) {
-                console.error('browser_compat: failed to load i18n messages', e);
-            }
-
-            i18nMessages = i18nMessages || {};
+            i18nMessages = loadJsonSync('_locales/' + locale + '/messages.json') || {};
         })();
 
         window.chrome.i18n = {
@@ -97,17 +127,7 @@
 
         window.chrome.runtime.getManifest = function () {
             if (!cachedManifest) {
-                try {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', 'package.json', false);
-                    xhr.send(null);
-
-                    if (xhr.status === 200 || xhr.status === 0) {
-                        cachedManifest = JSON.parse(xhr.responseText);
-                    }
-                } catch (e) {
-                    console.error('browser_compat: failed to load package.json manifest', e);
-                }
+                cachedManifest = loadJsonSync('package.json');
             }
 
             if (!cachedManifest) {
