@@ -1,0 +1,25 @@
+{
+    "name": "Rotorflight Blackbox Explorer",
+    "short_name": "RF Blackbox",
+    "description": "Blackbox log viewer and analysis tool for the Rotorflight flight control system.",
+    "id": "./",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#1e2024",
+    "theme_color": "#1e2024",
+    "icons": [
+        {
+            "src": "images/rf_icon_192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "images/rf_icon_512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}
