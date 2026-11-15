@@ -2365,7 +2365,11 @@ function BlackboxLogViewer() {
             return allowed ? url : null;
         }
 
-        async function fetchSharedFile(url, fallbackName) {
+        // Downloads a shared file, reporting the bytes received so far and the
+        // total. The log sites send logs gzip-compressed (the browser unpacks
+        // them), so the real size comes from their X-Log-Size header rather
+        // than Content-Length, which is the compressed size.
+        async function fetchSharedFile(url, fallbackName, onProgress) {
             const response = await fetch(url, { credentials: 'omit' });
             if (!response.ok) {
                 throw new Error(response.status === 404
@@ -2374,7 +2378,28 @@ function BlackboxLogViewer() {
             }
             const disposition = response.headers.get('Content-Disposition') || '';
             const match = disposition.match(/filename="([^"]+)"/);
-            return new File([await response.blob()], match ? match[1] : fallbackName);
+            const total = Number(response.headers.get('X-Log-Size')) || 0;
+            const chunks = [];
+            let received = 0;
+            if (response.body && response.body.getReader) {
+                const reader = response.body.getReader();
+                for (;;) {
+                    const { done, value } = await reader.read();
+                    if (done) {
+                        break;
+                    }
+                    chunks.push(value);
+                    received += value.length;
+                    onProgress(received, total);
+                }
+            } else {
+                chunks.push(await response.blob());
+            }
+            return new File(chunks, match ? match[1] : fallbackName);
+        }
+
+        function formatMegabytes(bytes) {
+            return (bytes / 1048576).toFixed(1);
         }
 
         async function loadSharedLog() {
@@ -2390,9 +2415,22 @@ function BlackboxLogViewer() {
                 return;
             }
             message.text('Downloading the shared log...').show();
+            let shown = '';
+            const progress = (received, total) => {
+                const text = total >= received
+                    ? `Downloading the shared log... ${formatMegabytes(received)} of ${formatMegabytes(total)} MB (${Math.floor(received * 100 / total)} %)`
+                    : `Downloading the shared log... ${formatMegabytes(received)} MB`;
+                if (text !== shown) {
+                    shown = text;
+                    message.text(text);
+                }
+            };
             try {
-                const log = await fetchSharedFile(logUrl, 'shared.bbl');
-                const cli = cliUrl ? await fetchSharedFile(cliUrl, 'cli.txt') : null;
+                // The CLI dump is small; fetch it alongside the log.
+                const [log, cli] = await Promise.all([
+                    fetchSharedFile(logUrl, 'shared.bbl', progress),
+                    cliUrl ? fetchSharedFile(cliUrl, 'cli.txt', () => {}) : null,
+                ]);
                 loadFiles([log]);
                 if (cli) {
                     loadLogFile(cli, true);
