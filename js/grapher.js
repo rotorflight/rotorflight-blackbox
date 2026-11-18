@@ -1,6 +1,7 @@
 "use strict";
 
-function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, options) {
+function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, options,
+        piroWobbleCanvas /* only the live view has one - not the video export */) {
     var
         PID_P = 0,
         PID_I = 1,
@@ -100,6 +101,13 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
     if (hasAttitude) {
         craft = new Craft3D($(craftWrapper).find('canvas').get(0), flightLog);
     }
+
+    // The piro section (P key) and its wobble plot, which sits under the craft while the section
+    // is on screen. craftPlacement is where the craft settings put the craft.
+    const piroWobble = piroWobbleCanvas ? new PiroWobblePlot(flightLog, piroWobbleCanvas) : null;
+    let piroSection = { start: null, end: null };
+    let piroWobbleVisible = false;
+    let craftPlacement = null;
 
     this.onSeek = null;
 
@@ -752,17 +760,12 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
         });
 
         var craftSize = canvas.height * (parseInt(options.craft.size) / 100.0);
-        if (craft) {
-            craft.resize(craftSize, craftSize);
-        }
-
-        // Positon the craft canvas according to options
-        $(craftWrapper).css({
-            left:Math.max(((canvas.width * parseInt(options.craft.left) / 100.0) - (craftSize / 2)), 0) + "px",
-            top: Math.max(((canvas.height * parseInt(options.craft.top) / 100.0) - (craftSize / 2)), 0) + "px",
-            width: `${craftSize}px`,
-            height: `${craftSize}px`,
-        });
+        craftPlacement = {
+            centerX: canvas.width * parseInt(options.craft.left) / 100.0,
+            top: Math.max(((canvas.height * parseInt(options.craft.top) / 100.0) - (craftSize / 2)), 0),
+            size: craftSize,
+        };
+        layoutCraft();
 
         if(analyser!=null) analyser.resize();
 
@@ -774,6 +777,131 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
         computeDrawingParameters();
     };
+
+    /**
+     * Position the craft canvas according to options. While the piro wobble plot is shown it goes
+     * directly under the craft, the same size; if there isn't room for both, the two share the
+     * graph's height, moving up and shrinking only as far as they need to.
+     */
+    function layoutCraft() {
+        if (!craftPlacement) {
+            return;
+        }
+        var size = craftPlacement.size,
+            top = craftPlacement.top;
+
+        if (piroWobbleVisible && top + 2 * size > canvas.height) {
+            size = Math.min(size, canvas.height / 2);
+            top = Math.max(0, Math.min(top, canvas.height - 2 * size));
+        }
+        var left = Math.max(craftPlacement.centerX - size / 2, 0);
+
+        if (craft) {
+            craft.resize(size, size);
+        }
+        $(craftWrapper).css({
+            left: left + "px",
+            top: top + "px",
+            width: `${size}px`,
+            height: `${size}px`,
+        });
+
+        if (piroWobble) {
+            piroWobble.resize(size);
+            $(piroWobbleCanvas.parentElement).css({
+                left: left + "px",
+                top: (top + size) + "px",
+                width: `${size}px`,
+                height: `${size}px`,
+            });
+        }
+    }
+
+    /**
+     * Show the piro wobble plot while the piro section is on screen (its start marked and any part
+     * of it inside the graph window), and put the craft back as it was when it isn't.
+     */
+    function drawPiroWobble(frame) {
+        if (!piroWobble) {
+            return;
+        }
+        var start = piroSection.start,
+            end = piroSection.end != null ? piroSection.end : Math.max(start, windowCenterTime),
+            onScreen = start != null &&
+                piroWobble.hasData() &&
+                document.documentElement.classList.contains("has-craft") &&
+                start <= windowEndTime &&
+                end >= windowStartTime;
+
+        if (onScreen !== piroWobbleVisible) {
+            piroWobbleVisible = onScreen;
+            $(piroWobbleCanvas.parentElement).toggle(onScreen);
+            $(craftWrapper).toggleClass("piro-joined", onScreen);
+            layoutCraft();
+        }
+        if (onScreen) {
+            piroWobble.draw(piroSection, windowCenterTime, frame);
+        }
+    }
+
+    // The piro section's label on the graph, worked out once per section.
+    var piroLabelKey = null, piroLabelText = "Piro";
+    function piroLabel(start, end) {
+        if (end == null) {
+            return "Piro (press P to end)";
+        }
+        var key = `${start}|${end}`;
+        if (key !== piroLabelKey) {
+            piroLabelKey = key;
+            var result = analysePiro(flightLog, start, end);
+            piroLabelText = !result.ok ? "Piro"
+                : result.gap ? "Piro (logging gap)"
+                : `Piro ${result.revolutions.toFixed(1)} turns`;
+        }
+        return piroLabelText;
+    }
+
+    /**
+     * Tint the piro section (P key) blue and mark its edges. While only its start is set, the tint
+     * runs up to the cursor.
+     */
+    function drawPiroRegion() {
+        var start = piroSection.start;
+        if (start == null) {
+            return;
+        }
+        var end = piroSection.end != null ? piroSection.end : Math.max(start, windowCenterTime);
+        if (end < windowStartTime || start > windowEndTime) {
+            return;
+        }
+        var startX = Math.max(timeToCanvasX(start), 0),
+            endX = Math.min(timeToCanvasX(end), canvas.width),
+            edges = piroSection.end == null ? [start] : [start, end];
+
+        canvasContext.save();
+        canvasContext.fillStyle = "rgba(64, 140, 255, 0.14)";
+        canvasContext.fillRect(startX, 0, Math.max(endX - startX, 0), canvas.height);
+
+        canvasContext.strokeStyle = "rgba(80, 160, 255, 0.95)";
+        canvasContext.lineWidth = 2;
+        canvasContext.setLineDash(piroSection.end == null ? [4, 4] : []);
+        edges.forEach(function(edge) {
+            var x = timeToCanvasX(edge);
+            if (x >= 0 && x <= canvas.width) {
+                canvasContext.beginPath();
+                canvasContext.moveTo(x, 0);
+                canvasContext.lineTo(x, canvas.height);
+                canvasContext.stroke();
+            }
+        });
+        canvasContext.setLineDash([]);
+
+        canvasContext.fillStyle = "rgba(160, 200, 255, 0.95)";
+        canvasContext.font = drawingParams.fontSizeEventLabel + "pt " + DEFAULT_FONT_FACE;
+        canvasContext.textAlign = "left";
+        canvasContext.fillText(piroLabel(start, piroSection.end), startX + 4, canvas.height - 6);
+        canvasContext.restore();
+    }
 
     this.render = function(windowCenterTimeMicros) {
         windowCenterTime = windowCenterTimeMicros;
@@ -792,6 +920,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
         var
             chunks = flightLog.getSmoothedChunksInTimeRange(windowStartTime, windowEndTime),
+            craftPosed = false, // set once the craft has been given this frame's pose
             startChunkIndex, startFrameIndex,
             i, j;
 
@@ -867,6 +996,8 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
             }
 
+            drawPiroRegion();
+
             // Draw events - if option set or even if option is not set but there are graphs
             // the option is for video export; if you export the video without any graphs set,
             // then the events are not shown either (to keep the video clean. but
@@ -896,9 +1027,13 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                     const collectiveRaw = typeof collectiveFieldIndex === "number" ? centerFrame[collectiveFieldIndex] : undefined;
                     const cyclicRollRaw = typeof cyclicRollFieldIndex === "number" ? centerFrame[cyclicRollFieldIndex] : undefined;
                     const cyclicPitchRaw = typeof cyclicPitchFieldIndex === "number" ? centerFrame[cyclicPitchFieldIndex] : undefined;
-                    craft.rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw);
+                    craft.rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw,
+                        !!piroWobble && isInPiroSection(piroSection, windowCenterTime));
+                    craftPosed = true;
                 }
             }
+
+            drawPiroWobble(centerFrame);
 
             // Draw Analyser
             if (options.drawAnalyser && graphConfig.selectedFieldName) {
@@ -926,6 +1061,12 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                 drawLapTimer();
             }
 
+        }
+
+        // With no frame at the cursor (e.g. a synced video before the log starts) the craft keeps
+        // its last pose, but the piro mast must not stay up from an earlier section.
+        if (craft && !craftPosed) {
+            craft.showPiroMast(false);
         }
 
         drawInOutRegion();
@@ -1015,6 +1156,14 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
             analyser.setInTime(inTime);
             if (stepResponse) stepResponse.setInTime(inTime);
         }
+    };
+
+    /**
+     * The piro section (P key), log times in microseconds; a null start clears it, a null end
+     * leaves it open.
+     */
+    this.setPiroSection = function(start, end) {
+        piroSection = { start: start, end: end };
     };
 
     // New function to return the current window scale.

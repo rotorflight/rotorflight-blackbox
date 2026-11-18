@@ -36,6 +36,21 @@ const CYCLIC_GRADIENT_MIN_ALPHA = 0.1;
 const CYCLIC_ROLL_SIGN = 1;
 const CYCLIC_PITCH_SIGN = -1;
 
+// Piro mast (see piro_wobble.js), in model units: the rotor head ("Cone" node) sits at y = 27 and
+// the model spans roughly +-80 across, with the camera 200 away. The blue mast runs from the rotor
+// head straight down the model's own Y axis, so it leans with the heli; a faint grey true vertical
+// from the same point shows how far it has leaned. Both are drawn over the model.
+const PIRO_ROTOR_HEAD_Y = 27;
+const PIRO_MAST_LENGTH = 110;
+const PIRO_MAST_RADIUS = 1.2;
+const PIRO_MAST_COLOR = 0x5aa9ff;
+const PIRO_VERTICAL_COLOR = 0xaaaaaa;
+const PIRO_RENDER_ORDER = 1000;
+
+function piroOverlayMaterial(Material, params) {
+  return new Material(Object.assign({ transparent: true, depthTest: false, depthWrite: false }, params));
+}
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -81,10 +96,30 @@ class Craft3D {
     this.collectiveDisc = null;
     this.cyclicUniforms = null;
 
+    this.piroMast = new THREE.Mesh(
+      new THREE.CylinderGeometry(PIRO_MAST_RADIUS, PIRO_MAST_RADIUS, PIRO_MAST_LENGTH, 8),
+      piroOverlayMaterial(THREE.MeshBasicMaterial, { color: PIRO_MAST_COLOR, opacity: 0.95 }),
+    );
+    this.piroMast.position.y = PIRO_ROTOR_HEAD_Y - PIRO_MAST_LENGTH / 2;
+    this.piroMast.renderOrder = PIRO_RENDER_ORDER + 1;
+    this.piroMast.visible = false;
+
+    this.piroVertical = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, PIRO_ROTOR_HEAD_Y, 0),
+        new THREE.Vector3(0, PIRO_ROTOR_HEAD_Y - PIRO_MAST_LENGTH, 0),
+      ]),
+      piroOverlayMaterial(THREE.LineBasicMaterial, { color: PIRO_VERTICAL_COLOR, opacity: 0.55 }),
+    );
+    this.piroVertical.renderOrder = PIRO_RENDER_ORDER;
+    this.piroVertical.visible = false;
+    this.scene.add(this.piroVertical);
+
     const loader = new THREE.GLTFLoader();
     loader.load("/resources/models/bell_cw.gltf", (gltf) => {
       this.model = gltf.scene;
       this.modelWrapper.add(this.model);
+      this.model.add(this.piroMast);
       this.setupCollectiveDisc();
       this.render();
     });
@@ -163,12 +198,33 @@ class Craft3D {
     disc.material.needsUpdate = true;
   }
 
-  rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw) {
+  // Show or hide the piro mast and its vertical without changing the pose.
+  showPiroMast(visible) {
+    if (this.piroMast.visible === visible && this.piroVertical.visible === visible) return;
+    this.piroMast.visible = visible;
+    this.piroVertical.visible = visible;
+    this.render();
+  }
+
+  // showPiroMast: true while playback is inside the piro section, to show the mast's lean.
+  rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw, showPiroMast = false) {
     if (!this.model) return;
+
+    this.piroMast.visible = showPiroMast;
+    this.piroVertical.visible = showPiroMast;
 
     this.model.rotation.x = x;
     this.modelWrapper.rotation.y = y;
     this.model.rotation.z = z;
+
+    if (showPiroMast) {
+      // Start the true vertical where the (tilted) rotor head actually is, so it and the mast
+      // meet at the head and part only as the mast leans. Its geometry runs down from
+      // PIRO_ROTOR_HEAD_Y, so move it by the head's offset from that point.
+      this.modelWrapper.updateMatrixWorld(true);
+      const head = this.piroMast.localToWorld(new THREE.Vector3(0, PIRO_MAST_LENGTH / 2, 0));
+      this.piroVertical.position.set(head.x, head.y - PIRO_ROTOR_HEAD_Y, head.z);
+    }
 
     if (this.collectiveDisc && typeof collectiveRaw === "number") {
       const isNegative = collectiveRaw < 0;
