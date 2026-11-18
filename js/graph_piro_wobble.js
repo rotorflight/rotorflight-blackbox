@@ -32,6 +32,12 @@ function piroHeadingOnPlot(yaw) {
  * The measurement lines under the plot, as [{ text, note }]: `note` lines are drawn in orange.
  */
 function piroDetailLines(result) {
+    if (result.gap) {
+        return [
+            { text: `${result.durationS.toFixed(1)} s` },
+            { text: "Logging gap in the section - no turn figures", note: true },
+        ];
+    }
     const lines = [{
         text: `${result.revolutions.toFixed(1)} turns · ${result.durationS.toFixed(1)} s · ` +
             `${result.yawRateDegS.toFixed(0)}°/s yaw`,
@@ -157,10 +163,14 @@ function PiroWobblePlot(flightLog, canvas) {
         const cy = h / 2;
         const radius = Math.max(10, Math.min(w, h) / 2 - font * 0.8);
         const k = radius / PIRO_MAX_DEGREES;
+        // Leans beyond the outer ring are pinned just outside it - but never so far out that the
+        // current dot and its arrow (centred on the point) would run off the canvas.
+        const markerLength = Math.max(12, font * 1.8);
+        const pinRadius = Math.max(0, Math.min(radius * PIRO_CLAMP, Math.min(w, h) / 2 - markerLength * 0.8 - 2));
         const toXY = (x, y) => {
             // x, y: the rotor head's lean; the mast's bottom swings the other way.
             const r = Math.hypot(x, y) * k;
-            const s = r > radius * PIRO_CLAMP ? (radius * PIRO_CLAMP) / r : 1;
+            const s = r > pinRadius ? pinRadius / r : 1;
             return [cx - x * k * s, cy + y * k * s];
         };
         // White Verdana with a black outline, so it reads over the craft window's backdrop.
@@ -201,7 +211,8 @@ function PiroWobblePlot(flightLog, canvas) {
         const t = ensureTrace(section, time);
         const count = piroTraceCountAt(t.times, time);
         ctx.lineWidth = 1.5;
-        let maxLean = 0;
+        // The peak comes from every logged frame, not the thinned trail, so no sample is missed.
+        let maxLean = piroPeakAt(t, time);
         for (let i = 1; i < count; i++) {
             const alpha = Math.max(PIRO_TRAIL_MIN_ALPHA, 1 - (time - t.times[i]) / PIRO_TRAIL_FADE_US);
             const [x0, y0] = toXY(t.x[i - 1], t.y[i - 1]);
@@ -212,7 +223,6 @@ function PiroWobblePlot(flightLog, canvas) {
             ctx.lineTo(x1, y1);
             ctx.stroke();
         }
-        for (let i = 0; i < count; i++) maxLean = Math.max(maxLean, Math.hypot(t.x[i], t.y[i]));
 
         // Current lean - only while the cursor is inside the section
         const inside = time >= section.start && (section.end == null || time <= section.end);
@@ -221,7 +231,7 @@ function PiroWobblePlot(flightLog, canvas) {
             const r = piroAttitudeToModelRotation(frame[attitude[0]], frame[attitude[1]], frame[attitude[2]]);
             const lean = piroMastLean(r.roll, r.pitch, r.yaw);
             const [dx, dy] = toXY(lean.x, lean.y);
-            drawPiroHeadingArrow(ctx, dx, dy, r.yaw, Math.max(12, font * 1.8));
+            drawPiroHeadingArrow(ctx, dx, dy, r.yaw, markerLength);
             nowText = `Lean now ${lean.degrees.toFixed(1)}°`;
             maxLean = Math.max(maxLean, lean.degrees);
         }

@@ -854,7 +854,9 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
         if (key !== piroLabelKey) {
             piroLabelKey = key;
             var result = analysePiro(flightLog, start, end);
-            piroLabelText = result.ok ? `Piro ${result.revolutions.toFixed(1)} turns` : "Piro";
+            piroLabelText = !result.ok ? "Piro"
+                : result.gap ? "Piro (logging gap)"
+                : `Piro ${result.revolutions.toFixed(1)} turns`;
         }
         return piroLabelText;
     }
@@ -918,6 +920,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
 
         var
             chunks = flightLog.getSmoothedChunksInTimeRange(windowStartTime, windowEndTime),
+            craftPosed = false, // set once the craft has been given this frame's pose
             startChunkIndex, startFrameIndex,
             i, j;
 
@@ -1026,6 +1029,7 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                     const cyclicPitchRaw = typeof cyclicPitchFieldIndex === "number" ? centerFrame[cyclicPitchFieldIndex] : undefined;
                     craft.rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw,
                         !!piroWobble && isInPiroSection(piroSection, windowCenterTime));
+                    craftPosed = true;
                 }
             }
 
@@ -1057,6 +1061,12 @@ function FlightLogGrapher(flightLog, graphConfig, canvas, stickCanvas, craftWrap
                 drawLapTimer();
             }
 
+        }
+
+        // With no frame at the cursor (e.g. a synced video before the log starts) the craft keeps
+        // its last pose, but the piro mast must not stay up from an earlier section.
+        if (craft && !craftPosed) {
+            craft.showPiroMast(false);
         }
 
         drawInOutRegion();

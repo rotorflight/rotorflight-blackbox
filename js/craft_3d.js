@@ -198,6 +198,14 @@ class Craft3D {
     disc.material.needsUpdate = true;
   }
 
+  // Show or hide the piro mast and its vertical without changing the pose.
+  showPiroMast(visible) {
+    if (this.piroMast.visible === visible && this.piroVertical.visible === visible) return;
+    this.piroMast.visible = visible;
+    this.piroVertical.visible = visible;
+    this.render();
+  }
+
   // showPiroMast: true while playback is inside the piro section, to show the mast's lean.
   rotateTo(x, y, z, collectiveRaw, cyclicRollRaw, cyclicPitchRaw, showPiroMast = false) {
     if (!this.model) return;
@@ -208,6 +216,15 @@ class Craft3D {
     this.model.rotation.x = x;
     this.modelWrapper.rotation.y = y;
     this.model.rotation.z = z;
+
+    if (showPiroMast) {
+      // Start the true vertical where the (tilted) rotor head actually is, so it and the mast
+      // meet at the head and part only as the mast leans. Its geometry runs down from
+      // PIRO_ROTOR_HEAD_Y, so move it by the head's offset from that point.
+      this.modelWrapper.updateMatrixWorld(true);
+      const head = this.piroMast.localToWorld(new THREE.Vector3(0, PIRO_MAST_LENGTH / 2, 0));
+      this.piroVertical.position.set(head.x, head.y - PIRO_ROTOR_HEAD_Y, head.z);
+    }
 
     if (this.collectiveDisc && typeof collectiveRaw === "number") {
       const isNegative = collectiveRaw < 0;

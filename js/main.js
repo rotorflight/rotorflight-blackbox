@@ -116,6 +116,7 @@ function BlackboxLogViewer() {
         markerTime = 0, // New marker time
 
         piroSection = {start: null, end: null}, // Piro section (P key), log times
+        piroSectionLog = {flightLog: null, index: null}, // the log the section was marked on
         piroWobbleCanvas = $("#piroWobbleCanvas")[0],
 
         graphRendersCount = 0,
@@ -654,8 +655,13 @@ function BlackboxLogViewer() {
 
         graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, userSettings, piroWobbleCanvas);
 
-        // A piro section belongs to the log it was marked on.
-        piroSection = {start: null, end: null};
+        // A piro section belongs to the log it was marked on: keep it when the same log is rebuilt
+        // (e.g. after a header edit), clear it for another log or file.
+        if (piroSectionLog.flightLog !== flightLog || piroSectionLog.index !== currentOffsetCache.index) {
+            piroSection = {start: null, end: null};
+            piroSectionLog = {flightLog: flightLog, index: currentOffsetCache.index};
+        }
+        graph.setPiroSection(piroSection.start, piroSection.end);
         $("#piroWobbleWrapper").hide();
         $(craftWrapper).removeClass("piro-joined");
 
@@ -2076,7 +2082,10 @@ function BlackboxLogViewer() {
 
                     case "P".charCodeAt(0):
                         // P marks the start of a piro section, then its end; Shift+P clears it.
-                        if (!(e.altKey || e.ctrlKey || e.metaKey)) {
+                        // Holding P must not count as more presses (the repeat would cancel it).
+                        if (e.originalEvent && e.originalEvent.repeat) {
+                            e.preventDefault();
+                        } else if (!(e.altKey || e.ctrlKey || e.metaKey)) {
                             piroSection = e.shiftKey
                                 ? {start: null, end: null}
                                 : nextPiroSection(piroSection, currentBlackboxTime);

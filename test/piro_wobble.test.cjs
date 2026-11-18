@@ -28,6 +28,17 @@ function fakeLog(count, frame, fields = FIELDS) {
     };
 }
 
+// A log from explicit frames, with gapStartsHere marks.
+function fakeLogFrames(frames, gapStartsHere = {}) {
+    return {
+        getMainFieldIndexByName: (name) => (FIELDS.includes(name) ? FIELDS.indexOf(name) : undefined),
+        getChunksInTimeRange: () => [{frames, gapStartsHere}],
+    };
+}
+
+// Logged yaw (decidegrees, wrapped to -1800..1799) for a heading in degrees.
+const wrapYaw = (deg) => Math.round((((deg % 360) + 360) % 360) * 10) - 1800;
+
 const near = (actual, expected, tolerance, message) =>
     assert.ok(Math.abs(actual - expected) <= tolerance, `${message}: ${actual} vs ${expected}`);
 
@@ -92,6 +103,51 @@ test('averages keep the tilt fixed to the heli and cancel the tilt fixed to the 
     near(r.tilt.roll, 1.0, 0.02, 'tilt roll');
     near(r.tilt.pitch, -0.5, 0.02, 'tilt pitch');
     near(r.tilt.degrees, Math.hypot(1, 0.5), 0.02, 'tilt');
+});
+
+test('an uneven turn rate does not let a world-fixed lean into the average', () => {
+    const {analysePiro} = load();
+    // Each turn: the first half takes 3 s, the second half 1 s. Two and a quarter turns. A 4 deg
+    // world-fixed lean turns through the body frame; the heli holds 1.0 deg right / 0.5 deg nose up.
+    const headingAt = (t) => {
+        const turn = Math.floor(t / 4), tt = t - turn * 4;
+        return turn * 360 + (tt < 3 ? (180 * tt) / 3 : 180 + 180 * (tt - 3));
+    };
+    const frames = [];
+    for (let i = 0; i <= 9000; i++) {
+        const t = i / 1000, deg = headingAt(t), a = (deg * Math.PI) / 180;
+        frames.push([i * 1000, 10 + 40 * Math.cos(a), -5 + 40 * Math.sin(a), wrapYaw(deg), 0, 0, 0, 0]);
+    }
+    const r = analysePiro(fakeLogFrames(frames), 0, 9e6);
+    assert.equal(r.wholeRevolutions, 2);
+    near(r.tilt.roll, 1.0, 0.02, 'tilt roll');
+    near(r.tilt.pitch, -0.5, 0.02, 'tilt pitch');
+});
+
+test('a logging gap in the section gives no turn figures', () => {
+    const {analysePiro, piroDetailLines} = load();
+    const frames = [];
+    for (let i = 0; i <= 2000; i++) frames.push([i * 1000, 0, 0, wrapYaw(i * 0.36), 0, 0, 0, 0]);
+    const r = analysePiro(fakeLogFrames(frames, {1000: true}), 0, 2e6);
+    assert.equal(r.gap, true);
+    assert.equal(r.tilt, undefined);
+    near(r.durationS, 2, 1e-9, 'duration');
+    const lines = piroDetailLines(r);
+    assert.equal(lines[1].note, true);
+    // A gap after the section's last frame is outside it.
+    assert.equal(analysePiro(fakeLogFrames(frames, {1000: true}), 0, 1e6).gap, false);
+});
+
+test('the peak lean counts every frame, not just the thinned trail', () => {
+    const {buildPiroTrace, piroPeakAt} = load();
+    // Level, then one 8 deg frame at 5 ms (between the 10 ms trail samples), then level again.
+    const frames = [];
+    for (let i = 0; i <= 20; i++) frames.push([i * 1000, i === 5 ? 80 : 0, 0, 0, 0, 0, 0, 0]);
+    const trace = buildPiroTrace(fakeLogFrames(frames), 0, 20000);
+    assert.ok(![...trace.times].includes(5000), 'the 8 deg frame is not a trail sample');
+    near(piroPeakAt(trace, 4000), 0, 1e-9, 'before the peak');
+    near(piroPeakAt(trace, 10000), 8, 1e-9, 'after the peak');
+    near(piroPeakAt(trace, 20000), 8, 1e-9, 'still the peak later');
 });
 
 test('under one turn there are no averages', () => {
