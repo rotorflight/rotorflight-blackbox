@@ -65,6 +65,8 @@ const APP_ASSET_SOURCES = [
     './js/graph_stepresponse.js',
     './js/graph_stepresponse_calc.js',
     './js/graph_stepresponse_plot.js',
+    './js/graph_piro_wobble.js',
+    './js/piro_wobble.js',
     './js/grapher.js',
     './js/sticks.js',
     './js/gui.js',

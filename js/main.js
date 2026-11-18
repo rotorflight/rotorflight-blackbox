@@ -115,6 +115,9 @@ function BlackboxLogViewer() {
 
         markerTime = 0, // New marker time
 
+        piroSection = {start: null, end: null}, // Piro section (P key), log times
+        piroWobbleCanvas = $("#piroWobbleCanvas")[0],
+
         graphRendersCount = 0,
 
         seekBarCanvas = $(".log-seek-bar canvas")[0],
@@ -649,7 +652,12 @@ function BlackboxLogViewer() {
                 userSettings.analyserSampleRate = 1000000 / (flightLog.getSysConfig().looptime * (validate(flightLog.getSysConfig().pid_process_denom,1)) * flightLog.getSysConfig().frameIntervalPDenom / flightLog.getSysConfig().frameIntervalPNum);
                 }
 
-        graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, userSettings);
+        graph = new FlightLogGrapher(flightLog, activeGraphConfig, canvas, stickCanvas, craftWrapper, analyserCanvas, stepResponseCanvas, userSettings, piroWobbleCanvas);
+
+        // A piro section belongs to the log it was marked on.
+        piroSection = {start: null, end: null};
+        $("#piroWobbleWrapper").hide();
+        $(craftWrapper).removeClass("piro-joined");
 
         $("#stepResponseAxisRoll").prop('checked', userSettings.stepResponseAxes ? userSettings.stepResponseAxes.roll : true);
         $("#stepResponseAxisPitch").prop('checked', userSettings.stepResponseAxes ? userSettings.stepResponseAxes.pitch : true);
@@ -1182,6 +1190,7 @@ function BlackboxLogViewer() {
             userSettings.drawCraft = !userSettings.drawCraft;
             html.toggleClass("has-craft", userSettings.drawCraft);
             saveOneUserSetting('drawCraft', userSettings.drawCraft);
+            invalidateGraph(); // the piro wobble plot follows the craft
         });
 
         $(".view-sticks").click(function() {
@@ -2063,6 +2072,18 @@ function BlackboxLogViewer() {
                             invalidateGraph();
                         }
                         e.preventDefault();
+                    break;
+
+                    case "P".charCodeAt(0):
+                        // P marks the start of a piro section, then its end; Shift+P clears it.
+                        if (!(e.altKey || e.ctrlKey || e.metaKey)) {
+                            piroSection = e.shiftKey
+                                ? {start: null, end: null}
+                                : nextPiroSection(piroSection, currentBlackboxTime);
+                            graph.setPiroSection(piroSection.start, piroSection.end);
+                            invalidateGraph();
+                            e.preventDefault();
+                        }
                     break;
 
                     case "C".charCodeAt(0):

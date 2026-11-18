@@ -412,6 +412,9 @@
                   <canvas width="0" height="0" id="craftCanvas"></canvas>
                   <p i18n="craftAttitudeUnavailable"></p>
                 </div>
+                <div id="piroWobbleWrapper">
+                  <canvas width="0" height="0" id="piroWobbleCanvas"></canvas>
+                </div>
                 <div id="analyser" class="analyser">
                     <canvas width="0" height="0" id="analyserCanvas"></canvas>
 
@@ -2827,6 +2830,21 @@
                                                 backwards and forwards until your video shows the exaxt same start of event.
                                                 Now press 'Alt M' to sync the log and video at this point.</div>
                                         </li>
+                                        <li>
+                                            <span class="keys">
+                                                <div class="key">P</div>
+                                            </span>
+                                            <div class="description">Mark the start of a piro section, then press again to mark its end.
+                                                While the section is on screen, the piro wobble plot under the craft shows how far the
+                                                mast leans as the heli turns, with the section's measurements.</div>
+                                        </li>
+                                        <li>
+                                            <span class="keys">
+                                                <div class="key">Shift</div>
+                                                <div class="key">P</div>
+                                            </span>
+                                            <div class="description">Clear the piro section.</div>
+                                        </li>
                                     </ul>
                                     <ul>
                                         <li>
@@ -3563,6 +3581,8 @@
     <script src="js/flightlog_parser.js"></script>
     <script src="js/flightlog_index.js"></script>
     <script src="js/flightlog.js"></script>
+    <script src="js/piro_wobble.js"></script>
+    <script src="js/graph_piro_wobble.js"></script>
     <script src="js/grapher.js"></script>
     <script src="js/graph_config.js"></script>
     <script src="js/graph_legend.js"></script>

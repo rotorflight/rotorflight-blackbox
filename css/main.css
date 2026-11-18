@@ -505,6 +505,28 @@ html.has-log .log-graph-config {
     border-radius: 12px;
 }
 
+/* The piro wobble plot (P key): under the craft while the piro section is on screen. grapher.js
+   positions it and shows/hides it. */
+#piroWobbleWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    background-color: #89898973;
+    border-radius: 0 0 12px 12px; /* square where it joins the craft above */
+    pointer-events: none;
+}
+
+/* With the piro wobble plot joined underneath, the craft and plot read as one panel. */
+#craftWrapper.piro-joined {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#piroWobbleCanvas {
+    display: block;
+}
+
 #craftWrapper p {
     position: absolute;
     top: 50%;
