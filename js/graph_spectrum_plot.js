@@ -36,6 +36,7 @@ window.GraphSpectrumPlot = window.GraphSpectrumPlot || {
             x : 0,
             y : 0,
     },
+    _pinnedFrequency  : null, // Hz; when set, the harmonic lines are drawn here instead of at the mouse
     _overdrawType     : null,
     _spectrumType     : null,
     _sysConfig        : null,
@@ -50,6 +51,7 @@ window.GraphSpectrumPlot = window.GraphSpectrumPlot || {
 GraphSpectrumPlot.initialize = function(canvas, sysConfig) {
     this._canvasCtx = canvas.getContext("2d");
     this._sysConfig = sysConfig;
+    this._pinnedFrequency = null; // a new log starts without the pinned harmonic
     this._invalidateCache();
     this._invalidateDataCache();
 };
@@ -93,6 +95,19 @@ GraphSpectrumPlot.setOverdraw = function(overdrawType) {
 GraphSpectrumPlot.setMousePosition = function(x, y) {
     this._mousePosition.x = x;
     this._mousePosition.y = y;
+    this._pinnedFrequency = null; // Shift + mouse takes the harmonic lines back
+};
+
+/**
+ * Pins the 1st harmonic line at a frequency in Hz (e.g. the average
+ * headspeed). Pass null to clear it.
+ */
+GraphSpectrumPlot.setHarmonicFrequency = function(frequency) {
+    this._pinnedFrequency = frequency;
+};
+
+GraphSpectrumPlot.getHarmonicFrequency = function() {
+    return this._pinnedFrequency;
 };
 
 GraphSpectrumPlot.draw = function() {
@@ -469,7 +484,10 @@ GraphSpectrumPlot._drawNotCachedElements = function() {
     canvasCtx.translate(LEFT, TOP);
 
     const offset = 0;
-    if (this._mousePosition.x > 0 || this._mousePosition.y > 0) {
+    const isFrequencyType = this._spectrumType === SPECTRUM_TYPE.FREQUENCY || this._spectrumType === SPECTRUM_TYPE.FREQ_VS_THROTTLE;
+    if (this._pinnedFrequency != null && isFrequencyType) {
+        this._drawHarmonics(canvasCtx, this._pinnedFrequency, WIDTH, HEIGHT, (15 * offset) + MARGIN);
+    } else if (this._mousePosition.x > 0 || this._mousePosition.y > 0) {
         const stroke = "rgba(0,255,0,0.50)";
         this._drawMousePosition(canvasCtx, this._mousePosition.x, this._mousePosition.y, WIDTH, HEIGHT, (15 * offset) + MARGIN, stroke, 3);
     }
@@ -744,30 +762,33 @@ GraphSpectrumPlot._drawNotchFilter = function(canvasCtx, center, cutoff, sampleR
 
 };
 
+GraphSpectrumPlot._drawHarmonics = function(canvasCtx, firstHarmonicFrequency, WIDTH, HEIGHT, OFFSET) {
+    const sampleRate = this._fftData.blackBoxRate / this._zoomX;
+    const harmonicOrdinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
+    for (let h = 1; h <= harmonicOrdinals.length; h++) {
+        const harmonicFrequency = firstHarmonicFrequency * h;
+        if (firstHarmonicFrequency >= 0 && harmonicFrequency <= sampleRate) {
+            this._drawRpmFrequency(
+                canvasCtx,
+                harmonicFrequency,
+                sampleRate,
+                ` - ${harmonicOrdinals[h - 1]} harmonic (${Math.round(harmonicFrequency * 60)}rpm)`,
+                WIDTH, HEIGHT, OFFSET + (h - 1) * 17,
+                "rgba(0,255,0,0.66)", 1
+            );
+        }
+    }
+};
+
 GraphSpectrumPlot._drawMousePosition = function(canvasCtx, mouseX, mouseY, WIDTH, HEIGHT, OFFSET, stroke, lineWidth) {
 
     // X axis
     if (this._spectrumType === SPECTRUM_TYPE.FREQUENCY || this._spectrumType === SPECTRUM_TYPE.FREQ_VS_THROTTLE) {
         // Calculate frequency at mouse
-        const sampleRate = this._fftData.blackBoxRate / this._zoomX;
         const marginLeft = this._getActualMarginLeft();
 
         const mouseFrequency = ((mouseX - marginLeft) / WIDTH) * ((this._fftData.blackBoxRate / this._zoomX) / 2);
-        const harmonicOrdinals = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'];
-        for (let h = 1; h <= harmonicOrdinals.length; h++) {
-            const harmonicFrequency = mouseFrequency * h;
-            if (mouseFrequency >= 0 && harmonicFrequency <= sampleRate) {
-                this._drawRpmFrequency(
-                    canvasCtx, 
-                    harmonicFrequency, 
-                    sampleRate,
-                    ` - ${harmonicOrdinals[h - 1]} harmonic (${Math.round(harmonicFrequency * 60)}rpm)`,
-                    // ` - ${h}x (${Math.round(harmonicFrequency * 60)}rpm)`,
-                    WIDTH, HEIGHT, OFFSET + (h - 1) * 17, 
-                    "rgba(0,255,0,0.66)", 1
-                );
-            }
-        }
+        this._drawHarmonics(canvasCtx, mouseFrequency, WIDTH, HEIGHT, OFFSET);
 
         // Y axis
         if (this._spectrumType === SPECTRUM_TYPE.FREQ_VS_THROTTLE) {

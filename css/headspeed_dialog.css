@@ -1,0 +1,69 @@
+.headspeed-dialog .modal-dialog {
+    width: 560px;
+    max-width: calc(100% - 32px);
+}
+
+.headspeed-dialog .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.headspeed-dialog .modal-title svg {
+    width: 20px;
+    height: 20px;
+    color: var(--rf-accent);
+}
+
+.headspeed-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.headspeed-tile {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 14px 8px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.headspeed-tile-label {
+    color: #606060;
+    font-size: 13px;
+}
+
+.headspeed-tile-value {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #303030;
+}
+
+.headspeed-tile-unit {
+    color: #808080;
+    font-size: 12px;
+}
+
+.headspeed-tile-hz {
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #303030;
+}
+
+.headspeed-tile-hz span {
+    font-weight: 400;
+    color: #808080;
+}
+
+.headspeed-note {
+    margin: 16px 0 0 0;
+    font-size: 12px;
+    color: #808080;
+}
+
+.headspeed-note:first-child {
+    margin-top: 0;
+}
